@@ -30,7 +30,7 @@ namespace beednn {
 	void LayerSelfDot::backpropagation(const MatrixFloat& mIn, const MatrixFloat& mGradientOut, MatrixFloat& mGradientIn)
 	{
 		int middle = mIn.rows() / 2;
-		mGradientIn.middleRows(0, middle) = mGradientOut * mIn.middleRows(middle, middle);//might be reverse
-		mGradientIn.middleRows(middle, middle) = mGradientOut * mIn.middleRows(0, middle);
+		mGradientIn.middleRows(middle, middle) = mIn.middleRows(0, middle).transpose() * mGradientOut ;
+		mGradientIn.middleRows(0, middle) = mGradientOut * mIn.middleRows(middle, middle).transpose();//might be reverse or might be completly diffrent
 	}
 }

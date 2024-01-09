@@ -1,15 +1,14 @@
 #include "LayerEmbed.h"
 
-#include "Initializers.h"
-using namespace std;
 namespace beednn {
 	///////////////////////////////////////////////////////////////////////////////
-	LayerEmbed::LayerEmbed(Index vocabSize, Index dimensionSize, Index maxPositon) :
+	LayerEmbed::LayerEmbed(const Index vocabSize,const Index dimensionSize,const Index maxPositon, const string& sBiasInitializer) :
 		Layer("Normalize"),
 		_pPositionSize(maxPositon),
 		_pVocabSize(vocabSize),
 		_pDimensionSize(dimensionSize)
 	{
+		set_bias_initializer(sBiasInitializer);
 		LayerEmbed::init();
 	}
 	///////////////////////////////////////////////////////////////////////////////
@@ -19,20 +18,18 @@ namespace beednn {
 	///////////////////////////////////////////////////////////////////////////////
 	Layer* LayerEmbed::clone() const
 	{
-		LayerEmbed* pLayer = new LayerEmbed(_pVocabSize, _pDimensionSize, _pPositionSize);
-		//copy the token embed and position embed
+		LayerEmbed* pLayer = new LayerEmbed(_pVocabSize, _pDimensionSize, _pPositionSize,bias_initializer());
+		pLayer->_bias = _bias;
+		pLayer->_bias2 = _bias2;
 		return pLayer;
 	}
 	///////////////////////////////////////////////////////////////////////////////
 	void LayerEmbed::init()
 	{
-
-		//init two 2d biases
-		// dim*vocab
-		// dim*pos
-
-		//idk how to make that
-
+		_bias.resize(_pDimensionSize, _pVocabSize);
+		Initializers::compute(bias_initializer(), _bias, _pDimensionSize, _pVocabSize);
+		_bias2.resize(_pDimensionSize, _pPositionSize);
+		Initializers::compute(bias_initializer(), _bias, _pDimensionSize, _pPositionSize);
 		Layer::init();
 	}
 	///////////////////////////////////////////////////////////////////////////////
@@ -43,10 +40,10 @@ namespace beednn {
 		//assert(mIn.rows()<possize && >0    
 		//or we just scale position and vocab size up
 
-		for (int i = 0; i < mIn.rows(); i++) {
+		for (int i = 0; i < mIn.rows(); i++) {//or mIn.cols()
 			MatrixFloat encodedToken;
-			//encodedToken += vocabBias.col(mIn(i, 0));
-			//encodedToken += posBias.col(i);
+			encodedToken += _bias.col(mIn(i, 0));
+			encodedToken += _bias2.col(i);
 			//mOut.addCol(encodedToken); //somthing like that \/ below
 			mOut.col(mOut.cols()) = encodedToken.col(0);
 		}
@@ -55,11 +52,39 @@ namespace beednn {
 	void LayerEmbed::backpropagation(const MatrixFloat& mIn, const MatrixFloat& mGradientOut, MatrixFloat& mGradientIn)
 	{
 		for (int i = 0; i < mIn.rows(); i++) {
-			//vocabBiasGradient.col(mIn(i, 0))+= mGradientOut.row(i);
-			//posBiasGradient.col(i) += mGradientOut.row(i);
+			_bias.col(mIn(i, 0))+= mGradientOut.row(i);
+			_bias2.col(i) += mGradientOut.row(i);
 		}
 		//it should be the first layer because tokenizer is static
 		//assert(_bFirstLayer);
+	}
+
+	///////////////////////////////////////////////////////////////
+	bool LayerEmbed::has_weights() const
+	{
+		return false;
+	}
+	
+	///////////////////////////////////////////////////////////////
+	bool LayerEmbed::has_biases() const
+	{
+		return true;
+	}
+	///////////////////////////////////////////////////////////////
+	std::vector<MatrixFloat*> LayerEmbed::biases()
+	{
+		std::vector<MatrixFloat*> v;
+		v.push_back(&_bias);
+		v.push_back(&_bias2);
+		return v;
+	}
+	///////////////////////////////////////////////////////////////
+	std::vector<MatrixFloat*> LayerEmbed::gradient_biases()
+	{
+		std::vector<MatrixFloat*> v;
+		v.push_back(&_gradientBias);
+		v.push_back(&_gradientBias2);
+		return v;
 	}
 	///////////////////////////////////////////////////////////////
 }

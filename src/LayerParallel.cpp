@@ -79,8 +79,6 @@ namespace beednn {
 					mGradientIn += mf;
 				}
 
-				mGradientIn += mf;
-
 				start += n;
 			}
 		}
@@ -119,4 +117,73 @@ namespace beednn {
 			}
 		}
 	}
+	///////////////////////////////////////////////////////////////
+	bool LayerParallel::has_weights() const
+	{
+		for (auto layer : _Layers)
+			if (layer->has_weights())
+				return true;
+		return false;
+	}
+	///////////////////////////////////////////////////////////////
+	std::vector<MatrixFloat*> LayerParallel::weights()
+	{
+		std::vector<MatrixFloat*> v;
+		for (auto layer : _Layers)
+			if (layer->has_weights()) {
+				auto vi = layer->weights();
+				if (vi.size() > 0) {
+					v.insert(v.end(), vi.begin(), vi.end());
+				}
+			}
+		return v;
+	}
+	///////////////////////////////////////////////////////////////
+	std::vector<MatrixFloat*> LayerParallel::gradient_weights()
+	{
+		std::vector<MatrixFloat*> v;
+		for (auto layer : _Layers)
+			if (layer->has_weights()) {
+				auto vi = layer->gradient_weights();
+				if (vi.size() > 0) {
+					v.insert(v.end(), vi.begin(), vi.end());
+				}
+			}
+		return v;
+	}
+	///////////////////////////////////////////////////////////////
+	bool LayerParallel::has_biases() const
+	{
+		for (auto layer : _Layers)
+			if (layer->has_biases())
+				return true;
+		return false;
+	}
+	///////////////////////////////////////////////////////////////
+	std::vector<MatrixFloat*> LayerParallel::biases()
+	{
+		std::vector<MatrixFloat*> v;
+		for (auto layer : _Layers)
+			if (layer->has_biases()) {
+				auto vi = layer->biases();
+				if (vi.size() > 0) {
+					v.insert(v.end(), vi.begin(), vi.end());
+				}
+			}
+		return v;
+	}
+	///////////////////////////////////////////////////////////////
+	std::vector<MatrixFloat*> LayerParallel::gradient_biases()
+	{
+		std::vector<MatrixFloat*> v;
+		for (auto layer : _Layers)
+			if (layer->has_biases()) {
+				auto vi = layer->gradient_biases();
+				if (vi.size() > 0) {
+					v.insert(v.end(), vi.begin(), vi.end());
+				}
+			}
+		return v;
+	}
+	///////////////////////////////////////////////////////////////
 }

@@ -33,15 +33,15 @@ public:
 
     void set_weight_initializer(const std::string& _sWeightInitializer);
     std::string weight_initializer() const;
-    bool has_weights() const;
-    std::vector<MatrixFloat*> weights();
-    std::vector<MatrixFloat*> gradient_weights();
+    virtual bool has_weights() const;
+    virtual std::vector<MatrixFloat*> weights();
+    virtual std::vector<MatrixFloat*> gradient_weights();
 
     void set_bias_initializer(const std::string& _sBiasInitializer);
     std::string bias_initializer() const;
-	bool has_biases() const;
-    std::vector<MatrixFloat*> biases();
-    std::vector<MatrixFloat*> gradient_biases();
+    virtual bool has_biases() const;
+    virtual std::vector<MatrixFloat*> biases();
+    virtual std::vector<MatrixFloat*> gradient_biases();
 
 protected:
     MatrixFloat _weight,_gradientWeight;

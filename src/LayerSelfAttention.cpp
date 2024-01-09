@@ -25,6 +25,6 @@ namespace beednn {
 			for (int f = s + 1; f < mf.cols(); f++) {
 				mf(s, f) = 0;
 			}
-		LayerSelfDot::backpropagation(mIn, mf, mGradientIn);
+		LayerSelfDot::backpropagation(mIn, mf, mGradientIn);//this might be before zeroing
 	}
 }
