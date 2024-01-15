@@ -2,7 +2,7 @@
 
 namespace beednn {
 	LayerSelfAttention::LayerSelfAttention()
-		:Layer("LayerSelfAttention") {
+		:LayerSelfDot("LayerSelfAttention") {
 	}
 	Layer* LayerSelfAttention::clone() const
 	{

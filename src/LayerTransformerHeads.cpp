@@ -12,12 +12,12 @@ namespace beednn {
 						new LayerSequential({
 							new LayerStacked({
 								new LayerDense(iDimmensionSize,iHeadMem, sWeightInitializer, sBiasInitializer)
-							},None,2),
+							},ROWSTACK,2),
 							new LayerSelfAttention(),
 							new LayerSoftmax(),
 						})
-					},Dot)
-				},None,iNumHeads),
+					},DOT)
+				},ROWSTACK,iNumHeads),
 				new LayerDense(iNumHeads * iHeadMem, iDimmensionSize, sWeightInitializer, sBiasInitializer)
 			})
 			}, SUM) {}

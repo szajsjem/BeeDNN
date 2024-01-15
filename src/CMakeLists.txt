@@ -52,6 +52,15 @@ set(BEEDNN_FILES
 	LayerTimeDistributedDot.cpp LayerTimeDistributedDot.h
 	LayerUniformNoise.cpp LayerUniformNoise.h
 	LayerZeroPadding2D.cpp LayerZeroPadding2D.h
+	LayerEmbed.cpp LayerEmbed.h
+	LayerNormalize.cpp LayerNormalize.h
+	LayerParallel.cpp LayerParallel.h
+	LayerSelfAttention.cpp LayerSelfAttention.h
+	LayerSelfDot.cpp LayerSelfDot.h
+	LayerSequential.cpp LayerSequential.h
+	LayerStacked.cpp LayerStacked.h
+	LayerTransformerFeedForward.cpp LayerTransformerFeedForward.h
+	LayerTransformerHeads.cpp LayerTransformerHeads.h
 	Loss.cpp Loss.h
 	Matrix.cpp Matrix.h
 	MetaOptimizer.cpp MetaOptimizer.h

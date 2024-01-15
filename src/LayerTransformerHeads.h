@@ -8,7 +8,6 @@
 #include "LayerStacked.h"
 #include "LayerParallel.h"
 #include "LayerSequential.h"
-#include "LayerCopy.h"
 #include "LayerNormalize.h"
 #include "LayerSelfAttention.h"
 #include "LayerActivation.h"
@@ -19,3 +18,4 @@ namespace beednn {
 	public:
 		explicit LayerTransformerHeads(const int iDimmensionSize, const int iHeadMem, const int iNumHeads, const std::string& sWeightInitializer, const std::string& sBiasInitializer);
 	};
+}

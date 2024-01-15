@@ -733,4 +733,7 @@ const MatrixFloat fromFile(const std::string& sFile);
 const MatrixFloat fromString(const std::string& s);
 bool toFile(const std::string& sFile, const MatrixFloat & m);
 
+MatrixFloat concatenateRows(MatrixFloat a, MatrixFloat b);
+MatrixFloat concatenateCols(MatrixFloat a, MatrixFloat b);
+
 }

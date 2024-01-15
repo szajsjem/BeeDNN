@@ -566,4 +566,28 @@ void reverseData(float* pData, Index iSize)
 		*pData++ = *pDataEnd--;
 }
 ///////////////////////////////////////////////////////////////////////////
+MatrixFloat concatenateRows(MatrixFloat a, MatrixFloat b) {
+	assert(a.cols() == b.cols());
+	MatrixFloat out(a.rows() + b.rows(), a.cols());
+	for (int i = 0; i < a.rows(); i++) {
+		out.row(i) = a.row(i);
+	}
+	for (int i = 0; i < b.rows(); i++) {
+		out.row(a.rows() + i) = b.row(i);
+	}
+	return out;
+}
+///////////////////////////////////////////////////////////////////////////
+MatrixFloat concatenateCols(MatrixFloat a, MatrixFloat b) {
+	assert(a.rows() == b.rows());
+	MatrixFloat out( a.rows(), a.cols() + b.cols());
+	for (int i = 0; i < a.cols(); i++) {
+		out.col(i) = a.col(i);
+	}
+	for (int i = 0; i < b.cols(); i++) {
+		out.col(a.cols() + i) = b.col(i);
+	}
+	return out;
+}
+///////////////////////////////////////////////////////////////////////////
 }

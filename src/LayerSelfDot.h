@@ -7,6 +7,8 @@ namespace beednn {
 
 	class LayerSelfDot : public Layer
 	{
+	protected:
+		LayerSelfDot(const std::string& sType);
 	public:
 		explicit LayerSelfDot();
 		virtual ~LayerSelfDot() override;

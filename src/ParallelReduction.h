@@ -2,8 +2,9 @@
 
 namespace beednn {
 	enum ParallelReduction {
-		None,
+		ROWSTACK,
+		COLSTACK,
 		SUM,
-		Dot,
+		DOT,
 	};
 }

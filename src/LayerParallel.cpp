@@ -41,28 +41,32 @@ namespace beednn {
 	///////////////////////////////////////////////////////////////////////////////
 	void LayerParallel::forward(const MatrixFloat& mIn, MatrixFloat& mOut)
 	{
+		mOut.resize(0, 0);//todo save output sizes of diffrent layers
 		for (auto x : _Layers) {
 			MatrixFloat mf;
 			x->forward(mIn, mf);
-			if (mOut.size() == 0) {
+			if (mOut.size() == 0 || *_Layers.begin()==x) {
 				mOut = mf;
 			}
 			else if (_ParallelReduction == SUM) {
 				mOut += mf;
 			}
-			else if (_ParallelReduction == None) {
-				for (int i = 0; i < mf.rows(); i++)
-					mOut.row(mOut.rows()) = mf.row(i);
-			}
-			else if (_ParallelReduction == Dot) {
+			else if (_ParallelReduction == DOT) {
 				mOut *= mf;
+			}
+			else if (_ParallelReduction == ROWSTACK) {
+				mOut = concatenateRows(mOut, mf);
+			}
+			else if (_ParallelReduction == COLSTACK) {
+				mOut = concatenateCols(mOut, mf);
 			}
 		}
 	}
 	///////////////////////////////////////////////////////////////////////////////
 	void LayerParallel::backpropagation(const MatrixFloat& mIn, const MatrixFloat& mGradientOut, MatrixFloat& mGradientIn)
 	{
-		if (_ParallelReduction == None) {
+		mGradientIn.resize(0, 0);//todo save output sizes of diffrent layers
+		if (_ParallelReduction == ROWSTACK) {
 			Index start = 0, n = mGradientOut.rows();
 			for (auto x : _Layers) {
 				MatrixFloat mf;
@@ -82,7 +86,27 @@ namespace beednn {
 				start += n;
 			}
 		}
-		else if (_ParallelReduction == SUM) {
+		if (_ParallelReduction == COLSTACK) {
+			Index start = 0, n = mGradientOut.cols();
+			for (auto x : _Layers) {
+				MatrixFloat mf;
+				MatrixFloat temp;
+				x->forward(mIn, temp);
+				n = temp.cols();
+
+				//assert(start+n<=mGradientOut.rows())
+				x->backpropagation(mIn, mGradientOut.middleCols(start, n), mf);
+				if (mGradientIn.size() == 0) {
+					mGradientIn = mf;
+				}
+				else {
+					mGradientIn += mf;
+				}
+
+				start += n;
+			}
+		}
+		if (_ParallelReduction == SUM) {
 			for (auto x : _Layers) {
 				MatrixFloat mf;
 				x->backpropagation(mIn, mGradientOut, mf);
@@ -94,20 +118,26 @@ namespace beednn {
 				}
 			}
 		}
-		else if (_ParallelReduction == Dot) {
+		if (_ParallelReduction == DOT) {
 			std::vector<MatrixFloat> mOuts(_Layers.size());
 			for (int i = 0; i < _Layers.size(); i++)
 				_Layers[i]->forward(mIn, mOuts[i]);
 
 			MatrixFloat mG = mGradientOut;
 			for (int i = _Layers.size() - 1; i >= 0; i--) {
-				MatrixFloat mf, mD(1);
-				for (int j = 0; j < i; j++) {
-					mD *= mOuts[j];
+				MatrixFloat mf, mD;
+				if (i > 0) {
+					mD = mOuts[0];
+					for (int j = 1; j < i; j++) {
+						mD *= mOuts[j];
+					}
+					_Layers[i]->backpropagation(mIn, mD.transpose() * mG, mf);//todo check mD*mG
+					mG *= mOuts[i].transpose();
 				}
-				_Layers[i]->backpropagation(mIn, mG * mD, mf);//todo check mD*mG
-
-				mG *= mOuts[i].inverse();
+				else {
+					_Layers[i]->backpropagation(mIn, mG, mf);//todo check mD*mG
+				}
+				//mG *= mOuts[i].inverse();//inverse symbol not found
 				if (mGradientIn.size() == 0) {
 					mGradientIn = mf;
 				}
@@ -132,7 +162,7 @@ namespace beednn {
 		for (auto layer : _Layers)
 			if (layer->has_weights()) {
 				auto vi = layer->weights();
-				if (vi.size() > 0) {
+				if (vi.size() > 0) {//this probably not needed
 					v.insert(v.end(), vi.begin(), vi.end());
 				}
 			}

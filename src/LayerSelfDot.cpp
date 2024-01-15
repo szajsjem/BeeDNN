@@ -1,8 +1,8 @@
 #include "LayerSelfDot.h"
 
 namespace beednn {
-	LayerSelfDot::LayerSelfDot() :
-		Layer("LayerSelfDot")
+	LayerSelfDot::LayerSelfDot(const std::string& sType) :
+		Layer("sType")
 	{
 	}
 	///////////////////////////////////////////////////////////////////////////////
@@ -29,6 +29,7 @@ namespace beednn {
 	///////////////////////////////////////////////////////////////////////////////
 	void LayerSelfDot::backpropagation(const MatrixFloat& mIn, const MatrixFloat& mGradientOut, MatrixFloat& mGradientIn)
 	{
+		mGradientIn.resizeLike(mIn);
 		int middle = mIn.rows() / 2;
 		mGradientIn.middleRows(middle, middle) = mIn.middleRows(0, middle).transpose() * mGradientOut ;
 		mGradientIn.middleRows(0, middle) = mGradientOut * mIn.middleRows(middle, middle).transpose();//might be reverse or might be completly diffrent

@@ -51,13 +51,13 @@ namespace beednn {
 		std::vector<MatrixFloat> in; in.push_back(mIn);
 		for (auto x : _Layers) {//todo optimize this in netfit
 			MatrixFloat mf;
-			x->forward(*(in.end()), mf);
+			x->forward(*(in.end()-1), mf);
 			in.push_back(mf);
 		}
 		in.pop_back();
 		MatrixFloat grad = mGradientOut;
 		for (auto it = _Layers.rbegin(); it != _Layers.rend(); it++) {
-			(*it)->backpropagation(*(in.end()), grad, mGradientIn);
+			(*it)->backpropagation(*(in.end()-1), grad, mGradientIn);
 			grad = mGradientIn;
 			in.pop_back();
 		}

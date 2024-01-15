@@ -1,8 +1,9 @@
 #include "LayerTransformerFeedForward.h"
 
 namespace beednn {
-	LayerTransformerFeedForward::LayerTransformerFeedForward(Index iDimmensionSize, Index iMemorySize, const string& sActivation, const std::string& sWeightInitializer = "GlorotUniform", const std::string& sBiasInitializer = "Zeros")
-		:LayerParallel({ new LayerActivation("Identity"),
+	LayerTransformerFeedForward::LayerTransformerFeedForward(const Index iDimmensionSize, const  Index iMemorySize, const std::string& sActivation, const std::string& sWeightInitializer, const std::string& sBiasInitializer)
+		:LayerParallel({ 
+			new LayerActivation("Identity"),
 			new LayerSequential({
 				new LayerNormalize(),
 				new LayerDense(iDimmensionSize, iMemorySize, sWeightInitializer, sBiasInitializer),

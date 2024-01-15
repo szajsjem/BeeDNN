@@ -1,8 +1,9 @@
 #include "LayerEmbed.h"
 
+#include "Initializers.h"
 namespace beednn {
 	///////////////////////////////////////////////////////////////////////////////
-	LayerEmbed::LayerEmbed(const Index vocabSize,const Index dimensionSize,const Index maxPositon, const string& sBiasInitializer) :
+	LayerEmbed::LayerEmbed(const Index vocabSize,const Index dimensionSize,const Index maxPositon, const std::string& sBiasInitializer) :
 		Layer("Normalize"),
 		_pPositionSize(maxPositon),
 		_pVocabSize(vocabSize),
@@ -52,8 +53,8 @@ namespace beednn {
 	void LayerEmbed::backpropagation(const MatrixFloat& mIn, const MatrixFloat& mGradientOut, MatrixFloat& mGradientIn)
 	{
 		for (int i = 0; i < mIn.rows(); i++) {
-			_bias.col(mIn(i, 0))+= mGradientOut.row(i);
-			_bias2.col(i) += mGradientOut.row(i);
+			_gradientBias.col(mIn(i, 0))+= mGradientOut.row(i);
+			_gradientBias2.col(i) += mGradientOut.row(i);
 		}
 		//it should be the first layer because tokenizer is static
 		//assert(_bFirstLayer);

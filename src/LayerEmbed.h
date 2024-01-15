@@ -6,7 +6,7 @@ namespace beednn {
 	class LayerEmbed : public Layer
 	{
 	public:
-		explicit LayerEmbed(const Index vocabSize, const Index dimensionSize, const Index maxPositon, const string& sBiasInitializer);
+		explicit LayerEmbed(const Index vocabSize, const Index dimensionSize, const Index maxPositon, const std::string& sBiasInitializer);
 		virtual ~LayerEmbed() override;
 
 		virtual Layer* clone() const override;
@@ -16,6 +16,7 @@ namespace beednn {
 		virtual void forward(const MatrixFloat& mIn, MatrixFloat& mOut) override;
 		virtual void backpropagation(const MatrixFloat& mIn, const MatrixFloat& mGradientOut, MatrixFloat& mGradientIn) override;
 
+		virtual bool has_weights() const;
 		virtual bool has_biases() const;
 		virtual std::vector<MatrixFloat*> biases();
 		virtual std::vector<MatrixFloat*> gradient_biases();
