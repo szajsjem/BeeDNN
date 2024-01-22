@@ -25,7 +25,7 @@ int main()
 	const int seqlen = 6;
 
 	Net model;
-	model.add(new LayerEmbed(vocabSize, dimmSize, seqlen));
+	model.add(new LayerEmbed(vocabSize, dimmSize, seqlen,"Uniform"));
 	for (int i = 0; i < layers; i++) {
 		model.add(new LayerTransformerHeads(dimmSize, dimmSize / numheads, dimmSize / numheads, numheads));
 		model.add(new LayerTransformerFeedForward(dimmSize, 4 * dimmSize, "Relu"));
@@ -33,6 +33,8 @@ int main()
 	model.add(new LayerNormalize());
 	model.add(new LayerDot(dimmSize, vocabSize));
 	model.add(new LayerSoftmax());
+
+	model.set_classification_mode(false);
 
 	//set the train data
 	float dSamples[] = { 1,   0,   1,   0,   1,   0 };
