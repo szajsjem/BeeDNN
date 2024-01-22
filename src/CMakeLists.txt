@@ -72,6 +72,6 @@ set(BEEDNN_FILES
 	Optimizer.cpp Optimizer.h
 	Regularizer.cpp Regularizer.h
 	StandardScaler.cpp StandardScaler.h
-)
+	LayerTranspose.cpp LayerTranspose.h)
 include_directories(.)
 add_library( libBeeDNN STATIC ${BEEDNN_FILES})

@@ -11,11 +11,12 @@
 #include "LayerNormalize.h"
 #include "LayerSelfAttention.h"
 #include "LayerActivation.h"
+#include "LayerTranspose.h"
 
 namespace beednn {
 	class LayerTransformerHeads : public LayerParallel
 	{
 	public:
-		explicit LayerTransformerHeads(const int iDimmensionSize, const int iHeadMem, const int iNumHeads, const std::string& sWeightInitializer, const std::string& sBiasInitializer);
+		explicit LayerTransformerHeads(const int iDimmensionSize, const int iHeadVMem, const int iHeadQKMem, const int iNumHeads, const std::string& sWeightInitializer = "GlorotUniform", const std::string& sBiasInitializer = "Zeros");
 	};
 }

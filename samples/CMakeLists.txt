@@ -26,3 +26,6 @@ target_link_libraries(sample_classification_MNIST libBeeDNN)
 
 add_executable(sample_classification_CIFAR10 sample_classification_CIFAR10.cpp  )
 target_link_libraries(sample_classification_CIFAR10 libBeeDNN)
+
+add_executable(Transformer_example Transformer_example.cpp  )
+target_link_libraries(Transformer_example libBeeDNN)

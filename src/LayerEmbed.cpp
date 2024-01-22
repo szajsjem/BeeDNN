@@ -27,10 +27,10 @@ namespace beednn {
 	///////////////////////////////////////////////////////////////////////////////
 	void LayerEmbed::init()
 	{
-		_bias.resize(_pDimensionSize, _pVocabSize);
-		Initializers::compute(bias_initializer(), _bias, _pDimensionSize, _pVocabSize);
-		_bias2.resize(_pDimensionSize, _pPositionSize);
-		Initializers::compute(bias_initializer(), _bias, _pDimensionSize, _pPositionSize);
+		_bias.resize(_pVocabSize, _pDimensionSize);
+		Initializers::compute(bias_initializer(), _bias, _pVocabSize, _pDimensionSize);
+		_bias2.resize(_pPositionSize, _pDimensionSize);
+		Initializers::compute(bias_initializer(), _bias2, _pPositionSize, _pDimensionSize);
 		Layer::init();
 	}
 	///////////////////////////////////////////////////////////////////////////////
@@ -41,22 +41,24 @@ namespace beednn {
 		//assert(mIn.rows()<possize && >0    
 		//or we just scale position and vocab size up
 
-		for (int i = 0; i < mIn.rows(); i++) {//or mIn.cols()
-			MatrixFloat encodedToken;
-			encodedToken += _bias.col(mIn(i, 0));
-			encodedToken += _bias2.col(i);
-			//mOut.addCol(encodedToken); //somthing like that \/ below
-			mOut.col(mOut.cols()) = encodedToken.col(0);
+		mOut.resize(mIn.rows(), _pDimensionSize); 
+
+		for (int i = 0; i < mIn.rows(); i++) {
+			mOut.row(i) = _bias.row(mIn(i, 0));
+			mOut.row(i) += _bias2.row(i % _pPositionSize);
 		}
 	}
 	///////////////////////////////////////////////////////////////////////////////
 	void LayerEmbed::backpropagation(const MatrixFloat& mIn, const MatrixFloat& mGradientOut, MatrixFloat& mGradientIn)
 	{
+		_gradientBias.resizeLike(_bias);
+		_gradientBias2.resizeLike(_bias2);
 		for (int i = 0; i < mIn.rows(); i++) {
-			_gradientBias.col(mIn(i, 0))+= mGradientOut.row(i);
-			_gradientBias2.col(i) += mGradientOut.row(i);
+			_gradientBias.row(mIn(i, 0))+= mGradientOut.row(i);
+			_gradientBias2.row(i) += mGradientOut.row(i);
 		}
-		//it should be the first layer because tokenizer is static
+		//it should be the first layer because tokenizer can process text into diffrent number of tokens,
+		// i don't think you can implement it as layer
 		//assert(_bFirstLayer);
 	}
 

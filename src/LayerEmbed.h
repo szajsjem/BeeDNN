@@ -6,7 +6,7 @@ namespace beednn {
 	class LayerEmbed : public Layer
 	{
 	public:
-		explicit LayerEmbed(const Index vocabSize, const Index dimensionSize, const Index maxPositon, const std::string& sBiasInitializer);
+		explicit LayerEmbed(const Index vocabSize, const Index dimensionSize, const Index maxPositon, const std::string& sBiasInitializer = "Zeros");
 		virtual ~LayerEmbed() override;
 
 		virtual Layer* clone() const override;

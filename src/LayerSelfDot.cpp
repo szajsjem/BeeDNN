@@ -24,14 +24,14 @@ namespace beednn {
 	{
 		//assert(mIn.rows%2==0)
 		int middle = mIn.rows() / 2;
-		mOut = mIn.middleRows(0, middle) * mIn.middleRows(middle, middle);
+		mOut = mIn.middleRows(0, middle).transpose() * mIn.middleRows(middle, middle);
 	}
 	///////////////////////////////////////////////////////////////////////////////
 	void LayerSelfDot::backpropagation(const MatrixFloat& mIn, const MatrixFloat& mGradientOut, MatrixFloat& mGradientIn)
 	{
 		mGradientIn.resizeLike(mIn);
 		int middle = mIn.rows() / 2;
-		mGradientIn.middleRows(middle, middle) = mIn.middleRows(0, middle).transpose() * mGradientOut ;
-		mGradientIn.middleRows(0, middle) = mGradientOut * mIn.middleRows(middle, middle).transpose();//might be reverse or might be completly diffrent
+		mGradientIn.middleRows(middle, middle) = mIn.middleRows(0, middle) * mGradientOut ;//might be reverse or might be completly diffrent
+		mGradientIn.middleRows(0, middle) = mIn.middleRows(middle, middle) * mGradientOut;
 	}
 }

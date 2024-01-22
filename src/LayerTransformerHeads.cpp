@@ -1,24 +1,25 @@
 #include "LayerTransformerHeads.h"
 
 namespace beednn {
-	LayerTransformerHeads::LayerTransformerHeads(const int iDimmensionSize, const int iHeadMem, const int iNumHeads, const std::string& sWeightInitializer, const std::string& sBiasInitializer)
+	LayerTransformerHeads::LayerTransformerHeads(const int iDimmensionSize, const int iHeadVMem, const int iHeadQKMem, const int iNumHeads, const std::string& sWeightInitializer, const std::string& sBiasInitializer)
 		:LayerParallel({
 			new LayerActivation("Identity"),
 			new LayerSequential({
 				new LayerNormalize(),
 				new LayerStacked({
 					new LayerParallel({
-						new LayerDense(iDimmensionSize,iHeadMem, sWeightInitializer, sBiasInitializer),
+						new LayerDense(iDimmensionSize,iHeadVMem, sWeightInitializer, sBiasInitializer),
 						new LayerSequential({
 							new LayerStacked({
-								new LayerDense(iDimmensionSize,iHeadMem, sWeightInitializer, sBiasInitializer)
+								new LayerDense(iDimmensionSize,iHeadQKMem, sWeightInitializer, sBiasInitializer)
 							},ROWSTACK,2),
 							new LayerSelfAttention(),
 							new LayerSoftmax(),
+							//new LayerTranspose()
 						})
 					},DOT)
-				},ROWSTACK,iNumHeads),
-				new LayerDense(iNumHeads * iHeadMem, iDimmensionSize, sWeightInitializer, sBiasInitializer)
+				},COLSTACK,iNumHeads),
+				new LayerDense(iNumHeads * iHeadVMem, iDimmensionSize, sWeightInitializer, sBiasInitializer)
 			})
 			}, SUM) {}
 }
