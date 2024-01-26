@@ -38,6 +38,8 @@ NetTrain::NetTrain():
     _pLoss = create_loss("MeanSquaredError");
     _iBatchSize = 32;
 	_iBatchSizeAdjusted=-1; //invalid
+	_iBatchStepSize = 0;
+	_iBatchSizeAdjusted = _iBatchSize;
 	_iValidationBatchSize = 128;
 	_bKeepBest = true;
     _iEpochs = 100;
@@ -289,6 +291,16 @@ Index NetTrain::get_batchsize() const
     return _iBatchSize;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////
+void NetTrain::set_batchstepsize(Index iBatchStepSize) //16 by default
+{
+	_iBatchStepSize = iBatchStepSize;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////
+Index NetTrain::get_batchstepsize() const
+{
+	return _iBatchStepSize;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////
 void NetTrain::set_validation_batchsize(Index iValBatchSize) //128 by default
 {
 	_iValidationBatchSize = iValBatchSize;
@@ -422,6 +434,9 @@ void NetTrain::fit(Net& rNet)
     int iReboost = 0;
 
     Net bestNet;
+
+	if (_iBatchStepSize > 0)_iBatchStepAdjusted = _iBatchStepSize;
+	else _iBatchStepAdjusted = _iBatchSize;
 
     //accept batch size == 0 or greater than nb samples  -> full size
     _iBatchSizeAdjusted=_iBatchSize;
@@ -754,7 +769,7 @@ void NetTrain::train_one_epoch(const MatrixFloat& mSampleShuffled, const MatrixF
 		auto mTarget = viewRow(mTruthShuffled, iBatchStart, iBatchEnd);
 		train_batch(mSample, mTarget);
 
-		iBatchStart = iBatchEnd;
+		iBatchStart += _iBatchStepAdjusted;
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////

@@ -64,6 +64,9 @@ public:
 	void set_batchsize(Index iBatchSize); //32 by default
 	Index get_batchsize() const;
 
+	void set_batchstepsize(Index iBatchSize); //0 = batchsize by default
+	Index get_batchstepsize() const;
+
 	void set_classbalancing(bool bBalancing); //true by default //use weight loss algorithm
 	bool get_classbalancing() const;
 
@@ -98,7 +101,7 @@ public:
 protected:
 	virtual void train_one_epoch(const MatrixFloat& mSampleShuffled, const MatrixFloat& mTruthShuffled);
 	void add_online_statistics(const MatrixFloat&mPredicted, const MatrixFloat&mTruth);	//online statistics, i.e. loss, accuracy ..
-	Index _iBatchSize,_iBatchSizeAdjusted;
+	Index _iBatchSize,_iBatchSizeAdjusted, _iBatchStepSize, _iBatchStepAdjusted;
 	Loss* _pLoss;
 	Regularizer* _pRegularizer;
 	std::vector<Optimizer*> _optimizers;

@@ -72,7 +72,47 @@ public:
             balance_with_weight(mTruth, mGradientLoss);
     }
 };
+//////////////////////////////////////////////////////////////////////////////
+class LossMeanSquaredErrorLLM :public Loss {
+    string name() const override
+    {
+        return "MeanSquaredErrorLLM";
+    }
 
+    void compute(const MatrixFloat& mPredicted, const MatrixFloat& mTruth, MatrixFloat& mLoss) const override
+    {
+        assert(mTruth.cols() == mPredicted.cols());
+        assert(mTruth.rows() == mPredicted.rows());
+
+        MatrixFloat mult(1, mPredicted.cols());
+        for (int i = 0; i < mult.cols(); i++)
+            mult(0, i) = i*i;
+        mult /= mult.mean();
+        MatrixFloat r =  (mPredicted - mTruth);
+        for(int i=0;i<r.cols();i++)r.col(i) *= mult.col(0);
+        mLoss = colWiseMean(r.cwiseAbs2());
+
+        if (_bClassBalancing)
+            balance_with_weight(mTruth, mLoss);
+    }
+
+    void compute_gradient(const MatrixFloat& mPredicted, const MatrixFloat& mTruth, MatrixFloat& mGradientLoss) const override
+    {
+        assert(mTruth.cols() == mPredicted.cols());
+        assert(mTruth.rows() == mPredicted.rows());
+
+        MatrixFloat mult(1, mPredicted.cols());
+        for (int i = 0; i < mult.cols(); i++)
+            mult(0, i) = i * i;
+        mult /= mult.mean();
+        MatrixFloat r = (mPredicted - mTruth);
+        for (int i = 0; i < r.cols(); i++)r.col(i) *= mult.col(0);
+        mGradientLoss = r / (float)mPredicted.cols();
+
+        if (_bClassBalancing)
+            balance_with_weight(mTruth, mGradientLoss);
+    }
+};
 //////////////////////////////////////////////////////////////////////////////
 //Huber Loss from https://en.wikipedia.org/wiki/Huber_loss
 #define HUBER_SIGMA (1.f)

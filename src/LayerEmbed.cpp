@@ -45,7 +45,7 @@ namespace beednn {
 
 		for (int i = 0; i < mIn.rows(); i++) {
 			mOut.row(i) = _bias.row(mIn(i, 0));
-			mOut.row(i) += _bias2.row(i % _pPositionSize);
+			mOut.row(i) += _bias2.row(i % _pPositionSize);//idk how do you extend position encoding
 		}
 	}
 	///////////////////////////////////////////////////////////////////////////////
@@ -55,7 +55,7 @@ namespace beednn {
 		_gradientBias2.resizeLike(_bias2);
 		for (int i = 0; i < mIn.rows(); i++) {
 			_gradientBias.row(mIn(i, 0))+= mGradientOut.row(i);
-			_gradientBias2.row(i) += mGradientOut.row(i);
+			_gradientBias2.row(i % _pPositionSize) += mGradientOut.row(i);
 		}
 		//it should be the first layer because tokenizer can process text into diffrent number of tokens,
 		// i don't think you can implement it as layer

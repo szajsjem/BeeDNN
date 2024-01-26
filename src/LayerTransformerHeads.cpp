@@ -8,7 +8,6 @@ namespace beednn {
 				new LayerNormalize(),
 				new LayerStacked({
 					new LayerParallel({
-						new LayerDense(iDimmensionSize,iHeadVMem, sWeightInitializer, sBiasInitializer),
 						new LayerSequential({
 							new LayerStacked({
 								new LayerDense(iDimmensionSize,iHeadQKMem, sWeightInitializer, sBiasInitializer)
@@ -16,7 +15,8 @@ namespace beednn {
 							new LayerSelfAttention(),
 							new LayerSoftmax(),
 							//new LayerTranspose()
-						})
+						}),
+						new LayerDense(iDimmensionSize,iHeadVMem, sWeightInitializer, sBiasInitializer),
 					},DOT)
 				},COLSTACK,iNumHeads),
 				new LayerDense(iNumHeads * iHeadVMem, iDimmensionSize, sWeightInitializer, sBiasInitializer)
