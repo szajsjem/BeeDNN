@@ -46,6 +46,8 @@ NetTrain::NetTrain():
     _iReboostEveryEpochs = -1; // -1 mean no reboost
 	_iOnlineAccuracyGood= 0;
 
+	_bRandomBatchOrder = true;
+
     _fLearningRate = -1.f; //default
     _fDecay = -1.f; //default
     _fMomentum = -1.f; //default
@@ -291,7 +293,17 @@ Index NetTrain::get_batchsize() const
     return _iBatchSize;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////
-void NetTrain::set_batchstepsize(Index iBatchStepSize) //16 by default
+void NetTrain::set_RandomBatchOrder(bool bRandomBatchOrder) //true by default
+{
+	_bRandomBatchOrder = bRandomBatchOrder;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////
+bool NetTrain::get_RandomBatchOrder() const
+{
+	return _bRandomBatchOrder;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////
+void NetTrain::set_batchstepsize(Index iBatchStepSize) //0 by default
 {
 	_iBatchStepSize = iBatchStepSize;
 }
@@ -346,8 +358,10 @@ float NetTrain::compute_loss_accuracy(const MatrixFloat &mSamples, const MatrixF
 
 	//cut in parts of size _iValidationBatchSize for a lower memory usage
 	Index iGood = 0;
-
-	for (Index iStart = 0; iStart < iNbSamples; iStart+=_iValidationBatchSize)
+	Index iStep = _iBatchStepSize;
+	if (iStep <= 0)iStep = _iValidationBatchSize;
+#pragma omp parallel for
+	for (Index iStart = 0; iStart < iNbSamples; iStart+= iStep)
 	{
 		Index iEnd = iStart + _iValidationBatchSize;
 		if (iEnd > iNbSamples)
@@ -471,11 +485,13 @@ void NetTrain::fit(Net& rNet)
         MatrixFloat mSampleShuffled;
         MatrixFloat mTruthShuffled;
 
-        if (_iBatchSizeAdjusted < iNbSamples)
+        if (_bRandomBatchOrder && _iBatchSizeAdjusted < iNbSamples)
         {
             auto vShuffle = randPerm(iNbSamples);
             applyRowPermutation(vShuffle, mSamples, mSampleShuffled);
             applyRowPermutation(vShuffle, mTruth, mTruthShuffled);
+			mSampleShuffled = mSamples; //todo remove copy
+			mTruthShuffled = mTruth;
         }
         else
         {
@@ -566,6 +582,48 @@ void NetTrain::fit(Net& rNet)
 
 	if(_bKeepBest)
 		(*_pNet).operator=(bestNet);
+}
+void NetTrain::slowfit(Net& rNet)
+{
+	set_net(rNet);
+
+	if (_pNet == nullptr)
+		return;
+
+	_iNbLayers = _pNet->layers().size();
+	if (_iNbLayers == 0)
+		return; //nothing to do
+
+	update_class_weight();
+
+	const MatrixFloat& mSamples = *_pmSamplesTrain;
+	const MatrixFloat& mTruth = *_pmTruthTrain;
+
+	Net bestNet;
+	float fMaxAccuracy = 0;
+
+	float loss = compute_loss_accuracy(mSamples, mTruth, &fMaxAccuracy);
+	std::vector<MatrixFloat*> trainableWeights;
+
+	trainableWeights.insert(trainableWeights.end(), _pWeights.begin(), _pWeights.end());
+	trainableWeights.insert(trainableWeights.end(), _pBiases.begin(), _pBiases.end());
+
+	for (int iEpoch = 0; iEpoch < _iEpochs; iEpoch++)
+	{
+		for(int i=0;i<trainableWeights.size();i++)
+			for(int y=0;y<trainableWeights[i]->rows();y++)
+				for (int x = 0; x < trainableWeights[i]->cols(); x++) {
+					(*trainableWeights[i])(y, x) += _fLearningRate;
+					float nLoss = compute_loss_accuracy(mSamples, mTruth, &fMaxAccuracy);
+					if (nLoss > loss) {
+						(*trainableWeights[i])(y, x) -= _fLearningRate*2;
+						nLoss = compute_loss_accuracy(mSamples, mTruth, &fMaxAccuracy);
+					}
+					loss = nLoss;
+				}
+		_fLearningRate *= 0.999;
+	}
+	_fTrainLoss = loss;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void NetTrain::train_batch(const MatrixFloat& mSample, const MatrixFloat& mTruth)

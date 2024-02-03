@@ -64,6 +64,9 @@ public:
 	void set_batchsize(Index iBatchSize); //32 by default
 	Index get_batchsize() const;
 
+	void set_RandomBatchOrder(bool bRandomBatchOrder); //true by default
+	bool get_RandomBatchOrder() const;
+
 	void set_batchstepsize(Index iBatchSize); //0 = batchsize by default
 	Index get_batchstepsize() const;
 
@@ -83,6 +86,7 @@ public:
 	Index get_validation_batchsize() const;
 
 	void fit(Net& rNet);
+	void slowfit(Net& rNet);
 
 	float compute_loss_accuracy(const MatrixFloat & mSamples, const MatrixFloat& mTruth,float* pfAccuracy = nullptr) const;
 
@@ -102,6 +106,7 @@ protected:
 	virtual void train_one_epoch(const MatrixFloat& mSampleShuffled, const MatrixFloat& mTruthShuffled);
 	void add_online_statistics(const MatrixFloat&mPredicted, const MatrixFloat&mTruth);	//online statistics, i.e. loss, accuracy ..
 	Index _iBatchSize,_iBatchSizeAdjusted, _iBatchStepSize, _iBatchStepAdjusted;
+	bool _bRandomBatchOrder;
 	Loss* _pLoss;
 	Regularizer* _pRegularizer;
 	std::vector<Optimizer*> _optimizers;

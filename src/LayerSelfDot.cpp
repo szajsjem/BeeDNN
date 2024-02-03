@@ -31,7 +31,7 @@ namespace beednn {
 	{
 		mGradientIn.resizeLike(mIn);
 		int middle = mIn.rows() / 2;
-		mGradientIn.middleRows(middle, middle) = mIn.middleRows(0, middle).transpose() * mGradientOut ;//might be reverse or might be completly diffrent
+		mGradientIn.middleRows(middle, middle) = (mIn.middleRows(0, middle).transpose() * mGradientOut).transpose() ;//might be reverse or might be completly diffrent
 		mGradientIn.middleRows(0, middle) = mGradientOut * mIn.middleRows(middle, middle);
 	}
 }

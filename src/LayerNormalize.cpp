@@ -43,6 +43,8 @@ namespace beednn {
 	void LayerNormalize::backpropagation(const MatrixFloat& mIn, const MatrixFloat& mGradientOut, MatrixFloat& mGradientIn)
 	{
 		mGradientIn.resizeLike(mIn);
+		//mGradientIn = mGradientOut;
+		//return;
 
 		for (int c = 0; c < mIn.rows(); c++) {
 			double avg = mIn.row(c).mean(), stdev = 0;

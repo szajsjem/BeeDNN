@@ -13,8 +13,7 @@ namespace beednn {
 								new LayerDense(iDimmensionSize,iHeadQKMem, sWeightInitializer, sBiasInitializer)
 							},ROWSTACK,2),
 							new LayerSelfAttention(),
-							new LayerSoftmax(),
-							//new LayerTranspose()
+							new LayerSoftmax()
 						}),
 						new LayerDense(iDimmensionSize,iHeadVMem, sWeightInitializer, sBiasInitializer),
 					},DOT)

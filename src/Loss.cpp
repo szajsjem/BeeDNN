@@ -72,11 +72,14 @@ public:
             balance_with_weight(mTruth, mGradientLoss);
     }
 };
-//////////////////////////////////////////////////////////////////////////////
-class LossMeanSquaredErrorLLM :public Loss {
+
+
+class LossAdjustedMeanSquaredError : public Loss
+{
+public:
     string name() const override
     {
-        return "MeanSquaredErrorLLM";
+        return "AdjustedMeanSquaredError";
     }
 
     void compute(const MatrixFloat& mPredicted, const MatrixFloat& mTruth, MatrixFloat& mLoss) const override
@@ -84,16 +87,16 @@ class LossMeanSquaredErrorLLM :public Loss {
         assert(mTruth.cols() == mPredicted.cols());
         assert(mTruth.rows() == mPredicted.rows());
 
-        MatrixFloat mult(1, mPredicted.cols());
-        for (int i = 0; i < mult.cols(); i++)
-            mult(0, i) = i*i;
-        mult /= mult.mean();
-        MatrixFloat r =  (mPredicted - mTruth);
-        for(int i=0;i<r.cols();i++)r.col(i) *= mult.col(0);
-        mLoss = colWiseMean(r.cwiseAbs2());
+        MatrixFloat diff = mPredicted - mTruth;
+        for (int i = 0; i < diff.rows(); i++) {
+            diff.row(i) *= i<(diff.rows()-1)?0:1;
+        }
+
+        mLoss = colWiseMean(diff.cwiseAbs2());
 
         if (_bClassBalancing)
             balance_with_weight(mTruth, mLoss);
+
     }
 
     void compute_gradient(const MatrixFloat& mPredicted, const MatrixFloat& mTruth, MatrixFloat& mGradientLoss) const override
@@ -101,18 +104,17 @@ class LossMeanSquaredErrorLLM :public Loss {
         assert(mTruth.cols() == mPredicted.cols());
         assert(mTruth.rows() == mPredicted.rows());
 
-        MatrixFloat mult(1, mPredicted.cols());
-        for (int i = 0; i < mult.cols(); i++)
-            mult(0, i) = i * i;
-        mult /= mult.mean();
-        MatrixFloat r = (mPredicted - mTruth);
-        for (int i = 0; i < r.cols(); i++)r.col(i) *= mult.col(0);
-        mGradientLoss = r / (float)mPredicted.cols();
+        mGradientLoss = (mPredicted - mTruth) / (float)mPredicted.cols();
 
         if (_bClassBalancing)
             balance_with_weight(mTruth, mGradientLoss);
+        
+        //for (int i = 0; i < mGradientLoss.rows(); i++) {
+        //    mGradientLoss.row(i) /= mGradientLoss.rows() - i;
+        //}
     }
 };
+
 //////////////////////////////////////////////////////////////////////////////
 //Huber Loss from https://en.wikipedia.org/wiki/Huber_loss
 #define HUBER_SIGMA (1.f)
@@ -582,6 +584,9 @@ Loss* create_loss(const string& sLoss)
 
     if(sLoss == "BinaryCrossEntropy")
         return new LossBinaryCrossEntropy;
+
+    if (sLoss == "AdjustedMeanSquaredError")
+        return new LossAdjustedMeanSquaredError;
 
     return nullptr;
 }
