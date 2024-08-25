@@ -45,7 +45,7 @@ namespace beednn {
 		for (auto x : _Layers) {
 			MatrixFloat mf;
 			x->forward(mIn, mf);
-			if (mOut.size() == 0 || *_Layers.begin()==x) {
+			if (mOut.size() == 0) {
 				mOut = mf;
 			}
 			else if (_ParallelReduction == SUM) {
@@ -146,6 +146,7 @@ namespace beednn {
 				}
 			}
 		}
+		mGradientIn /= _Layers.size();
 	}
 	///////////////////////////////////////////////////////////////
 	bool LayerParallel::has_weights() const

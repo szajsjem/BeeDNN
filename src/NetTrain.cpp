@@ -347,7 +347,6 @@ float NetTrain::compute_loss_accuracy(const MatrixFloat &mSamples, const MatrixF
 {
     Index iNbSamples = mSamples.rows();
 	float fLoss = 0.f;
-	MatrixFloat mOut,mTruthBatch, mSamplesBatch,mLoss;
 
 	if ((_pNet->layers().size() == 0) || (iNbSamples == 0))
 	{
@@ -360,9 +359,10 @@ float NetTrain::compute_loss_accuracy(const MatrixFloat &mSamples, const MatrixF
 	Index iGood = 0;
 	Index iStep = _iBatchStepSize;
 	if (iStep <= 0)iStep = _iValidationBatchSize;
-#pragma omp parallel for
+#pragma omp parallel for default(shared) reduction(+:fLoss,iGood)
 	for (Index iStart = 0; iStart < iNbSamples; iStart+= iStep)
 	{
+		MatrixFloat mOut, mTruthBatch, mSamplesBatch, mLoss;
 		Index iEnd = iStart + _iValidationBatchSize;
 		if (iEnd > iNbSamples)
 			iEnd = iNbSamples;
@@ -598,6 +598,8 @@ void NetTrain::slowfit(Net& rNet)
 
 	const MatrixFloat& mSamples = *_pmSamplesTrain;
 	const MatrixFloat& mTruth = *_pmTruthTrain;
+	const MatrixFloat& mSamplesV = _pmSamplesValidation != NULL ? *_pmSamplesValidation : *_pmSamplesTrain;
+	const MatrixFloat& mTruthV = _pmTruthValidation != NULL ? *_pmTruthValidation : *_pmTruthTrain;
 
 	Net bestNet;
 	float fMaxAccuracy = 0;
@@ -621,9 +623,13 @@ void NetTrain::slowfit(Net& rNet)
 					}
 					loss = nLoss;
 				}
-		_fLearningRate *= 0.999;
+		_fLearningRate *= 0.99;
+		_fTrainLoss = loss/mSamples.rows();
+		_fValidationLoss = compute_loss_accuracy(mSamplesV, mTruthV, &fMaxAccuracy);
+		if (_epochCallBack)
+			_epochCallBack();
+		_trainLoss.push_back(_fTrainLoss);
 	}
-	_fTrainLoss = loss;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void NetTrain::train_batch(const MatrixFloat& mSample, const MatrixFloat& mTruth)
@@ -645,6 +651,7 @@ void NetTrain::train_batch(const MatrixFloat& mSample, const MatrixFloat& mTruth
 	// optimize weights and biases
 	Index iNbWeights = _pWeights.size();
 	Index iNbBiases = _pBiases.size();
+#pragma omp parallel for
 	for (int i = 0; i < iNbWeights; i++)
 	{
 		if (_pRegularizer)
@@ -652,6 +659,7 @@ void NetTrain::train_batch(const MatrixFloat& mSample, const MatrixFloat& mTruth
 
 		_optimizers[i]->optimize(*_pWeights[i], *_pGradWeights[i]);
 	}
+#pragma omp parallel for
 	for (int i = 0; i < iNbBiases; i++)
 	{
 		if (_pRegularizer)

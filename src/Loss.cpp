@@ -88,11 +88,8 @@ public:
         assert(mTruth.rows() == mPredicted.rows());
 
         MatrixFloat diff = mPredicted - mTruth;
-        for (int i = 0; i < diff.rows(); i++) {
-            diff.row(i) *= i<(diff.rows()-1)?0:1;
-        }
 
-        mLoss = colWiseMean(diff.cwiseAbs2());
+        mLoss = colWiseMean(diff.row(diff.rows() - 1).cwiseAbs2());
 
         if (_bClassBalancing)
             balance_with_weight(mTruth, mLoss);
@@ -105,6 +102,8 @@ public:
         assert(mTruth.rows() == mPredicted.rows());
 
         mGradientLoss = (mPredicted - mTruth) / (float)mPredicted.cols();
+        for (int i = 0; i < mGradientLoss.rows() - 1; i++)
+            mGradientLoss.row(i) *= 0;
 
         if (_bClassBalancing)
             balance_with_weight(mTruth, mGradientLoss);

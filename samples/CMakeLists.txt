@@ -27,5 +27,8 @@ target_link_libraries(sample_classification_MNIST libBeeDNN)
 add_executable(sample_classification_CIFAR10 sample_classification_CIFAR10.cpp  )
 target_link_libraries(sample_classification_CIFAR10 libBeeDNN)
 
-add_executable(Transformer_example Transformer_example.cpp  )
+add_executable(Transformer_example Transformer_example.cpp)
 target_link_libraries(Transformer_example libBeeDNN)
+
+add_executable(sample_graph_predictor sample_graph_predictor.cpp   )
+target_link_libraries(sample_graph_predictor libBeeDNN OpenMP::OpenMP_CXX)

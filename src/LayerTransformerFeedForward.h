@@ -4,7 +4,7 @@
 #include "Matrix.h"
 #include "Layer.h"
 
-#include "layerNormalize.h"
+#include "LayerNormalize.h"
 #include "LayerDense.h"
 #include "LayerActivation.h"
 #include "LayerParallel.h"

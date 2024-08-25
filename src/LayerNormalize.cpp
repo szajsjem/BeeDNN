@@ -26,12 +26,13 @@ namespace beednn {
 	///////////////////////////////////////////////////////////////////////////////
 	void LayerNormalize::forward(const MatrixFloat& mIn, MatrixFloat& mOut)
 	{
+		assert(mIn.cols() >= 2);
 		mOut.resizeLike(mIn);
 		for (int c = 0; c < mIn.rows(); c++) {
 			double avg = mIn.row(c).mean(), stdev = 0;
 			for (int i = 0; i < mIn.cols(); i++) {
 				mOut(c, i) = mIn(c, i) - avg;
-				stdev += pow(mOut(c, i), 2);
+				stdev += mOut(c, i)* mOut(c, i);
 			}
 			stdev = sqrt((stdev+1e-6) / (mIn.cols() - 1));
 			for (int i = 0; i < mIn.cols(); i++) {

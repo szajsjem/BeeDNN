@@ -73,6 +73,7 @@ set(BEEDNN_FILES
 	Regularizer.cpp Regularizer.h
 	StandardScaler.cpp StandardScaler.h
 	LayerTranspose.cpp LayerTranspose.h
-	LayerBatchTo2D.cpp LayerBatchTo2D.h )
+	LayerBatchTo2D.cpp LayerBatchTo2D.h
+	LayerRouter.h LayerRouter.cpp)
 include_directories(.)
 add_library( libBeeDNN STATIC ${BEEDNN_FILES})
