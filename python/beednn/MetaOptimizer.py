@@ -10,16 +10,17 @@ import numpy as np
 import copy
 import multiprocessing
 import threading
-import BeeDNN as nn
+import beednn as nn
 import pickle
 
 ###################################################################################################
 class MetaOptimizer:
-  nb_cpu=multiprocessing.cpu_count()
-  nb_tries=1
-  max_accuracy=-1
-  best_net=None
-  save_name=None
+  def __init__(self):
+    self.nb_cpu=multiprocessing.cpu_count()
+    self.nb_tries=1
+    self.max_accuracy=-1
+    self.best_net=None
+    self.save_name=None
 
   def set_nb_cpu(self,nb_cpu):
     self.nb_cpu=nb_cpu
