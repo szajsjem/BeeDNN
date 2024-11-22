@@ -23,3 +23,17 @@ endif()
 add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(samples)
+
+# Add installation rules
+install(TARGETS libBeeDNN
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+)
+
+# Install header files
+install(
+    DIRECTORY ${CMAKE_SOURCE_DIR}/src/
+    DESTINATION include/BeeDNN
+    FILES_MATCHING PATTERN "*.h"
+)

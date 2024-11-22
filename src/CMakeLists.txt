@@ -77,3 +77,32 @@ set(BEEDNN_FILES
 	LayerRouter.h LayerRouter.cpp)
 include_directories(.)
 add_library( libBeeDNN STATIC ${BEEDNN_FILES})
+
+# Make the library available for installation
+set_target_properties(libBeeDNN PROPERTIES
+    PUBLIC_HEADER "${BEEDNN_FILES}"
+    OUTPUT_NAME "BeeDNN"
+)
+
+# Set include directories for the library
+target_include_directories(libBeeDNN
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+)
+
+# Export the library for use by other projects
+install(TARGETS libBeeDNN
+    EXPORT BeeDNNTargets
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+    PUBLIC_HEADER DESTINATION include/BeeDNN
+)
+
+# Generate and install the export targets
+install(EXPORT BeeDNNTargets
+    FILE BeeDNNTargets.cmake
+    NAMESPACE BeeDNN::
+    DESTINATION lib/cmake/BeeDNN
+)
