@@ -9,19 +9,13 @@
 #pragma once
 
 #include "Layer.h"
+#include "LayerSequential.h"
 #include "Matrix.h"
 namespace beednn {
-class LayerGlobalAffine : public Layer
+class LayerGlobalAffine : public LayerSequential
 {
 public:
     explicit LayerGlobalAffine();
-    virtual ~LayerGlobalAffine();
-
-    virtual Layer* clone() const override;
-
-    virtual void init() override;
-
-    virtual void forward(const MatrixFloat& mIn, MatrixFloat &mOut) override;
-    virtual void backpropagation(const MatrixFloat &mIn,const MatrixFloat &mGradientOut, MatrixFloat &mGradientIn) override;
 };
+REGISTER_LAYER(LayerGlobalAffine, "LayerGlobalAffine");
 }

@@ -13,20 +13,21 @@ namespace beednn {
 LayerSimpleRNN::LayerSimpleRNN(int iSampleSize, int iUnits) :
     LayerRNN(iSampleSize, iUnits)
 {
-    LayerSimpleRNN::init();
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerSimpleRNN::~LayerSimpleRNN()
 { }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerSimpleRNN::init()
+bool LayerSimpleRNN::init(size_t& in, size_t& out, bool debug)
 {
     _whh.setRandom(_iUnits, _iUnits); // Todo Xavier init ?
     _wxh.setRandom(_iFrameSize, _iUnits); // Todo Xavier init ?
     _bh.setZero(1, _iUnits);
     _h.setZero(1, _iUnits);
 
-    LayerRNN::init();
+    out = in;
+    Layer::init(in, out, debug);
+    return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 Layer* LayerSimpleRNN::clone() const
@@ -51,6 +52,22 @@ void LayerSimpleRNN::forward_frame(const MatrixFloat& mIn, MatrixFloat& mOut)
 void LayerSimpleRNN::backpropagation_frame(const MatrixFloat& mInFrame, const MatrixFloat& mH, const MatrixFloat& mHm1, const MatrixFloat& mGradientOut, MatrixFloat& mGradientIn)
 {
     //Todo
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerSimpleRNN::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerSimpleRNN::load(std::istream& from) {
+    return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerSimpleRNN::construct(std::initializer_list<float> fArgs, std::string sArg) {
+    return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerSimpleRNN::constructUsage() {
+    return "error";
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 }

@@ -155,7 +155,7 @@ void NetTrain::set_net(Net& model)
 	//init all optimizers, for now, same for bias and weights
 	clear_optimizers();
 	collect_all_weights_biases();
-	Index iNbOptimizers = _pWeights.size() + _pBiases.size();
+	Index iNbOptimizers = _pWeights.size();
 	for (Index i = 0; i < iNbOptimizers; i++)
 	{
 		_optimizers.push_back(create_optimizer(_sOptimizer));
@@ -608,7 +608,6 @@ void NetTrain::slowfit(Net& rNet)
 	std::vector<MatrixFloat*> trainableWeights;
 
 	trainableWeights.insert(trainableWeights.end(), _pWeights.begin(), _pWeights.end());
-	trainableWeights.insert(trainableWeights.end(), _pBiases.begin(), _pBiases.end());
 
 	for (int iEpoch = 0; iEpoch < _iEpochs; iEpoch++)
 	{
@@ -650,7 +649,6 @@ void NetTrain::train_batch(const MatrixFloat& mSample, const MatrixFloat& mTruth
 
 	// optimize weights and biases
 	Index iNbWeights = _pWeights.size();
-	Index iNbBiases = _pBiases.size();
 #pragma omp parallel for
 	for (int i = 0; i < iNbWeights; i++)
 	{
@@ -658,14 +656,6 @@ void NetTrain::train_batch(const MatrixFloat& mSample, const MatrixFloat& mTruth
 			_pRegularizer->apply(*_pWeights[i], *_pGradWeights[i]);
 
 		_optimizers[i]->optimize(*_pWeights[i], *_pGradWeights[i]);
-	}
-#pragma omp parallel for
-	for (int i = 0; i < iNbBiases; i++)
-	{
-		if (_pRegularizer)
-			_pRegularizer->apply(*_pBiases[i], *_pGradBiases[i]);
-
-		_optimizers[i + iNbWeights]->optimize(*_pBiases[i], *_pGradBiases[i]);
 	}
 
 	//compute and save statistics
@@ -676,8 +666,6 @@ void NetTrain::collect_all_weights_biases()
 {
 	_pWeights.clear();
 	_pGradWeights.clear();
-	_pBiases.clear();
-	_pGradBiases.clear();
 	
 	for (size_t i = 0; i < _iNbLayers; i++)
 	{
@@ -689,14 +677,6 @@ void NetTrain::collect_all_weights_biases()
 
 			vector<MatrixFloat*> vgw = l.gradient_weights();
 			_pGradWeights.insert(_pGradWeights.end(), vgw.begin(), vgw.end());
-		}
-		if (l.has_biases())
-		{
-			vector<MatrixFloat*> vb = l.biases();
-			_pBiases.insert(_pBiases.end(), vb.begin(), vb.end());
-
-			vector<MatrixFloat*> vgb = l.gradient_biases();
-			_pGradBiases.insert(_pGradBiases.end(), vgb.begin(), vgb.end());
 		}
 	}
 }

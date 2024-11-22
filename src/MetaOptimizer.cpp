@@ -152,7 +152,7 @@ void MetaOptimizer::apply_variations(Net& model)
 		{
 			const LayerVariation & v = vl[iVariation-1];
 
-			model.replace(iL, LayerFactory::create(v.sType,v.fArg1, v.fArg2, v.fArg3, v.fArg4, v.fArg5));
+			model.replace(iL, LayerFactory::construct(v.sType, { v.fArg1, v.fArg2, v.fArg3, v.fArg4, v.fArg5 },""));
 		}
 	}
 

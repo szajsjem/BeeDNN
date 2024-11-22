@@ -15,7 +15,6 @@ LayerGlobalBias::LayerGlobalBias() :
 {
     _bias.resize(1,1);
 	_gradientBias.resize(1, 1);
-    LayerGlobalBias::init();
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerGlobalBias::~LayerGlobalBias()
@@ -28,10 +27,12 @@ Layer* LayerGlobalBias::clone() const
     return pLayer;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerGlobalBias::init()
+bool LayerGlobalBias::init(size_t& in, size_t& out, bool debug)
 {
 	_bias.setZero();
-    Layer::init();
+	out = in;
+	Layer::init(in, out, debug);
+	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerGlobalBias::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
@@ -49,6 +50,37 @@ void LayerGlobalBias::backpropagation(const MatrixFloat &mIn,const MatrixFloat &
 		return;
 
     mGradientIn = mGradientOut;
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerGlobalBias::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerGlobalBias::load(std::istream& from) {
+    return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerGlobalBias::construct(std::initializer_list<float> fArgs, std::string sArg) {
+    return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerGlobalBias::constructUsage() {
+    return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerGlobalBias::has_weights() const
+{
+	return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerGlobalBias::weights()
+{
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerGlobalBias::gradient_weights()
+{
+	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////////////////////
 }

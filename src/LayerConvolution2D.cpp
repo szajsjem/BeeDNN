@@ -45,7 +45,6 @@ LayerConvolution2D::LayerConvolution2D(Index iInRows, Index iInCols, Index iInCh
 		_iOutCols = (_iOutCols + 1) / _iColStride;
 
 	create_im2col_LUT();
-	LayerConvolution2D::init();
 
 	fastLUT = true; 
 }
@@ -53,7 +52,7 @@ LayerConvolution2D::LayerConvolution2D(Index iInRows, Index iInCols, Index iInCh
 LayerConvolution2D::~LayerConvolution2D()
 { }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerConvolution2D::init()
+bool LayerConvolution2D::init(size_t& in, size_t& out, bool debug)
 {
 	_weight.resize(_iOutChannels, _iKernelRows * _iKernelCols * _iInChannels);
 
@@ -64,6 +63,9 @@ void LayerConvolution2D::init()
 
 	_gradientWeight.resizeLike(_weight);
 	_gradientWeight.setZero();
+	out = in;
+	Layer::init(in, out, debug);
+	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerConvolution2D::get_params(Index& iInRows, Index& iInCols, Index& iInChannels, Index& iKernelRows, Index& iKernelCols, Index& iOutChannels, Index& iRowStride, Index& iColStride) const
@@ -356,6 +358,37 @@ void LayerConvolution2D::create_im2col_LUT()
 			}
 		}
 	}
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerConvolution2D::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerConvolution2D::load(std::istream& from) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerConvolution2D::construct(std::initializer_list<float> fArgs, std::string sArg) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerConvolution2D::constructUsage() {
+	return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerConvolution2D::has_weights() const
+{
+	return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerConvolution2D::weights()
+{
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerConvolution2D::gradient_weights()
+{
+	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////////////////////
 }

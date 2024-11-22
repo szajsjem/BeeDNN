@@ -12,4 +12,5 @@ namespace beednn {
 	public:
 		explicit LayerStacked(Layer* mStackedLayer, ParallelReduction mReduction, const int num);
 	};
+	REGISTER_LAYER(LayerStacked, "LayerStacked");
 }

@@ -112,94 +112,6 @@ public:
     }
 };
 //////////////////////////////////////////////////////////
-class OptimizerLpf : public Optimizer
-{
-    float a0, a1, a2, b1, b2;
-    MatrixFloat xm1, xm2, ym1, ym2;
-public:
-    OptimizerLpf() :Optimizer()
-    {
-        a0 = 1;
-        a1 = 0;
-        a2 = 0;
-        b1 = 0;
-        b2 = 0;
-    }
-
-    ~OptimizerLpf() override
-    {}
-
-    Optimizer* clone() override
-    {
-        auto pOpt = new OptimizerLpf;
-        pOpt->_fLearningRate = _fLearningRate;
-        return pOpt;
-    }
-
-    string name() const override
-    {
-        return "LowPassFilter";
-    }
-
-    virtual void init() override
-    {
-        if (_fLearningRate == -1.f) _fLearningRate = 0.1f;
-        if (_fDecay == -1.f) _fDecay = 0.3f;
-        if (_fMomentum == -1.f) _fMomentum = 0.7f;
-
-        /*
-        //v1
-        double a = 2 * EIGEN_PI * _fDecay;
-        double x = cos(a) / (1 + sin(a));
-        a0 = (1 - x) / 2;
-        a1 = (1 - x) / 2;
-        a2 = 0;
-        b1 = -x;
-        b2 = 0;
-        */
-
-        //v2
-        //decay is frequency cutoff
-        //momentum is the q of filter
-        double K = tan(EIGEN_PI * _fDecay);
-        double norm = 1 / (1 + K / _fMomentum + K * K);
-        a0 = K * K * norm;
-        a1 = 2 * a0;
-        a2 = a0;
-        b1 = 2 * (K * K - 1) * norm;
-        b2 = (1 - K / _fMomentum + K * K) * norm;
-
-        //todo test which is better
-
-        xm1.resize(0, 0);
-    }
-
-    virtual void optimize(MatrixFloat& w, const MatrixFloat& dw) override
-    {
-        assert(w.rows() == dw.rows());
-        assert(w.cols() == dw.cols());
-        if (xm1.cols() == 0) {
-            xm1.resizeLike(dw);
-            xm2.resizeLike(dw);
-            ym1.resizeLike(dw);
-            ym2.resizeLike(dw);
-        }
-        assert(xm1.rows() == dw.rows());
-        assert(xm1.cols() == dw.cols());
-
-        MatrixFloat y = dw * a0 + xm1 * a1 + xm2 * a2
-            - ym1 * b1 - ym2 * b2;
-
-        xm2 = xm1;
-        xm1 = dw;
-        ym2 = ym1;
-        ym1 = y;
-
-
-        w -= y * _fLearningRate;
-    }
-};
-//////////////////////////////////////////////////////////
 template<class ca=Optimizer,class cb = Optimizer>
 class OptimizerMulti : public Optimizer
 {
@@ -220,12 +132,12 @@ public:
         delete a;
         delete b;
     }
-    virtual void Optimizer::set_learningrate(float fLearningRate)  //-1.f is for default params
+    virtual void set_learningrate(float fLearningRate)  //-1.f is for default params
     {
         a->set_learningrate(fLearningRate);
         b->set_learningrate(fLearningRate);
     }
-    virtual void Optimizer::set_params(float fLearningRate, float fDecay, float fMomentum)  //-1.f is for default params
+    virtual void set_params(float fLearningRate, float fDecay, float fMomentum)  //-1.f is for default params
     {
         a->set_params(fLearningRate,fDecay,fMomentum);
         b->set_params(fLearningRate, fDecay, fMomentum);
@@ -991,6 +903,95 @@ public:
 private:
     MatrixFloat _oldgradw, _mu;
 };
+//////////////////////////////////////////////////////////
+class OptimizerLpf : public Optimizer
+{
+    float a0, a1, a2, b1, b2;
+    MatrixFloat xm1, xm2, ym1, ym2;
+    OptimizerAdamW o;
+public:
+    OptimizerLpf() :Optimizer()
+    {
+        a0 = 1;
+        a1 = 0;
+        a2 = 0;
+        b1 = 0;
+        b2 = 0;
+    }
+
+    ~OptimizerLpf() override
+    {}
+
+    Optimizer* clone() override
+    {
+        auto pOpt = new OptimizerLpf;
+        pOpt->_fLearningRate = _fLearningRate;
+        return pOpt;
+    }
+
+    string name() const override
+    {
+        return "LowPassFilter";
+    }
+
+    virtual void init() override
+    {
+        if (_fLearningRate == -1.f) _fLearningRate = 0.01f;
+        if (_fDecay == -1.f) _fDecay = 0.5f;
+        if (_fMomentum == -1.f) _fMomentum = 0.6f;
+        o.init();
+        //decay is frequency cutoff
+        ////momentum is the q of filter
+        
+        //v1
+        double a = 2 * _Pi_val * _fDecay;
+        double x = cos(a) / (1 + sin(a));
+        a0 = (1 - x) / 2;
+        a1 = (1 - x) / 2;
+        a2 = 0;
+        b1 = -x;
+        b2 = 0;
+        
+
+        //v2
+        /*double K = tan(_Pi_val * _fDecay);
+        double norm = 1 / (1 + K / _fMomentum + K * K);
+        a0 = K * K * norm;
+        a1 = 2 * a0;
+        a2 = a0;
+        b1 = 2 * (K * K - 1) * norm;
+        b2 = (1 - K / _fMomentum + K * K) * norm;*/
+
+        //todo test which is better
+
+        xm1.resize(0, 0);
+    }
+
+    virtual void optimize(MatrixFloat& w, const MatrixFloat& dw) override
+    {
+        assert(w.rows() == dw.rows());
+        assert(w.cols() == dw.cols());
+        if (xm1.cols() == 0) {
+            xm1.resizeLike(dw);
+            xm2.resizeLike(dw);
+            ym1.resizeLike(dw);
+            ym2.resizeLike(dw);
+        }
+        assert(xm1.rows() == dw.rows());
+        assert(xm1.cols() == dw.cols());
+
+        MatrixFloat y = dw.array() * a0 + xm1.array() * a1 + xm2.array() * a2
+            - ym1.array() * b1 - ym2.array() * b2;
+
+        xm2 = xm1;
+        xm1 = dw;
+        ym2 = ym1;
+        ym1 = y;
+
+        w -= y * _fLearningRate;
+        //o.optimize(w, dw);
+    }
+};
 
 //////////////////////////////////////////////////////////
 Optimizer* create_optimizer(const string& sOptimizer)
@@ -1039,6 +1040,9 @@ Optimizer* create_optimizer(const string& sOptimizer)
 
     if (sOptimizer == "Step")
         return new OptimizerStep();
+
+    if (sOptimizer == "LowPassFilter")
+        return new OptimizerLpf();
 
     return nullptr;
 }

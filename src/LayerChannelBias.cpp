@@ -20,8 +20,7 @@ LayerChannelBias::LayerChannelBias(Index iNbRows,Index iNbCols,Index iNbChannels
 	_iNbCols=iNbCols;
 	_iNbChannels=iNbChannels;
 
-	set_bias_initializer(sBiasInitializer);
-    LayerChannelBias::init();
+	set_initializer(sBiasInitializer);
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerChannelBias::~LayerChannelBias()
@@ -29,15 +28,17 @@ LayerChannelBias::~LayerChannelBias()
 ///////////////////////////////////////////////////////////////////////////////
 Layer* LayerChannelBias::clone() const
 {
-    LayerChannelBias* pLayer=new LayerChannelBias(_iNbRows,_iNbCols,_iNbChannels, bias_initializer());
+    LayerChannelBias* pLayer=new LayerChannelBias(_iNbRows,_iNbCols,_iNbChannels, get_initializer());
 	pLayer->_bias = _bias;
 	return pLayer;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerChannelBias::init()
+bool LayerChannelBias::init(size_t& in, size_t& out, bool debug)
 {
-	Initializers::compute(bias_initializer(), _bias, 1, _iNbChannels);
-    Layer::init();
+	Initializers::compute(get_initializer(), _bias, 1, _iNbChannels);
+	out = in;
+	Layer::init(in, out, debug);
+	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerChannelBias::get_params(Index & iRows, Index & iCols, Index & iChannels) const
@@ -63,6 +64,37 @@ void LayerChannelBias::backpropagation(const MatrixFloat &mIn,const MatrixFloat 
 		return;
 
     mGradientIn = mGradientOut;
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerChannelBias::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerChannelBias::load(std::istream& from) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerChannelBias::construct(std::initializer_list<float> fArgs, std::string sArg) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerChannelBias::constructUsage() {
+	return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerChannelBias::has_weights() const
+{
+	return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerChannelBias::weights()
+{
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerChannelBias::gradient_weights()
+{
+	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////////////////////
 }

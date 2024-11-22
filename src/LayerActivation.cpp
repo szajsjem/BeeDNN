@@ -56,4 +56,42 @@ void LayerActivation::backpropagation(const MatrixFloat &mIn,const MatrixFloat &
     mGradientIn = mGradientIn.cwiseProduct(mGradientOut);
 }
 ///////////////////////////////////////////////////////////////////////////////
+void LayerActivation::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerActivation::load(std::istream& from) {
+    return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerActivation::construct(std::initializer_list<float> fArgs, std::string sArg) {
+    return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerActivation::constructUsage() {
+    return "error";
+}
+////////////////////////////////////////////////////////////////
+bool LayerActivation::init(size_t& in, size_t& out, bool debug)
+{
+    out = in;
+    Layer::init(in, out, debug);
+    return true;
+}
+///////////////////////////////////////////////////////////////
+bool LayerActivation::has_weights() const
+{
+    return false;
+}
+///////////////////////////////////////////////////////////////
+vector<MatrixFloat*> LayerActivation::weights()
+{
+    return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+vector<MatrixFloat*> LayerActivation::gradient_weights()
+{
+    return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
 }

@@ -2,17 +2,16 @@
 
 namespace beednn {
 	LayerParallel::LayerParallel(std::vector<Layer*> mParallelLayers, ParallelReduction mReduction)
-		:Layer("TransformerHeads")
+		:Layer("LayerParallel")
 	{
 		for (auto layer : mParallelLayers) {
 			_Layers.push_back(layer);
 		}
 		_ParallelReduction = mReduction;
-		LayerParallel::init();
 	}
 	///////////////////////////////////////////////////////////////////////////////
 	LayerParallel::LayerParallel() :
-		Layer("TransformerHeads")
+		Layer("LayerParallel")
 	{
 	}
 	///////////////////////////////////////////////////////////////////////////////
@@ -30,13 +29,35 @@ namespace beednn {
 			pLayer->_Layers.push_back(x->clone());
 		}
 		pLayer->_ParallelReduction = _ParallelReduction;
-		pLayer->init();
 		return pLayer;
 	}
 	///////////////////////////////////////////////////////////////////////////////
-	void LayerParallel::init()
+	bool LayerParallel::init(size_t& in, size_t& out, bool debug)
 	{
-		Layer::init();
+		if (_ParallelReduction != COLSTACK) {
+			for (auto l : _Layers) {
+				if (!l->init(in, out, debug))
+					return false;
+			}
+		}
+		else {
+			size_t clout = 0;
+			for (auto l : _Layers) {
+				size_t tout = -1;
+				if (!l->init(in, tout, debug))
+					return false;
+				if (tout == -1 || clout == -1)
+					clout = -1;
+				else
+					clout += tout;
+			}
+			if (out == -1)
+				out = clout;
+			if (out != clout)
+				return false;
+		}
+		Layer::init(in, out, debug);
+		return true;
 	}
 	///////////////////////////////////////////////////////////////////////////////
 	void LayerParallel::forward(const MatrixFloat& mIn, MatrixFloat& mOut)
@@ -182,39 +203,21 @@ namespace beednn {
 			}
 		return v;
 	}
-	///////////////////////////////////////////////////////////////
-	bool LayerParallel::has_biases() const
-	{
-		for (auto layer : _Layers)
-			if (layer->has_biases())
-				return true;
-		return false;
+	///////////////////////////////////////////////////////////////////////////////
+	void LayerParallel::save(std::ostream& to) const {
+
 	}
 	///////////////////////////////////////////////////////////////
-	std::vector<MatrixFloat*> LayerParallel::biases()
-	{
-		std::vector<MatrixFloat*> v;
-		for (auto layer : _Layers)
-			if (layer->has_biases()) {
-				auto vi = layer->biases();
-				if (vi.size() > 0) {
-					v.insert(v.end(), vi.begin(), vi.end());
-				}
-			}
-		return v;
+	Layer* LayerParallel::load(std::istream& from) {
+		return NULL;
 	}
 	///////////////////////////////////////////////////////////////
-	std::vector<MatrixFloat*> LayerParallel::gradient_biases()
-	{
-		std::vector<MatrixFloat*> v;
-		for (auto layer : _Layers)
-			if (layer->has_biases()) {
-				auto vi = layer->gradient_biases();
-				if (vi.size() > 0) {
-					v.insert(v.end(), vi.begin(), vi.end());
-				}
-			}
-		return v;
+	Layer* LayerParallel::construct(std::initializer_list<float> fArgs, std::string sArg) {
+		return NULL;
+	}
+	///////////////////////////////////////////////////////////////
+	std::string LayerParallel::constructUsage() {
+		return "error";
 	}
 	///////////////////////////////////////////////////////////////
 }

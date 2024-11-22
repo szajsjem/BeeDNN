@@ -27,4 +27,33 @@ namespace beednn {
 			}
 		LayerSelfDot::backpropagation(mIn, mf, mGradientIn);//this might be before zeroing
 	}
+	///////////////////////////////////////////////////////////////////////////////
+	void LayerSelfAttention::save(std::ostream& to) const {
+
+	}
+	///////////////////////////////////////////////////////////////
+	Layer* LayerSelfAttention::load(std::istream& from) {
+		return NULL;
+	}
+	///////////////////////////////////////////////////////////////
+	Layer* LayerSelfAttention::construct(std::initializer_list<float> fArgs, std::string sArg) {
+		return NULL;
+	}
+	///////////////////////////////////////////////////////////////
+	std::string LayerSelfAttention::constructUsage() {
+		return "error";
+	}
+	///////////////////////////////////////////////////////////////
+	bool LayerSelfAttention::has_weights() const
+	{
+		return false;
+	}
+	///////////////////////////////////////////////////////////////////////////////
+	bool LayerSelfAttention::init(size_t& in, size_t& out, bool debug)
+	{
+		//except l2d
+		out = in;
+		Layer::init(in, out, debug);
+		return true;
+	}
 }

@@ -13,17 +13,18 @@ namespace beednn {
 LayerSimplestRNN::LayerSimplestRNN(int iFrameSize) :
     LayerRNN(iFrameSize, iFrameSize)
 {
-    LayerSimplestRNN::init();
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerSimplestRNN::~LayerSimplestRNN()
 { }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerSimplestRNN::init()
+bool LayerSimplestRNN::init(size_t& in, size_t& out, bool debug)
 {
     _weight.setRandom(_iUnits, _iUnits); // Todo Xavier init ?
 
-    LayerRNN::init();
+    out = in;
+    Layer::init(in, out, debug);
+    return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 Layer* LayerSimplestRNN::clone() const
@@ -58,6 +59,37 @@ void LayerSimplestRNN::backpropagation_frame(const MatrixFloat& mInFrame, const 
         //grad(L/h(t-1))=grad(L/U))*whh
         mGradientIn = mGradU.transpose()*_weight;
     }
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerSimplestRNN::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerSimplestRNN::load(std::istream& from) {
+    return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerSimplestRNN::construct(std::initializer_list<float> fArgs, std::string sArg) {
+    return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerSimplestRNN::constructUsage() {
+    return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerSimplestRNN::has_weights() const
+{
+    return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerSimplestRNN::weights()
+{
+    return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerSimplestRNN::gradient_weights()
+{
+    return std::vector<MatrixFloat*>();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 }

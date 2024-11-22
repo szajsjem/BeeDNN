@@ -20,7 +20,6 @@ LayerGatedActivation::LayerGatedActivation(const string& sActivation1, const str
 {
 	_pActivation1 = get_activation(sActivation1);
 	_pActivation2 = get_activation(sActivation2);
-	LayerGatedActivation::init();
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerGatedActivation::~LayerGatedActivation()
@@ -34,9 +33,12 @@ Layer* LayerGatedActivation::clone() const
 	return new LayerGatedActivation(_pActivation1->name(), _pActivation2->name());
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerGatedActivation::init()
+bool LayerGatedActivation::init(size_t& in, size_t& out, bool debug)
 {
-	Layer::init();
+	if (in & 1)return false;
+	out = in/2;
+	Layer::init(in, out, debug);
+	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerGatedActivation::forward(const MatrixFloat& mIn, MatrixFloat& mOut)
@@ -69,6 +71,37 @@ void LayerGatedActivation::backpropagation(const MatrixFloat& mIn, const MatrixF
 			mGradientIn(r, c) = g * _pActivation2->apply(mIn(r, c + iNbColsHalf)) * _pActivation1->derivation(mIn(r, c)); // (dL/dt)*g(y)*f'(x1)*g(x2)
 			mGradientIn(r, c + iNbColsHalf) = g * _pActivation1->apply(mIn(r, c)) * _pActivation2->derivation(mIn(r, c + iNbColsHalf)); // (dL/dt)*f(x1)*g'(x2)
 		}
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerGatedActivation::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerGatedActivation::load(std::istream& from) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerGatedActivation::construct(std::initializer_list<float> fArgs, std::string sArg) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerGatedActivation::constructUsage() {
+	return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerGatedActivation::has_weights() const
+{
+	return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerGatedActivation::weights()
+{
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerGatedActivation::gradient_weights()
+{
+	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
 }

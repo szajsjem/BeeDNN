@@ -16,7 +16,6 @@ namespace beednn {
 LayerTERELU::LayerTERELU() :
     Layer("TERELU")
 {
-    LayerTERELU::init();
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerTERELU::~LayerTERELU()
@@ -30,12 +29,14 @@ Layer* LayerTERELU::clone() const
 	return pLayer;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerTERELU::init()
+bool LayerTERELU::init(size_t& in, size_t& out, bool debug)
 {
 	_weight.resize(0,0);
 	_alpha = 1.f;
 	_mu = 1.f;
-    Layer::init();
+	out = in;
+	Layer::init(in, out, debug);
+	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerTERELU::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
@@ -85,6 +86,22 @@ void LayerTERELU::backpropagation(const MatrixFloat &mIn,const MatrixFloat &mGra
 			else if (mIn(i, j) >= _mu)
 				mGradientIn(i, j) *= _weight(j) * expf(_mu - mIn(i, j));
 		}
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerTERELU::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerTERELU::load(std::istream& from) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerTERELU::construct(std::initializer_list<float> fArgs, std::string sArg) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerTERELU::constructUsage() {
+	return "error";
 }
 ///////////////////////////////////////////////////////////////
 }

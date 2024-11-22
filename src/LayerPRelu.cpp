@@ -15,7 +15,6 @@ namespace beednn {
 LayerPRelu::LayerPRelu() :
     Layer("PRelu")
 {
-    LayerPRelu::init();
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerPRelu::~LayerPRelu()
@@ -29,10 +28,12 @@ Layer* LayerPRelu::clone() const
 	return pLayer;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerPRelu::init()
+bool LayerPRelu::init(size_t& in, size_t& out, bool debug)
 {
 	_weight.resize(0,0);
-    Layer::init();
+	out = in;
+	Layer::init(in, out, debug);
+	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerPRelu::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
@@ -78,6 +79,37 @@ void LayerPRelu::backpropagation(const MatrixFloat &mIn,const MatrixFloat &mGrad
 			if (mIn(i, j) < 0.f)
 				mGradientIn(i, j) *= _weight(j);
 		}
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerPRelu::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerPRelu::load(std::istream& from) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerPRelu::construct(std::initializer_list<float> fArgs, std::string sArg) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerPRelu::constructUsage() {
+	return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerPRelu::has_weights() const
+{
+	return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerPRelu::weights()
+{
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerPRelu::gradient_weights()
+{
+	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
 }

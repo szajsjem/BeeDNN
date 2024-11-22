@@ -19,8 +19,7 @@ LayerDot::LayerDot(Index iInputSize, Index iOutputSize,const string& sWeightInit
 	_iInputSize(iInputSize),
 	_iOutputSize(iOutputSize)
 {
-	set_weight_initializer(sWeightInitializer);
-	LayerDot::init();
+	set_initializer(sWeightInitializer);
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerDot::~LayerDot()
@@ -33,20 +32,34 @@ Layer* LayerDot::clone() const
 	return pLayer;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerDot::init()
+bool LayerDot::init(size_t& in, size_t& out, bool debug)
 {
 	if (_iInputSize == 0)
-		return;
+		return false;
 
 	if (_iOutputSize == 0)
-		return;
-
-	assert(_iInputSize > 0);
-	assert(_iOutputSize > 0);
+		return false;
+	if(in!=-1 && _iInputSize!=-1)
+		assert(_iInputSize == in);
+	else {
+		assert(_iInputSize > 0 || in > 0);
+	}
+	assert(_iOutputSize > 0);//todo return false
 	
-	Initializers::compute(weight_initializer(), _weight, _iInputSize, _iOutputSize);
-	
-	Layer::init();
+	if (_iInputSize == -1)
+		if (in == -1)
+			return false;//please set the input data size to use this
+		else {
+			_iInputSize = in;
+			Initializers::compute(get_initializer(), _weight, in, _iOutputSize);
+		}
+	else {
+		Initializers::compute(get_initializer(), _weight, _iInputSize, _iOutputSize);
+		in = _iInputSize;
+	}
+	out = _iOutputSize;
+	Layer::init(in, out, debug);
+	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerDot::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
@@ -72,6 +85,41 @@ Index LayerDot::input_size() const
 Index LayerDot::output_size() const
 {
 	return _iOutputSize;
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerDot::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerDot::load(std::istream& from) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerDot::construct(std::initializer_list<float> fArgs, std::string sArg) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerDot::constructUsage() {
+	return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerDot::has_weights() const
+{
+	return true;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerDot::weights()
+{
+	std::vector<MatrixFloat*> v;
+	v.push_back(&_weight);
+	return v;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerDot::gradient_weights()
+{
+	std::vector<MatrixFloat*> v;
+	v.push_back(&_gradientWeight);
+	return v;
 }
 ///////////////////////////////////////////////////////////////
 }

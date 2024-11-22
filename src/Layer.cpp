@@ -17,15 +17,9 @@ _sType(sType)
 { 
 	_bTrainMode = false;
 	_bFirstLayer = false;
-
-	_sWeightInitializer = "";
-	_sBiasInitializer = "";
 }
 ////////////////////////////////////////////////////////////////
 Layer::~Layer()
-{ }
-////////////////////////////////////////////////////////////////
-void Layer::init()
 { }
 ///////////////////////////////////////////////////////////////
 string Layer::type() const
@@ -42,63 +36,51 @@ void Layer::set_train_mode(bool bTrainMode)
 {
 	_bTrainMode = bTrainMode;
 }
+////////////////////////////////////////////////////////////////
+bool Layer::init(size_t& in, size_t& out, bool debug)
+{
+	return false;
+}
 ///////////////////////////////////////////////////////////////
 bool Layer::has_weights() const
 {
-    return _weight.size()!=0.;
+    return false;
 }
 ///////////////////////////////////////////////////////////////
 vector<MatrixFloat*> Layer::weights()
 {
-	vector<MatrixFloat*> v;
-	v.push_back(&_weight);
-	return v;
+	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
 vector<MatrixFloat*> Layer::gradient_weights()
 {
-	vector<MatrixFloat*> v;
-	v.push_back(&_gradientWeight);
-	return v;
+	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-bool Layer::has_biases() const
-{
-	return _bias.size() != 0.;
-}
+ void Layer::set_initializer(const std::string& sWeightInitializer) 
+ {
+	 this->_sWeightInitializer = sWeightInitializer;
+ }
+ ///////////////////////////////////////////////////////////////
+ std::string Layer::get_initializer() const 
+ {
+	 return _sWeightInitializer;
+ }
 ///////////////////////////////////////////////////////////////
-vector<MatrixFloat*> Layer::biases()
-{
-	vector<MatrixFloat*> v;
-	v.push_back(&_bias);
-	return v;
-}
-///////////////////////////////////////////////////////////////
-vector<MatrixFloat*> Layer::gradient_biases()
-{
-	vector<MatrixFloat*> v;
-	v.push_back(&_gradientBias);
-	return v;
-}
-///////////////////////////////////////////////////////////////
-void Layer::set_weight_initializer(const string& sWeightInitializer)
-{
-	_sWeightInitializer = sWeightInitializer;
-}
-///////////////////////////////////////////////////////////////
-void Layer::set_bias_initializer(const string& sBiasInitializer)
-{
-	_sBiasInitializer = sBiasInitializer;
-}
-///////////////////////////////////////////////////////////////
-string Layer::weight_initializer() const
-{
-	return _sWeightInitializer;
-}
-///////////////////////////////////////////////////////////////
-string Layer::bias_initializer() const
-{
-	return _sBiasInitializer;
-}
-///////////////////////////////////////////////////////////////
+ void Layer::save(std::ostream& to) const {
+	
+ }
+ ///////////////////////////////////////////////////////////////
+ Layer* Layer::load(std::istream& from) {
+	 return NULL;
+ }
+ ///////////////////////////////////////////////////////////////
+ Layer* Layer::construct(std::initializer_list<float> fArgs, std::string sArg) {
+	 return NULL;
+ }
+ ///////////////////////////////////////////////////////////////
+ std::string Layer::constructUsage(){
+	 return "error";
+ }
+ ///////////////////////////////////////////////////////////////
 }

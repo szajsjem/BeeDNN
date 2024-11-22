@@ -16,8 +16,7 @@ LayerTimeDistributedBias::LayerTimeDistributedBias(int iFrameSize,const string& 
     Layer("TimeDistributedBias")
 {
 	_iFrameSize=iFrameSize;
-    set_bias_initializer(sBiasInitializer);
-    LayerTimeDistributedBias::init();
+    set_initializer(sBiasInitializer);
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerTimeDistributedBias::~LayerTimeDistributedBias()
@@ -25,7 +24,7 @@ LayerTimeDistributedBias::~LayerTimeDistributedBias()
 ///////////////////////////////////////////////////////////////////////////////
 Layer* LayerTimeDistributedBias::clone() const
 {
-    LayerTimeDistributedBias* pLayer=new LayerTimeDistributedBias(_iFrameSize, bias_initializer());
+    LayerTimeDistributedBias* pLayer=new LayerTimeDistributedBias(_iFrameSize, get_initializer());
 	pLayer->_bias = _bias;
 
     return pLayer;
@@ -36,10 +35,12 @@ int LayerTimeDistributedBias::frame_size() const
     return _iFrameSize;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerTimeDistributedBias::init()
+bool LayerTimeDistributedBias::init(size_t& in, size_t& out, bool debug)
 {
-    Initializers::compute(bias_initializer(), _bias, 1, _iFrameSize);
-    Layer::init();
+    Initializers::compute(get_initializer(), _bias, 1, _iFrameSize);
+    out = in;
+    Layer::init(in, out, debug);
+    return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerTimeDistributedBias::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
@@ -62,6 +63,37 @@ void LayerTimeDistributedBias::backpropagation(const MatrixFloat &mIn,const Matr
 		return;
 
     mGradientIn = mGradientOut;
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerTimeDistributedBias::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerTimeDistributedBias::load(std::istream& from) {
+    return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerTimeDistributedBias::construct(std::initializer_list<float> fArgs, std::string sArg) {
+    return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerTimeDistributedBias::constructUsage() {
+    return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerTimeDistributedBias::has_weights() const
+{
+    return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerTimeDistributedBias::weights()
+{
+    return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerTimeDistributedBias::gradient_weights()
+{
+    return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////////////////////
 }

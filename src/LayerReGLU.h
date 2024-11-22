@@ -15,4 +15,5 @@ class LayerReGLU : public LayerGatedActivation
 public:
     explicit LayerReGLU();
 };
+REGISTER_LAYER(LayerReGLU, "LayerReGLU");
 }

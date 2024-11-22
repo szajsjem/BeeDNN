@@ -16,4 +16,5 @@ class LayerBilinear : public LayerGatedActivation
 public:
     explicit LayerBilinear();
 };
+REGISTER_LAYER(LayerBilinear, "LayerBilinear");
 }

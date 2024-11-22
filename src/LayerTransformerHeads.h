@@ -19,4 +19,5 @@ namespace beednn {
 	public:
 		explicit LayerTransformerHeads(const int iDimmensionSize, const int iHeadVMem, const int iHeadQKMem, const int iNumHeads, const std::string& sWeightInitializer = "GlorotUniform", const std::string& sBiasInitializer = "Zeros");
 	};
+	REGISTER_LAYER(LayerTransformerHeads, "LayerTransformerHeads");
 }

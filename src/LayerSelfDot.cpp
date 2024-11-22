@@ -34,4 +34,33 @@ namespace beednn {
 		mGradientIn.middleRows(middle, middle) = (mIn.middleRows(0, middle).transpose() * mGradientOut).transpose() ;//might be reverse or might be completly diffrent
 		mGradientIn.middleRows(0, middle) = mGradientOut * mIn.middleRows(middle, middle);
 	}
+	///////////////////////////////////////////////////////////////////////////////
+	void LayerSelfDot::save(std::ostream& to) const {
+
+	}
+	///////////////////////////////////////////////////////////////
+	Layer* LayerSelfDot::load(std::istream& from) {
+		return NULL;
+	}
+	///////////////////////////////////////////////////////////////
+	Layer* LayerSelfDot::construct(std::initializer_list<float> fArgs, std::string sArg) {
+		return NULL;
+	}
+	///////////////////////////////////////////////////////////////
+	std::string LayerSelfDot::constructUsage() {
+		return "error";
+	}
+	///////////////////////////////////////////////////////////////
+	bool LayerSelfDot::has_weights() const
+	{
+		return false;
+	}
+	///////////////////////////////////////////////////////////////////////////////
+	bool LayerSelfDot::init(size_t& in, size_t& out, bool debug)
+	{
+		//except l2d
+		out = in;
+		Layer::init(in, out, debug);
+		return true;
+	}
 }

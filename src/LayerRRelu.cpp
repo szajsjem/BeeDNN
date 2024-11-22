@@ -21,7 +21,6 @@ LayerRRelu::LayerRRelu(float alpha1, float alpha2) :
 	_invAlpha2=1.f/alpha2;
 	_invAlphaMean=(_invAlpha1+_invAlpha2)*0.5f;
 	
-    LayerRRelu::init();
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerRRelu::~LayerRRelu()
@@ -32,9 +31,11 @@ Layer* LayerRRelu::clone() const
     return new LayerRRelu(_alpha1,_alpha2);
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerRRelu::init()
+bool LayerRRelu::init(size_t& in, size_t& out, bool debug)
 {
-    Layer::init();
+	out = in;
+	Layer::init(in, out, debug);
+	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerRRelu::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
@@ -75,6 +76,37 @@ void LayerRRelu::get_params(float& alpha1, float& alpha2) const
 {
 	alpha1 = _alpha1;
 	alpha2 = _alpha2;
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerRRelu::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerRRelu::load(std::istream& from) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerRRelu::construct(std::initializer_list<float> fArgs, std::string sArg) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerRRelu::constructUsage() {
+	return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerRRelu::has_weights() const
+{
+	return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerRRelu::weights()
+{
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerRRelu::gradient_weights()
+{
+	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
 }

@@ -13,7 +13,6 @@ namespace beednn {
 LayerAffine::LayerAffine() :
     Layer("Affine")
 {
-    LayerAffine::init();
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerAffine::~LayerAffine()
@@ -28,12 +27,14 @@ Layer* LayerAffine::clone() const
     return pLayer;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerAffine::init()
+bool LayerAffine::init(size_t& in, size_t& out, bool debug)
 {
 	_bias.resize(0,0);
 	_weight.resize(0,0);
 
-    Layer::init();
+	out = in;
+	Layer::init(in, out, debug);
+	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerAffine::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
@@ -67,6 +68,37 @@ void LayerAffine::backpropagation(const MatrixFloat &mIn,const MatrixFloat &mGra
 		{
 			mGradientIn(i, j) *= _weight(j);
 		}
+}
+///////////////////////////////////////////////////////////////
+void LayerAffine::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerAffine::load(std::istream& from) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerAffine::construct(std::initializer_list<float> fArgs, std::string sArg) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerAffine::constructUsage() {
+	return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerAffine::has_weights() const
+{
+	return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerAffine::weights()
+{
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerAffine::gradient_weights()
+{
+	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
 }

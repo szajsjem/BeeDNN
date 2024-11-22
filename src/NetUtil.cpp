@@ -93,30 +93,15 @@ namespace NetUtil {
 
 			if (layer->has_weights())
 			{
-				jf.add("WeightInitializer", layer->weight_initializer());
+				jf.add("Initializer", layer->get_initializer());
 				vector<MatrixFloat*> pW = layer->weights();
 				for (size_t j = 0; j < pW.size(); j++)
 					jf.add_array("Weight_" + to_string(j), (int)pW[j]->size(), pW[j]->data());
 			}
 
-			if (layer->has_biases())
-			{
-				jf.add("BiasInitializer", layer->bias_initializer());
-				vector<MatrixFloat*> pB = layer->biases();
-				for (size_t j = 0; j < pB.size(); j++)
-					jf.add_array("Bias_" + to_string(j), (int)pB[j]->size(), pB[j]->data());
-			}
-
-			if (layer->type() == "Dense")
-			{
-				auto l = static_cast<const LayerDense*>(layer);
-				jf.add("InputSize", (int)l->input_size());
-				jf.add("OutputSize", (int)l->output_size());
-			}
-
 			if (layer->type() == "Dot")
 			{
-				auto l = static_cast<const LayerDense*>(layer);
+				auto l = static_cast<const LayerDot*>(layer);
 				jf.add("InputSize", (int)l->input_size());
 				jf.add("OutputSize", (int)l->output_size());
 			}
@@ -210,13 +195,6 @@ namespace NetUtil {
 			else if (layer->type() == "TimeDistributedDot")
 			{
 				auto l = static_cast<const LayerTimeDistributedDot*>(layer);
-				jf.add("InFrameSize", l->in_frame_size());
-				jf.add("OutFrameSize", l->out_frame_size());
-			}
-
-			else if (layer->type() == "TimeDistributedDense")
-			{
-				auto l = static_cast<const LayerTimeDistributedDense*>(layer);
 				jf.add("InFrameSize", l->in_frame_size());
 				jf.add("OutFrameSize", l->out_frame_size());
 			}

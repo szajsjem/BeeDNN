@@ -7,7 +7,6 @@ namespace beednn {
 		_incolsize = incolsize;
 		_outcolsize = outcolsize;
 		_outrowsize = outrowsize;
-		LayerBatchTo2D::init();
 	}
 
 	LayerBatchTo2D::~LayerBatchTo2D()
@@ -20,9 +19,11 @@ namespace beednn {
 		return new LayerBatchTo2D(_incolsize, _outcolsize,_outrowsize, _l2d->clone());
 	}
 
-	void LayerBatchTo2D::init()
+	bool LayerBatchTo2D::init(size_t& in, size_t& out, bool debug)
 	{
-		Layer::init();
+		out = in;
+		Layer::init(in, out, debug);
+		return true;
 	}
 
 	void LayerBatchTo2D::forward(const MatrixFloat& mIn, MatrixFloat& mOut)
@@ -46,9 +47,6 @@ namespace beednn {
 		mGradientIn.resizeLike(mIn);
 		std::vector<MatrixFloat*> gradients;
 		std::vector<MatrixFloat> sumgradient;
-		if (_l2d->has_biases())
-			for (auto& g : _l2d->biases())
-				gradients.push_back(g);
 		if (_l2d->has_weights())
 			for (auto& g : _l2d->weights())
 				gradients.push_back(g);
@@ -86,16 +84,21 @@ namespace beednn {
 	{
 		return _l2d->gradient_weights();
 	}
-	bool LayerBatchTo2D::has_biases() const
-	{
-		return _l2d->has_biases();
+	////////////////////////////////////////////////////////////
+	void LayerBatchTo2D::save(std::ostream& to) const {
+
 	}
-	std::vector<MatrixFloat*> LayerBatchTo2D::biases()
-	{
-		return _l2d->biases();
+	///////////////////////////////////////////////////////////////
+	Layer* LayerBatchTo2D::load(std::istream& from) {
+		return NULL;
 	}
-	std::vector<MatrixFloat*> LayerBatchTo2D::gradient_biases()
-	{
-		return _l2d->gradient_biases();
+	///////////////////////////////////////////////////////////////
+	Layer* LayerBatchTo2D::construct(std::initializer_list<float> fArgs, std::string sArg) {
+		return NULL;
 	}
+	///////////////////////////////////////////////////////////////
+	std::string LayerBatchTo2D::constructUsage() {
+		return "error";
+	}
+	///////////////////////////////////////////////////////////////
 }

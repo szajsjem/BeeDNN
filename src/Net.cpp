@@ -126,10 +126,16 @@ size_t Net::size() const
     return _layers.size();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void Net::init()
+size_t Net::init(size_t inputDataSize,bool debug)
 {
-    for(unsigned int i=0;i<_layers.size();i++)
-        _layers[i]->init();
+    //todo save
+    size_t in = inputDataSize, out = -1;
+    for (unsigned int i = 0; i < _layers.size(); i++) {
+        _layers[i]->init(in, out, debug);
+        in = out;
+        out = -1;
+    }
+    return in;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 }

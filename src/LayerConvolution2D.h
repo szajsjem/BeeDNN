@@ -24,7 +24,16 @@ public:
 
     virtual Layer* clone() const override;
 
-	virtual void init() override;
+	virtual bool init(size_t& in, size_t& out, bool debug = false) override;
+
+	virtual bool has_weights() const override;
+	virtual std::vector<MatrixFloat*> weights() override;
+	virtual std::vector<MatrixFloat*> gradient_weights() override;
+
+	virtual void save(std::ostream& to)const override;
+	static Layer* load(std::istream& from);
+	static Layer* construct(std::initializer_list<float> fArgs, std::string sArg);
+	static std::string constructUsage();
 
     void get_params(Index & iInRows, Index & iInCols, Index & iInChannels, Index & iKernelRows, Index & iKernelCols, Index & iOutChannels, Index & iRowStride, Index & iColStride) const;
 
@@ -61,8 +70,10 @@ private:
 	Index _iOutRows;
 	Index _iOutCols;
 
+	MatrixFloat _weight, _gradientWeight;
 public:
 	MatrixFloat _im2colT; // input image, im2col format
 	MatrixFloat _tempImg; // temporary image, to avoid malloc
 };
+REGISTER_LAYER(LayerConvolution2D, "LayerConvolution2D");
 }

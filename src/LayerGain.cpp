@@ -14,7 +14,6 @@ namespace beednn {
 LayerGain::LayerGain() :
     Layer("Gain")
 {
-    LayerGain::init();
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerGain::~LayerGain()
@@ -27,11 +26,13 @@ Layer* LayerGain::clone() const
     return pLayer;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerGain::init()
+bool LayerGain::init(size_t& in, size_t& out, bool debug)
 {
 	_weight.resize(0,0);
 
-    Layer::init();
+	out = in;
+	Layer::init(in, out, debug);
+	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerGain::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
@@ -61,6 +62,37 @@ void LayerGain::backpropagation(const MatrixFloat &mIn,const MatrixFloat &mGradi
 		{
 			mGradientIn(i, j) *= _weight(j);
 		}
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerGain::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerGain::load(std::istream& from) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerGain::construct(std::initializer_list<float> fArgs, std::string sArg) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerGain::constructUsage() {
+	return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerGain::has_weights() const
+{
+	return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerGain::weights()
+{
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerGain::gradient_weights()
+{
+	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
 }

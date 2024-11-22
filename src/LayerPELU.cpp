@@ -15,7 +15,6 @@ namespace beednn {
 LayerPELU::LayerPELU() :
     Layer("PELU")
 {
-    LayerPELU::init();
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerPELU::~LayerPELU()
@@ -29,10 +28,12 @@ Layer* LayerPELU::clone() const
 	return pLayer;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerPELU::init()
+bool LayerPELU::init(size_t& in, size_t& out, bool debug)
 {
 	_weight.resize(0,0);
-    Layer::init();
+	out = in;
+	Layer::init(in, out, debug);
+	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerPELU::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
@@ -102,6 +103,22 @@ void LayerPELU::backpropagation(const MatrixFloat &mIn,const MatrixFloat &mGradi
 			else
 				mGradientIn(i, j) *= (_weight(0, j) / _weight(1, j))  * (expf(mIn(i, j) / _weight(1, j))); // a/b*exp(x/b)
 		}
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerPELU::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerPELU::load(std::istream& from) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerPELU::construct(std::initializer_list<float> fArgs, std::string sArg) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerPELU::constructUsage() {
+	return "error";
 }
 ///////////////////////////////////////////////////////////////
 }

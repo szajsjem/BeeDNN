@@ -9,8 +9,7 @@ namespace beednn {
 		_pVocabSize(vocabSize),
 		_pDimensionSize(dimensionSize)
 	{
-		set_bias_initializer(sBiasInitializer);
-		LayerEmbed::init();
+		set_initializer(sBiasInitializer);
 	}
 	///////////////////////////////////////////////////////////////////////////////
 	LayerEmbed::~LayerEmbed()
@@ -19,19 +18,21 @@ namespace beednn {
 	///////////////////////////////////////////////////////////////////////////////
 	Layer* LayerEmbed::clone() const
 	{
-		LayerEmbed* pLayer = new LayerEmbed(_pVocabSize, _pDimensionSize, _pPositionSize,bias_initializer());
+		LayerEmbed* pLayer = new LayerEmbed(_pVocabSize, _pDimensionSize, _pPositionSize,get_initializer());
 		pLayer->_bias = _bias;
 		pLayer->_bias2 = _bias2;
 		return pLayer;
 	}
 	///////////////////////////////////////////////////////////////////////////////
-	void LayerEmbed::init()
+	bool LayerEmbed::init(size_t& in, size_t& out, bool debug)
 	{
 		_bias.resize(_pVocabSize, _pDimensionSize);
-		Initializers::compute(bias_initializer(), _bias, _pVocabSize, _pDimensionSize);
+		Initializers::compute(get_initializer(), _bias, _pVocabSize, _pDimensionSize);
 		_bias2.resize(_pPositionSize, _pDimensionSize);
-		Initializers::compute(bias_initializer(), _bias2, _pPositionSize, _pDimensionSize);
-		Layer::init();
+		Initializers::compute(get_initializer(), _bias2, _pPositionSize, _pDimensionSize);
+		out = in;//todo
+		Layer::init(in, out, debug);
+		return true;
 	}
 	///////////////////////////////////////////////////////////////////////////////
 	void LayerEmbed::forward(const MatrixFloat& mIn, MatrixFloat& mOut)
@@ -67,16 +68,10 @@ namespace beednn {
 	///////////////////////////////////////////////////////////////
 	bool LayerEmbed::has_weights() const
 	{
-		return false;
-	}
-	
-	///////////////////////////////////////////////////////////////
-	bool LayerEmbed::has_biases() const
-	{
 		return true;
 	}
 	///////////////////////////////////////////////////////////////
-	std::vector<MatrixFloat*> LayerEmbed::biases()
+	std::vector<MatrixFloat*> LayerEmbed::weights()
 	{
 		std::vector<MatrixFloat*> v;
 		v.push_back(&_bias);
@@ -84,12 +79,28 @@ namespace beednn {
 		return v;
 	}
 	///////////////////////////////////////////////////////////////
-	std::vector<MatrixFloat*> LayerEmbed::gradient_biases()
+	std::vector<MatrixFloat*> LayerEmbed::gradient_weights()
 	{
 		std::vector<MatrixFloat*> v;
 		v.push_back(&_gradientBias);
 		v.push_back(&_gradientBias2);
 		return v;
+	}
+	///////////////////////////////////////////////////////////////////////////////
+	void LayerEmbed::save(std::ostream& to) const {
+
+	}
+	///////////////////////////////////////////////////////////////
+	Layer* LayerEmbed::load(std::istream& from) {
+		return NULL;
+	}
+	///////////////////////////////////////////////////////////////
+	Layer* LayerEmbed::construct(std::initializer_list<float> fArgs, std::string sArg) {
+		return NULL;
+	}
+	///////////////////////////////////////////////////////////////
+	std::string LayerEmbed::constructUsage() {
+		return "error";
 	}
 	///////////////////////////////////////////////////////////////
 }

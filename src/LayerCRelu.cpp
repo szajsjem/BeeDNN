@@ -17,7 +17,6 @@ namespace beednn {
 LayerCRelu::LayerCRelu() :
     Layer("CRelu")
 {	
-    LayerCRelu::init();
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerCRelu::~LayerCRelu()
@@ -28,9 +27,11 @@ Layer* LayerCRelu::clone() const
     return new LayerCRelu();
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerCRelu::init()
+bool LayerCRelu::init(size_t& in, size_t& out, bool debug)
 {
-    Layer::init();
+	out = in;
+	Layer::init(in, out, debug);
+	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerCRelu::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
@@ -63,6 +64,37 @@ void LayerCRelu::backpropagation(const MatrixFloat &mIn,const MatrixFloat &mGrad
 			else
 				mGradientIn(r, c) = -mGradientOut(r, c + iInSize);
 		}
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerCRelu::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerCRelu::load(std::istream& from) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerCRelu::construct(std::initializer_list<float> fArgs, std::string sArg) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerCRelu::constructUsage() {
+	return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerCRelu::has_weights() const
+{
+	return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerCRelu::weights()
+{
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerCRelu::gradient_weights()
+{
+	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
 }

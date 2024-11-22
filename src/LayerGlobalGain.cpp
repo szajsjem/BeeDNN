@@ -15,7 +15,6 @@ LayerGlobalGain::LayerGlobalGain():
 {
     _weight.resize(1,1);
 	_gradientWeight.resize(1, 1);
-    LayerGlobalGain::init();
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerGlobalGain::~LayerGlobalGain()
@@ -29,11 +28,13 @@ Layer* LayerGlobalGain::clone() const
     return pLayer;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerGlobalGain::init()
+bool LayerGlobalGain::init(size_t& in, size_t& out, bool debug)
 {
     _weight.setOnes(); // by default
 
-	Layer::init();
+    out = in;
+    Layer::init(in, out, debug);
+    return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerGlobalGain::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
@@ -49,6 +50,37 @@ void LayerGlobalGain::backpropagation(const MatrixFloat &mIn,const MatrixFloat &
 		return;
 
     mGradientIn = mGradientOut * _weight(0);
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerGlobalGain::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerGlobalGain::load(std::istream& from) {
+    return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerGlobalGain::construct(std::initializer_list<float> fArgs, std::string sArg) {
+    return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerGlobalGain::constructUsage() {
+    return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerGlobalGain::has_weights() const
+{
+    return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerGlobalGain::weights()
+{
+    return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerGlobalGain::gradient_weights()
+{
+    return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////////////////////
 }

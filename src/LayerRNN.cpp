@@ -26,7 +26,7 @@ void LayerRNN::forward(const MatrixFloat& mIn, MatrixFloat& mOut)
     if ( (mIn.size() != _iFrameSize) || _bTrainMode)
     {
         // not on-the-fly prediction, reset state on startup
-        init();
+        _savedH.clear();
     }
 
     MatrixFloat mFrame;   
@@ -43,7 +43,7 @@ void LayerRNN::forward(const MatrixFloat& mIn, MatrixFloat& mOut)
 void LayerRNN::backpropagation(const MatrixFloat& mIn, const MatrixFloat& mGradientOut, MatrixFloat& mGradientIn)
 {
     MatrixFloat mFrame,mGradientOutTemp= mGradientOut,mH,mHm1;
-    MatrixFloat mGradientWeightSum;
+    //MatrixFloat mGradientWeightSum;
     Index iNbSamples = mIn.cols() / _iFrameSize;
     for (Index iS = iNbSamples-2; iS >0; iS --) //was  iNbSamples-1 TODO FIXME
     {
@@ -53,21 +53,54 @@ void LayerRNN::backpropagation(const MatrixFloat& mIn, const MatrixFloat& mGradi
         backpropagation_frame(mFrame, mH,mHm1,mGradientOutTemp, mGradientIn);
         mGradientOutTemp = mGradientIn;
 
-        //sum gradient weights
-        if (mGradientWeightSum.size() == 0)
-            mGradientWeightSum = _gradientWeight;
-        else
-            mGradientWeightSum += _gradientWeight;
+        ////sum gradient weights
+        //if (mGradientWeightSum.size() == 0)
+        //    mGradientWeightSum = _gradientWeight;
+        //else
+        //    mGradientWeightSum += _gradientWeight;
     }
  
     // compute mean of _gradientWeight
-    _gradientWeight = mGradientWeightSum * (1.f / iNbSamples);
+    //_gradientWeight = mGradientWeightSum * (1.f / iNbSamples);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void LayerRNN::init()
+bool LayerRNN::init(size_t& in, size_t& out, bool debug)
 {
-    Layer::init();
     _savedH.clear();
+    out = in;
+    Layer::init(in, out, debug);
+    return true;
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerRNN::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerRNN::load(std::istream& from) {
+    return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerRNN::construct(std::initializer_list<float> fArgs, std::string sArg) {
+    return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerRNN::constructUsage() {
+    return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerRNN::has_weights() const
+{
+    return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerRNN::weights()
+{
+    return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerRNN::gradient_weights()
+{
+    return std::vector<MatrixFloat*>();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 }

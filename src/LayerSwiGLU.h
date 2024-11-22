@@ -15,4 +15,5 @@ class LayerSwiGLU : public LayerGatedActivation
 public:
     explicit LayerSwiGLU();
 };
+REGISTER_LAYER(LayerSwiGLU, "LayerSwiGLU");
 }

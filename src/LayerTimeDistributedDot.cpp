@@ -19,8 +19,7 @@ LayerTimeDistributedDot::LayerTimeDistributedDot(int iInFrameSize, int iOutFrame
 	_iInFrameSize=iInFrameSize;
 	_iOutFrameSize=iOutFrameSize;
 
-	set_weight_initializer(sWeightInitializer);
-    LayerTimeDistributedDot::init();
+	set_initializer(sWeightInitializer);
 }
 ///////////////////////////////////////////////////////////////////////////////
 LayerTimeDistributedDot::~LayerTimeDistributedDot()
@@ -28,7 +27,7 @@ LayerTimeDistributedDot::~LayerTimeDistributedDot()
 ///////////////////////////////////////////////////////////////////////////////
 Layer* LayerTimeDistributedDot::clone() const
 {
-    LayerTimeDistributedDot* pLayer=new LayerTimeDistributedDot(_iInFrameSize,_iOutFrameSize, weight_initializer());
+    LayerTimeDistributedDot* pLayer=new LayerTimeDistributedDot(_iInFrameSize,_iOutFrameSize, get_initializer());
 	pLayer->_weight = _weight;
 
     return pLayer;
@@ -44,12 +43,14 @@ int LayerTimeDistributedDot::out_frame_size() const
 	return _iOutFrameSize;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerTimeDistributedDot::init()
+bool LayerTimeDistributedDot::init(size_t& in, size_t& out, bool debug)
 {
 	//Xavier uniform initialization
-	Initializers::compute(weight_initializer(), _weight, _iInFrameSize, _iOutFrameSize);
+	Initializers::compute(get_initializer(), _weight, _iInFrameSize, _iOutFrameSize);
 
-    Layer::init();
+	out = in;
+	Layer::init(in, out, debug);
+	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerTimeDistributedDot::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
@@ -77,6 +78,37 @@ void LayerTimeDistributedDot::backpropagation(const MatrixFloat &mIn,const Matri
 		mGradientIn = mGradientOutR * (_weight.transpose());
 		mGradientIn.resize(mIn.rows(), iNbFrames * _iInFrameSize);
 	}
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerTimeDistributedDot::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerTimeDistributedDot::load(std::istream& from) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerTimeDistributedDot::construct(std::initializer_list<float> fArgs, std::string sArg) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerTimeDistributedDot::constructUsage() {
+	return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerTimeDistributedDot::has_weights() const
+{
+	return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerTimeDistributedDot::weights()
+{
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerTimeDistributedDot::gradient_weights()
+{
+	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
 }

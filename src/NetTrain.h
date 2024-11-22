@@ -153,8 +153,6 @@ private:
 
 	std::vector<MatrixFloat*> _pWeights;
 	std::vector<MatrixFloat*> _pGradWeights;
-	std::vector<MatrixFloat*> _pBiases;
-	std::vector<MatrixFloat*> _pGradBiases;
 
 	float _fTrainLoss;
 	float _fTrainAccuracy;

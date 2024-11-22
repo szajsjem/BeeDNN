@@ -23,3 +23,33 @@ void beednn::LayerTranspose::backpropagation(const MatrixFloat& mIn, const Matri
 {
 	mGradientIn = mGradientOut.transpose();
 }
+
+///////////////////////////////////////////////////////////////////////////////
+void beednn::LayerTranspose::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+beednn::Layer* beednn::LayerTranspose::load(std::istream& from) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+beednn::Layer* beednn::LayerTranspose::construct(std::initializer_list<float> fArgs, std::string sArg) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string beednn::LayerTranspose::constructUsage() {
+	return "error";
+}
+///////////////////////////////////////////////////////////////
+bool beednn::LayerTranspose::has_weights() const
+{
+	return false;
+}
+///////////////////////////////////////////////////////////////////////////////
+bool beednn::LayerTranspose::init(size_t& in, size_t& out, bool debug)
+{
+	//except l2d
+	out = in;
+	Layer::init(in, out, debug);
+	return true;
+}

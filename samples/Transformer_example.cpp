@@ -91,7 +91,7 @@ void testLayerGradientImpl(Layer* ln, MatrixFloat inputData) {
 	float loss = mL.mean();
 	l->compute_gradient(mF, mb, mG);
 	ln->backpropagation(inputData, mG, mB);
-	MatrixFloat maa = inputData - mB / 1000;
+	MatrixFloat maa = inputData - mB / 1000;//0.001 learning rate on input data
 	ln->forward(maa, mF);
 	l->compute(mF, mb, mL);
 	float loss2 = mL.mean();
@@ -99,18 +99,13 @@ void testLayerGradientImpl(Layer* ln, MatrixFloat inputData) {
 		printf("pased gradient passthrough:%f\n", loss - loss2);
 	}
 	else {
-		printf("backpropagation is wrong\n");
+		printf("backpropagation grad is wrong\n");
 	}
 
-	auto bs = ln->biases();
-	auto bg = ln->gradient_biases();
-	for (int i = 0; i < bs.size(); i++) {
-		*bs[i] -= (*bg[i]) / 1000;
-	}
 	auto ws = ln->weights();
 	auto wg = ln->gradient_weights();
 	for (int i = 0; i < ws.size(); i++) {
-		*ws[i] -= (*wg[i]) / 1000;
+		*ws[i] -= (*wg[i]) / 1000;//0.001 learning rate on gradients
 	}
 
 	ln->forward(inputData, mF);
@@ -120,7 +115,7 @@ void testLayerGradientImpl(Layer* ln, MatrixFloat inputData) {
 		printf("pased gradient apply:%f\n", loss - loss3);
 	}
 	else {
-		printf("backpropagation is wrong\n");
+		printf("backpropagation weight is wrong\n");
 	}
 	delete l;
 }

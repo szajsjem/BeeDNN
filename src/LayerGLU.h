@@ -14,5 +14,17 @@ class LayerGLU : public LayerGatedActivation
 {
 public:
 	explicit LayerGLU();
+
+    virtual bool init(size_t& in, size_t& out, bool debug = false) override;
+
+    virtual bool has_weights() const override;
+    virtual std::vector<MatrixFloat*> weights() override;
+    virtual std::vector<MatrixFloat*> gradient_weights() override;
+
+    virtual void save(std::ostream& to)const override;
+    static Layer* load(std::istream& from);
+    static Layer* construct(std::initializer_list<float> fArgs, std::string sArg);
+    static std::string constructUsage();
 };
+REGISTER_LAYER(LayerGLU, "LayerGLU");
 }

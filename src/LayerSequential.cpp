@@ -7,7 +7,6 @@ namespace beednn {
 		for (auto layer : mSequentialLayers) {
 			_Layers.push_back(layer);
 		}
-		LayerSequential::init();
 	}
 	///////////////////////////////////////////////////////////////////////////////
 	LayerSequential::LayerSequential() :
@@ -28,13 +27,26 @@ namespace beednn {
 		for (auto x : _Layers) {
 			pLayer->_Layers.push_back(x->clone());
 		}
-		pLayer->init();
 		return pLayer;
 	}
 	///////////////////////////////////////////////////////////////////////////////
-	void LayerSequential::init()
+	bool LayerSequential::init(size_t& in, size_t& out, bool debug)
 	{
-		Layer::init();
+		size_t tmp=in,tmpo;
+		for (auto l : _Layers) {
+			tmpo = -1;
+			if (!l->init(tmp, tmpo, debug))
+				return false;
+			if (in == -1)
+				in = tmp;
+			tmp = tmpo;
+		}
+		if (out != -1)
+			if (tmp != out)
+				return false;
+		out = tmp;
+		Layer::init(in, out, debug);
+		return true;
 	}
 	///////////////////////////////////////////////////////////////////////////////
 	void LayerSequential::forward(const MatrixFloat& mIn, MatrixFloat& mOut)
@@ -96,40 +108,21 @@ namespace beednn {
 			}
 		return v;
 	}
-	///////////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////
-	bool LayerSequential::has_biases() const
-	{
-		for (auto layer : _Layers)
-			if (layer->has_biases())
-				return true;
-		return false;
+	///////////////////////////////////////////////////////////////////////////////
+	void LayerSequential::save(std::ostream& to) const {
+
 	}
 	///////////////////////////////////////////////////////////////
-	std::vector<MatrixFloat*> LayerSequential::biases()
-	{
-		std::vector<MatrixFloat*> v;
-		for (auto layer : _Layers) 
-			if (layer->has_biases()){
-				auto vi = layer->biases();
-				if (vi.size() > 0) {
-					v.insert(v.end(), vi.begin(), vi.end());
-				}
-		}
-		return v;
+	Layer* LayerSequential::load(std::istream& from) {
+		return NULL;
 	}
 	///////////////////////////////////////////////////////////////
-	std::vector<MatrixFloat*> LayerSequential::gradient_biases()
-	{
-		std::vector<MatrixFloat*> v;
-		for (auto layer : _Layers)
-			if (layer->has_biases()) {
-				auto vi = layer->gradient_biases();
-				if (vi.size() > 0) {
-					v.insert(v.end(), vi.begin(), vi.end());
-				}
-			}
-		return v;
+	Layer* LayerSequential::construct(std::initializer_list<float> fArgs, std::string sArg) {
+		return NULL;
+	}
+	///////////////////////////////////////////////////////////////
+	std::string LayerSequential::constructUsage() {
+		return "error";
 	}
 	///////////////////////////////////////////////////////////////
 }

@@ -29,9 +29,11 @@ Layer* LayerRandomFlip::clone() const
     return new LayerRandomFlip(_iNbRows,_iNbCols,_iNbChannels);
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerRandomFlip::init()
+bool LayerRandomFlip::init(size_t& in, size_t& out, bool debug)
 {
-    Layer::init();
+	out = in;
+	Layer::init(in, out, debug);
+	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void LayerRandomFlip::get_params(Index & iRows, Index & iCols, Index & iChannels) const
@@ -93,6 +95,37 @@ void LayerRandomFlip::backpropagation(const MatrixFloat &mIn,const MatrixFloat &
 			}
 		}
 	}
+}
+///////////////////////////////////////////////////////////////////////////////
+void LayerRandomFlip::save(std::ostream& to) const {
+
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerRandomFlip::load(std::istream& from) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+Layer* LayerRandomFlip::construct(std::initializer_list<float> fArgs, std::string sArg) {
+	return NULL;
+}
+///////////////////////////////////////////////////////////////
+std::string LayerRandomFlip::constructUsage() {
+	return "error";
+}
+///////////////////////////////////////////////////////////////
+bool LayerRandomFlip::has_weights() const
+{
+	return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerRandomFlip::weights()
+{
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerRandomFlip::gradient_weights()
+{
+	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////////////////////
 }

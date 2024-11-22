@@ -11,7 +11,6 @@ namespace beednn {
 		_ParallelReduction = mReduction;
 		_router = RouterLayer;
 		computeLayers = selectedexperts;
-		LayerRouter::init();
 	}
 	LayerRouter::LayerRouter()
 		:Layer("LayerRouter")
@@ -32,12 +31,13 @@ namespace beednn {
 		}
 		pLayer->_ParallelReduction = _ParallelReduction;
 		pLayer->_router = _router->clone();
-		pLayer->init();
 		return pLayer;
 	}
-	void LayerRouter::init()
+	bool LayerRouter::init(size_t& in, size_t& out, bool debug)
 	{
-		Layer::init();
+		out = in;
+		Layer::init(in, out, debug);
+		return true;
 	}
 	void LayerRouter::forward(const MatrixFloat& mIn, MatrixFloat& mOut)
 	{
@@ -148,43 +148,20 @@ namespace beednn {
 		}
 		return v;
 	}
-	bool LayerRouter::has_biases() const
-	{
-		for (auto layer : _Layers)
-			if (layer->has_biases())
-				return true;
-		return _router->has_biases();
+	///////////////////////////////////////////////////////////////////////////////
+	void LayerRouter::save(std::ostream& to) const {
+
 	}
-	std::vector<MatrixFloat*> LayerRouter::biases()
-	{
-		std::vector<MatrixFloat*> v;
-		for (auto layer : _Layers)
-			if (layer->has_biases()) {
-				auto vi = layer->biases();
-				if (vi.size() > 0) {
-					v.insert(v.end(), vi.begin(), vi.end());
-				}
-			}
-		auto vi = _router->biases();
-		if (vi.size() > 0) {
-			v.insert(v.end(), vi.begin(), vi.end());
-		}
-		return v;
+	///////////////////////////////////////////////////////////////
+	Layer* LayerRouter::load(std::istream& from) {
+		return NULL;
 	}
-	std::vector<MatrixFloat*> LayerRouter::gradient_biases()
-	{
-		std::vector<MatrixFloat*> v;
-		for (auto layer : _Layers)
-			if (layer->has_biases()) {
-				auto vi = layer->gradient_biases();
-				if (vi.size() > 0) {
-					v.insert(v.end(), vi.begin(), vi.end());
-				}
-			}
-		auto vi = _router->gradient_biases();
-		if (vi.size() > 0) {
-			v.insert(v.end(), vi.begin(), vi.end());
-		}
-		return v;
+	///////////////////////////////////////////////////////////////
+	Layer* LayerRouter::construct(std::initializer_list<float> fArgs, std::string sArg) {
+		return NULL;
+	}
+	///////////////////////////////////////////////////////////////
+	std::string LayerRouter::constructUsage() {
+		return "error";
 	}
 }

@@ -6,7 +6,6 @@ namespace beednn {
 	LayerNormalize::LayerNormalize() :
 		Layer("Normalize")
 	{
-		LayerNormalize::init();
 	}
 	///////////////////////////////////////////////////////////////////////////////
 	LayerNormalize::~LayerNormalize()
@@ -19,9 +18,11 @@ namespace beednn {
 		return pLayer;
 	}
 	///////////////////////////////////////////////////////////////////////////////
-	void LayerNormalize::init()
+	bool LayerNormalize::init(size_t& in, size_t& out, bool debug)
 	{
-		Layer::init();
+		out = in;
+		Layer::init(in, out, debug);
+		return true;
 	}
 	///////////////////////////////////////////////////////////////////////////////
 	void LayerNormalize::forward(const MatrixFloat& mIn, MatrixFloat& mOut)
@@ -62,6 +63,27 @@ namespace beednn {
 						- (mGradientOut(c, i)  * (mIn(c, i) - avg)) / pow(stdev, 2));
 			}
 		}
+	}
+	///////////////////////////////////////////////////////////////////////////////
+	void LayerNormalize::save(std::ostream& to) const {
+
+	}
+	///////////////////////////////////////////////////////////////
+	Layer* LayerNormalize::load(std::istream& from) {
+		return NULL;
+	}
+	///////////////////////////////////////////////////////////////
+	Layer* LayerNormalize::construct(std::initializer_list<float> fArgs, std::string sArg) {
+		return NULL;
+	}
+	///////////////////////////////////////////////////////////////
+	std::string LayerNormalize::constructUsage() {
+		return "error";
+	}
+	///////////////////////////////////////////////////////////////
+	bool LayerNormalize::has_weights() const
+	{
+		return false;
 	}
 	///////////////////////////////////////////////////////////////
 }

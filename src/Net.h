@@ -21,7 +21,7 @@ public:
     Net& operator=(const Net& other);
 
 	void clear();
-	void init();
+	size_t init(size_t inputDataSize = -1, bool debug = false);
 
 	// add a layer, take the ownership of the layer
 	void add(Layer* l);

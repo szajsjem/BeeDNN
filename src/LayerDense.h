@@ -8,26 +8,15 @@
 
 #pragma once
 
+#include "LayerSequential.h"
 #include "Layer.h"
 #include "Matrix.h"
 namespace beednn {
-class LayerDense : public Layer
+class LayerDense : public LayerSequential
 {
 public:
-    LayerDense(Index iInputSize,Index iOutputSize, const std::string& sWeightInitializer = "GlorotUniform", const std::string& sBiasInitializer = "Zeros");
-    virtual ~LayerDense() override;
-
-	Index input_size() const;
-	Index output_size() const;
-
-    virtual Layer* clone() const override;
-
-    virtual void forward(const MatrixFloat& mIn, MatrixFloat &mOut) override;
-
-    virtual void init() override;
-    virtual void backpropagation(const MatrixFloat &mIn,const MatrixFloat &mGradientOut, MatrixFloat &mGradientIn) override;
-
+    explicit LayerDense(Index iInputSize,Index iOutputSize, const std::string& sWeightInitializer = "GlorotUniform", const std::string& sBiasInitializer = "Zeros");
 private:
-	Index _iInputSize, _iOutputSize;
 };
+REGISTER_LAYER(LayerDense, "LayerDense");
 }

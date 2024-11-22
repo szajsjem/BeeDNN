@@ -82,3 +82,5 @@ build
 /CMakeFiles*
 /CMakeCache.txt
 *.sln
+/US30M1.10k.csv
+/samples/sample_softcomputing.cpp
