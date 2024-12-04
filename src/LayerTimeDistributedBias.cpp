@@ -86,12 +86,12 @@ bool LayerTimeDistributedBias::has_weights() const
     return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerTimeDistributedBias::weights()
+std::vector<MatrixFloat*> LayerTimeDistributedBias::weights() const
 {
     return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerTimeDistributedBias::gradient_weights()
+std::vector<MatrixFloat*> LayerTimeDistributedBias::gradient_weights() const
 {
     return std::vector<MatrixFloat*>();
 }

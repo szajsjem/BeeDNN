@@ -76,11 +76,11 @@ namespace beednn {
 	{
 		return _l2d->has_weights();
 	}
-	std::vector<MatrixFloat*> LayerBatchTo2D::weights()
+	std::vector<MatrixFloat*> LayerBatchTo2D::weights() const
 	{
 		return _l2d->weights();
 	}
-	std::vector<MatrixFloat*> LayerBatchTo2D::gradient_weights()
+	std::vector<MatrixFloat*> LayerBatchTo2D::gradient_weights() const
 	{
 		return _l2d->gradient_weights();
 	}

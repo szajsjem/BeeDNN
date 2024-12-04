@@ -86,12 +86,12 @@ bool LayerSoftmin::has_weights() const
 	return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerSoftmin::weights()
+std::vector<MatrixFloat*> LayerSoftmin::weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerSoftmin::gradient_weights()
+std::vector<MatrixFloat*> LayerSoftmin::gradient_weights() const
 {
 	return std::vector<MatrixFloat*>();
 }

@@ -93,12 +93,12 @@ bool LayerRNN::has_weights() const
     return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerRNN::weights()
+std::vector<MatrixFloat*> LayerRNN::weights() const
 {
     return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerRNN::gradient_weights()
+std::vector<MatrixFloat*> LayerRNN::gradient_weights() const
 {
     return std::vector<MatrixFloat*>();
 }

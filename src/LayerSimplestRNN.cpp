@@ -82,12 +82,12 @@ bool LayerSimplestRNN::has_weights() const
     return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerSimplestRNN::weights()
+std::vector<MatrixFloat*> LayerSimplestRNN::weights() const
 {
     return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerSimplestRNN::gradient_weights()
+std::vector<MatrixFloat*> LayerSimplestRNN::gradient_weights() const
 {
     return std::vector<MatrixFloat*>();
 }

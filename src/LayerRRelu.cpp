@@ -99,12 +99,12 @@ bool LayerRRelu::has_weights() const
 	return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerRRelu::weights()
+std::vector<MatrixFloat*> LayerRRelu::weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerRRelu::gradient_weights()
+std::vector<MatrixFloat*> LayerRRelu::gradient_weights() const
 {
 	return std::vector<MatrixFloat*>();
 }

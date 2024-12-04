@@ -7,6 +7,8 @@
 */
 
 #include "Layer.h"
+#include <iostream>
+#include "LayerFactory.h"
 
 using namespace std;
 namespace beednn {
@@ -39,7 +41,14 @@ void Layer::set_train_mode(bool bTrainMode)
 ////////////////////////////////////////////////////////////////
 bool Layer::init(size_t& in, size_t& out, bool debug)
 {
-	return false;
+    node_id = global_node_id++;
+
+    if (debug) {
+        std::cout << "Initializing " << _sType << " layer" << std::endl;
+        std::cout << "Input size: " << in << std::endl;
+        std::cout << "Output size: " << out << std::endl;
+    }
+    return false;// this function should be rewritten in 
 }
 ///////////////////////////////////////////////////////////////
 bool Layer::has_weights() const
@@ -47,12 +56,12 @@ bool Layer::has_weights() const
     return false;
 }
 ///////////////////////////////////////////////////////////////
-vector<MatrixFloat*> Layer::weights()
+vector<MatrixFloat*> Layer::weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-vector<MatrixFloat*> Layer::gradient_weights()
+vector<MatrixFloat*> Layer::gradient_weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
@@ -72,15 +81,16 @@ vector<MatrixFloat*> Layer::gradient_weights()
  }
  ///////////////////////////////////////////////////////////////
  Layer* Layer::load(std::istream& from) {
-	 return NULL;
+	 return LayerFactory::loadLayer(from);
  }
  ///////////////////////////////////////////////////////////////
  Layer* Layer::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	 return NULL;
+	 return LayerFactory::construct(sArg,fArgs,sArg);
  }
  ///////////////////////////////////////////////////////////////
  std::string Layer::constructUsage(){
 	 return "error";
  }
+ int Layer::global_node_id;
  ///////////////////////////////////////////////////////////////
 }

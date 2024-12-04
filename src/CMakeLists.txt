@@ -74,7 +74,8 @@ set(BEEDNN_FILES
 	StandardScaler.cpp StandardScaler.h
 	LayerTranspose.cpp LayerTranspose.h
 	LayerBatchTo2D.cpp LayerBatchTo2D.h
-	LayerRouter.h LayerRouter.cpp)
+	LayerRouter.h LayerRouter.cpp
+	allLayers.h "ParallelReduction.cpp")
 include_directories(.)
 add_library( libBeeDNN STATIC ${BEEDNN_FILES})
 

@@ -23,6 +23,7 @@ endif()
 add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(samples)
+add_subdirectory(java_binding)
 
 # Add installation rules
 install(TARGETS libBeeDNN

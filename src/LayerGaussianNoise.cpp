@@ -72,12 +72,12 @@ bool LayerGaussianNoise::has_weights() const
 	return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerGaussianNoise::weights()
+std::vector<MatrixFloat*> LayerGaussianNoise::weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerGaussianNoise::gradient_weights()
+std::vector<MatrixFloat*> LayerGaussianNoise::gradient_weights() const
 {
 	return std::vector<MatrixFloat*>();
 }

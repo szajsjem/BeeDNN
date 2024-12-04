@@ -101,12 +101,12 @@ bool LayerTimeDistributedDot::has_weights() const
 	return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerTimeDistributedDot::weights()
+std::vector<MatrixFloat*> LayerTimeDistributedDot::weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerTimeDistributedDot::gradient_weights()
+std::vector<MatrixFloat*> LayerTimeDistributedDot::gradient_weights() const
 {
 	return std::vector<MatrixFloat*>();
 }

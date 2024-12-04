@@ -69,5 +69,17 @@ Layer* LayerSimpleRNN::construct(std::initializer_list<float> fArgs, std::string
 std::string LayerSimpleRNN::constructUsage() {
     return "error";
 }
+///////////////////////////////////////////////////////////////
+bool LayerSimpleRNN::has_weights() const {
+    return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerSimpleRNN::weights() const {
+    return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerSimpleRNN::gradient_weights() const {
+    return std::vector<MatrixFloat*>();
+}
 /////////////////////////////////////////////////////////////////////////////////////////////
 }

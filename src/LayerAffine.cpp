@@ -91,12 +91,12 @@ bool LayerAffine::has_weights() const
 	return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerAffine::weights()
+std::vector<MatrixFloat*> LayerAffine::weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerAffine::gradient_weights()
+std::vector<MatrixFloat*> LayerAffine::gradient_weights() const
 {
 	return std::vector<MatrixFloat*>();
 }

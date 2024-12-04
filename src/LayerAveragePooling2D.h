@@ -27,8 +27,8 @@ public:
     virtual bool init(size_t& in, size_t& out, bool debug = false) override;
 
     virtual bool has_weights() const override;
-    virtual std::vector<MatrixFloat*> weights() override;
-    virtual std::vector<MatrixFloat*> gradient_weights() override;
+    virtual std::vector<MatrixFloat*> weights() const override;
+    virtual std::vector<MatrixFloat*> gradient_weights() const override;
 
     virtual void save(std::ostream& to)const override;
     static Layer* load(std::istream& from);

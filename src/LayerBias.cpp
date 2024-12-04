@@ -79,17 +79,17 @@ bool LayerBias::has_weights() const
 	return true;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerBias::weights()
+std::vector<MatrixFloat*> LayerBias::weights() const
 {
 	std::vector<MatrixFloat*> v;
-	v.push_back(&_bias);
+	v.push_back((MatrixFloat*)&_bias);
 	return v;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerBias::gradient_weights()
+std::vector<MatrixFloat*> LayerBias::gradient_weights() const
 {
 	std::vector<MatrixFloat*> v;
-	v.push_back(&_gradientBias);
+	v.push_back((MatrixFloat*) & _gradientBias);
 	return v;
 }
 ///////////////////////////////////////////////////////////////

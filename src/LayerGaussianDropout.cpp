@@ -73,5 +73,21 @@ Layer* LayerGaussianDropout::construct(std::initializer_list<float> fArgs, std::
 std::string LayerGaussianDropout::constructUsage() {
 	return "error";
 }
+///////////////////////////////////////////////////////////////
+bool LayerGaussianDropout::init(size_t& in, size_t& out, bool debug) {
+	return false;
+}
+///////////////////////////////////////////////////////////////
+bool LayerGaussianDropout::has_weights() const {
+	return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerGaussianDropout::weights() const {
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerGaussianDropout::gradient_weights() const {
+	return std::vector<MatrixFloat*>();
+}
 ///////////////////////////////////////////////////////////////////////////////
 }

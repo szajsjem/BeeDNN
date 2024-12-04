@@ -85,12 +85,12 @@ bool LayerGain::has_weights() const
 	return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerGain::weights()
+std::vector<MatrixFloat*> LayerGain::weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerGain::gradient_weights()
+std::vector<MatrixFloat*> LayerGain::gradient_weights() const
 {
 	return std::vector<MatrixFloat*>();
 }

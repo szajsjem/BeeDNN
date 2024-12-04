@@ -94,12 +94,12 @@ bool LayerGatedActivation::has_weights() const
 	return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerGatedActivation::weights()
+std::vector<MatrixFloat*> LayerGatedActivation::weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerGatedActivation::gradient_weights()
+std::vector<MatrixFloat*> LayerGatedActivation::gradient_weights() const
 {
 	return std::vector<MatrixFloat*>();
 }

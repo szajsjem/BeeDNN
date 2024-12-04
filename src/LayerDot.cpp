@@ -100,7 +100,7 @@ Layer* LayerDot::construct(std::initializer_list<float> fArgs, std::string sArg)
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerDot::constructUsage() {
-	return "error";
+	return "layer fully connected\nsWeightInitializer\niInputSize;iOutputSize";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerDot::has_weights() const
@@ -108,17 +108,17 @@ bool LayerDot::has_weights() const
 	return true;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerDot::weights()
+std::vector<MatrixFloat*> LayerDot::weights() const
 {
 	std::vector<MatrixFloat*> v;
-	v.push_back(&_weight);
+	v.push_back((MatrixFloat*) & _weight);
 	return v;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerDot::gradient_weights()
+std::vector<MatrixFloat*> LayerDot::gradient_weights() const
 {
 	std::vector<MatrixFloat*> v;
-	v.push_back(&_gradientWeight);
+	v.push_back((MatrixFloat*)&_gradientWeight);
 	return v;
 }
 ///////////////////////////////////////////////////////////////

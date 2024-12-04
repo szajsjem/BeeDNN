@@ -116,7 +116,7 @@ namespace beednn {
 				return true;
 		return _router->has_weights();
 	}
-	std::vector<MatrixFloat*> LayerRouter::weights()
+	std::vector<MatrixFloat*> LayerRouter::weights() const
 	{
 		std::vector<MatrixFloat*> v;
 		for (auto layer : _Layers)
@@ -132,7 +132,7 @@ namespace beednn {
 		}
 		return v;
 	}
-	std::vector<MatrixFloat*> LayerRouter::gradient_weights()
+	std::vector<MatrixFloat*> LayerRouter::gradient_weights() const
 	{
 		std::vector<MatrixFloat*> v;
 		for (auto layer : _Layers)

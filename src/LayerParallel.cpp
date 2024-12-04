@@ -178,7 +178,7 @@ namespace beednn {
 		return false;
 	}
 	///////////////////////////////////////////////////////////////
-	std::vector<MatrixFloat*> LayerParallel::weights()
+	std::vector<MatrixFloat*> LayerParallel::weights() const
 	{
 		std::vector<MatrixFloat*> v;
 		for (auto layer : _Layers)
@@ -191,7 +191,7 @@ namespace beednn {
 		return v;
 	}
 	///////////////////////////////////////////////////////////////
-	std::vector<MatrixFloat*> LayerParallel::gradient_weights()
+	std::vector<MatrixFloat*> LayerParallel::gradient_weights() const
 	{
 		std::vector<MatrixFloat*> v;
 		for (auto layer : _Layers)

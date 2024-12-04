@@ -73,12 +73,12 @@ bool LayerGlobalBias::has_weights() const
 	return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerGlobalBias::weights()
+std::vector<MatrixFloat*> LayerGlobalBias::weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerGlobalBias::gradient_weights()
+std::vector<MatrixFloat*> LayerGlobalBias::gradient_weights() const
 {
 	return std::vector<MatrixFloat*>();
 }

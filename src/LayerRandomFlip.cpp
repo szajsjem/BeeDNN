@@ -118,12 +118,12 @@ bool LayerRandomFlip::has_weights() const
 	return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerRandomFlip::weights()
+std::vector<MatrixFloat*> LayerRandomFlip::weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerRandomFlip::gradient_weights()
+std::vector<MatrixFloat*> LayerRandomFlip::gradient_weights() const
 {
 	return std::vector<MatrixFloat*>();
 }

@@ -71,19 +71,19 @@ namespace beednn {
 		return true;
 	}
 	///////////////////////////////////////////////////////////////
-	std::vector<MatrixFloat*> LayerEmbed::weights()
+	std::vector<MatrixFloat*> LayerEmbed::weights() const
 	{
 		std::vector<MatrixFloat*> v;
-		v.push_back(&_bias);
-		v.push_back(&_bias2);
+		v.push_back((MatrixFloat*)&_bias);
+		v.push_back((MatrixFloat*)&_bias2);
 		return v;
 	}
 	///////////////////////////////////////////////////////////////
-	std::vector<MatrixFloat*> LayerEmbed::gradient_weights()
+	std::vector<MatrixFloat*> LayerEmbed::gradient_weights() const
 	{
 		std::vector<MatrixFloat*> v;
-		v.push_back(&_gradientBias);
-		v.push_back(&_gradientBias2);
+		v.push_back((MatrixFloat*)&_gradientBias);
+		v.push_back((MatrixFloat*)&_gradientBias2);
 		return v;
 	}
 	///////////////////////////////////////////////////////////////////////////////

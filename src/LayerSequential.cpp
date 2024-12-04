@@ -83,7 +83,7 @@ namespace beednn {
 		return false;
 	}
 	///////////////////////////////////////////////////////////////
-	std::vector<MatrixFloat*> LayerSequential::weights()
+	std::vector<MatrixFloat*> LayerSequential::weights() const
 	{
 		std::vector<MatrixFloat*> v;
 		for (auto layer : _Layers)
@@ -96,7 +96,7 @@ namespace beednn {
 		return v;
 	}
 	///////////////////////////////////////////////////////////////
-	std::vector<MatrixFloat*> LayerSequential::gradient_weights()
+	std::vector<MatrixFloat*> LayerSequential::gradient_weights() const
 	{
 		std::vector<MatrixFloat*> v;
 		for (auto layer : _Layers)

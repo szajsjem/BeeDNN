@@ -87,12 +87,12 @@ bool LayerChannelBias::has_weights() const
 	return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerChannelBias::weights()
+std::vector<MatrixFloat*> LayerChannelBias::weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerChannelBias::gradient_weights()
+std::vector<MatrixFloat*> LayerChannelBias::gradient_weights() const
 {
 	return std::vector<MatrixFloat*>();
 }

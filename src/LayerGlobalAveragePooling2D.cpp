@@ -109,5 +109,21 @@ Layer* LayerGlobalAveragePooling2D::construct(std::initializer_list<float> fArgs
 std::string LayerGlobalAveragePooling2D::constructUsage() {
 	return "error";
 }
+///////////////////////////////////////////////////////////////
+bool LayerGlobalAveragePooling2D::init(size_t& in, size_t& out, bool debug ) {
+	return false;
+}
+///////////////////////////////////////////////////////////////
+bool LayerGlobalAveragePooling2D::has_weights() const {
+	return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerGlobalAveragePooling2D::weights() const {
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerGlobalAveragePooling2D::gradient_weights() const {
+	return std::vector<MatrixFloat*>();
+}
 ///////////////////////////////////////////////////////////////////////////////
 }

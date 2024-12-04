@@ -69,12 +69,12 @@ bool LayerUniformNoise::has_weights() const
 	return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerUniformNoise::weights()
+std::vector<MatrixFloat*> LayerUniformNoise::weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerUniformNoise::gradient_weights()
+std::vector<MatrixFloat*> LayerUniformNoise::gradient_weights() const
 {
 	return std::vector<MatrixFloat*>();
 }

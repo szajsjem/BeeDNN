@@ -129,4 +129,20 @@ std::string LayerAveragePooling2D::constructUsage() {
 	return "error";
 }
 ///////////////////////////////////////////////////////////////
+bool LayerAveragePooling2D::init(size_t& in, size_t& out, bool debug) {
+	return false;
+}
+///////////////////////////////////////////////////////////////
+bool LayerAveragePooling2D::has_weights() const {
+	return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerAveragePooling2D::weights() const {
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerAveragePooling2D::gradient_weights() const {
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
 }

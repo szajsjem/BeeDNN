@@ -90,12 +90,12 @@ bool LayerSoftmax::has_weights() const
 	return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerSoftmax::weights()
+std::vector<MatrixFloat*> LayerSoftmax::weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerSoftmax::gradient_weights()
+std::vector<MatrixFloat*> LayerSoftmax::gradient_weights() const
 {
 	return std::vector<MatrixFloat*>();
 }

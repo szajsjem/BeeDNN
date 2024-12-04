@@ -83,12 +83,12 @@ bool LayerDropout::has_weights() const
 	return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerDropout::weights()
+std::vector<MatrixFloat*> LayerDropout::weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerDropout::gradient_weights()
+std::vector<MatrixFloat*> LayerDropout::gradient_weights() const
 {
 	return std::vector<MatrixFloat*>();
 }

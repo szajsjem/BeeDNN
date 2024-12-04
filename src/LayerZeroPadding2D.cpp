@@ -110,5 +110,21 @@ Layer* LayerZeroPadding2D::construct(std::initializer_list<float> fArgs, std::st
 std::string LayerZeroPadding2D::constructUsage() {
 	return "error";
 }
+///////////////////////////////////////////////////////////////
+bool LayerZeroPadding2D::init(size_t& in, size_t& out, bool debug) {
+	return false;
+}
+///////////////////////////////////////////////////////////////
+bool LayerZeroPadding2D::has_weights() const {
+	return false;
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerZeroPadding2D::weights() const {
+	return std::vector<MatrixFloat*>();
+}
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat*> LayerZeroPadding2D::gradient_weights() const {
+	return std::vector<MatrixFloat*>();
+}
 ///////////////////////////////////////////////////////////////////////////////
 }

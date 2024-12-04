@@ -84,12 +84,12 @@ bool LayerActivation::has_weights() const
     return false;
 }
 ///////////////////////////////////////////////////////////////
-vector<MatrixFloat*> LayerActivation::weights()
+vector<MatrixFloat*> LayerActivation::weights() const
 {
     return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-vector<MatrixFloat*> LayerActivation::gradient_weights()
+vector<MatrixFloat*> LayerActivation::gradient_weights() const
 {
     return std::vector<MatrixFloat*>();
 }

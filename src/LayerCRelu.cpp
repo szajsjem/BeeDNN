@@ -87,12 +87,12 @@ bool LayerCRelu::has_weights() const
 	return false;
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerCRelu::weights()
+std::vector<MatrixFloat*> LayerCRelu::weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerCRelu::gradient_weights()
+std::vector<MatrixFloat*> LayerCRelu::gradient_weights() const
 {
 	return std::vector<MatrixFloat*>();
 }
