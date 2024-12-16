@@ -14,5 +14,8 @@ namespace beednn {
 LayerSeGLU::LayerSeGLU() :
     LayerGatedActivation("Identity", "Selu")
 { }
+std::string LayerSeGLU::constructUsage() {
+    return "scaled exponential gated linear unit\n \n ";
+}
 ///////////////////////////////////////////////////////////////////////////////
 }

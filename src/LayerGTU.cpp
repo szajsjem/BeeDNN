@@ -14,5 +14,8 @@ namespace beednn {
 LayerGTU::LayerGTU() :
 	LayerGatedActivation("Tanh", "Sigmoid")
 { }
+std::string LayerGTU::constructUsage() {
+	return "gated tanh unit\n \n ";
+}
 ///////////////////////////////////////////////////////////////////////////////
 }

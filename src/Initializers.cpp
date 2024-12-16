@@ -120,4 +120,18 @@ void Initializers::compute(const std::string& sInitializer, MatrixFloat& m, Inde
     // todo : throw an error if here
 }
 ///////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> Initializers::getAllInitializers() {
+    return {
+        "GlorotUniform",
+        "GlorotNormal",
+        "HeUniform",
+        "HeNormal",
+        "LecunUniform",
+        "LecunNormal",
+        "Uniform",
+        "Normal",
+        "Zeros",
+        "Ones"
+    };
+}
 }

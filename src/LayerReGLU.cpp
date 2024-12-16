@@ -15,5 +15,8 @@ namespace beednn {
 LayerReGLU::LayerReGLU() :
     LayerGatedActivation("Identity", "Relu")
 { }
+std::string LayerReGLU::constructUsage() {
+    return "rectified gated linear unit\n \n ";
+}
 ///////////////////////////////////////////////////////////////////////////////
 }

@@ -69,7 +69,7 @@ Layer* LayerActivation::construct(std::initializer_list<float> fArgs, std::strin
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerActivation::constructUsage() {
-    return "error";
+    return "applies an activation function\nsActivation\n ";
 }
 ////////////////////////////////////////////////////////////////
 bool LayerActivation::init(size_t& in, size_t& out, bool debug)

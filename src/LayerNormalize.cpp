@@ -78,7 +78,7 @@ namespace beednn {
 	}
 	///////////////////////////////////////////////////////////////
 	std::string LayerNormalize::constructUsage() {
-		return "error";
+		return "normalizes activations\n \n ";
 	}
 	///////////////////////////////////////////////////////////////
 	bool LayerNormalize::has_weights() const

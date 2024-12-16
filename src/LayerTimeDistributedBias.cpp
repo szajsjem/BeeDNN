@@ -78,7 +78,7 @@ Layer* LayerTimeDistributedBias::construct(std::initializer_list<float> fArgs, s
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerTimeDistributedBias::constructUsage() {
-    return "error";
+    return "applies bias across time dimension\nsBiasInitializer\niFrameSize";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerTimeDistributedBias::has_weights() const

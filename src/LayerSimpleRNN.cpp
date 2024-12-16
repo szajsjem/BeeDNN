@@ -67,7 +67,7 @@ Layer* LayerSimpleRNN::construct(std::initializer_list<float> fArgs, std::string
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerSimpleRNN::constructUsage() {
-    return "error";
+    return "basic recurrent neural network\n \niSampleSize;iUnits";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerSimpleRNN::has_weights() const {

@@ -16,6 +16,7 @@ namespace beednn {
 	{
 	public:
 		explicit LayerTransformerFeedForward(Index iDimmensionSize, Index iMemorySize, const std::string& sActivation, const std::string& sWeightInitializer = "GlorotUniform", const std::string& sBiasInitializer = "Zeros");
+		static std::string constructUsage();
 	};
 	REGISTER_LAYER(LayerTransformerFeedForward, "LayerTransformerFeedForward");
 };

@@ -118,7 +118,7 @@ Layer* LayerPELU::construct(std::initializer_list<float> fArgs, std::string sArg
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerPELU::constructUsage() {
-	return "error";
+	return "parametric exponential linear unit\n \n ";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerPELU::has_weights() const {

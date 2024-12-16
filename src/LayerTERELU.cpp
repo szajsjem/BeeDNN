@@ -101,7 +101,7 @@ Layer* LayerTERELU::construct(std::initializer_list<float> fArgs, std::string sA
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerTERELU::constructUsage() {
-	return "error";
+	return "thresholded exponential relu\n \n ";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerTERELU::has_weights() const {

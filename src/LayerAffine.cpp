@@ -83,7 +83,7 @@ Layer* LayerAffine::construct(std::initializer_list<float> fArgs, std::string sA
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerAffine::constructUsage() {
-	return "error";
+	return "applies an affine transformation (scale and shift)\n \niInRows;iInCols;iInChannels;iRowFactor;iColFactor";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerAffine::has_weights() const

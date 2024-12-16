@@ -21,4 +21,7 @@ namespace beednn {
 				new LayerDense(iNumHeads * iHeadVMem, iDimmensionSize, sWeightInitializer, sBiasInitializer)
 			})
 			}, SUM) {}
+	std::string LayerTransformerHeads::constructUsage() {
+		return "multi-head attention block\nsReduction;sWeightInitializer;sBiasInitializer\niDimensionSize;iHeadVMem;iHeadQKMem;iNumHeads";
+	}
 }

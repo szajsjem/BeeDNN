@@ -22,5 +22,8 @@ namespace beednn {
             })
 {
 }
+    std::string LayerTimeDistributedDense::constructUsage() {
+        return "dense layer applied across time\nsWeightInitializer;sBiasInitializer\niInFrameSize;iOutFrameSize";
+    }
 ///////////////////////////////////////////////////////////////////////////////
 }

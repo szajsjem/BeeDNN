@@ -14,5 +14,8 @@ namespace beednn {
 LayerGEGLU::LayerGEGLU() :
     LayerGatedActivation("Identity", "GELU")
 { }
+std::string LayerGEGLU::constructUsage() {
+    return "gated gaussian error linear unit\n \n ";
+}
 ///////////////////////////////////////////////////////////////////////////////
 }

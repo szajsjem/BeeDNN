@@ -77,7 +77,7 @@ Layer* LayerGain::construct(std::initializer_list<float> fArgs, std::string sArg
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerGain::constructUsage() {
-	return "error";
+	return "applies trainable multiplicative scaling\n \n ";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerGain::has_weights() const

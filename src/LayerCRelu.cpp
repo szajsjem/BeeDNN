@@ -79,7 +79,7 @@ Layer* LayerCRelu::construct(std::initializer_list<float> fArgs, std::string sAr
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerCRelu::constructUsage() {
-	return "error";
+	return "applies concatenated rectified linear unit\n \n ";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerCRelu::has_weights() const

@@ -108,7 +108,7 @@ Layer* LayerZeroPadding2D::construct(std::initializer_list<float> fArgs, std::st
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerZeroPadding2D::constructUsage() {
-	return "error";
+	return "adds zero padding to 2D input\n \niInRows;iInCols;iInChannels;iBorder";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerZeroPadding2D::init(size_t& in, size_t& out, bool debug) {

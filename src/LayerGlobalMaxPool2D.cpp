@@ -96,7 +96,7 @@ Layer* LayerGlobalMaxPool2D::construct(std::initializer_list<float> fArgs, std::
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerGlobalMaxPool2D::constructUsage() {
-	return "error";
+	return "global max pooling for 2D data\n \niInRows;iInCols;iInChannels";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerGlobalMaxPool2D::has_weights() const

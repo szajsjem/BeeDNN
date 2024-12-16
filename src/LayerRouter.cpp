@@ -162,6 +162,6 @@ namespace beednn {
 	}
 	///////////////////////////////////////////////////////////////
 	std::string LayerRouter::constructUsage() {
-		return "error";
+		return "routes inputs through expert layers\nlayer;sReduction;layers\nfSelectedExperts";
 	}
 }

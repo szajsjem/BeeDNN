@@ -122,7 +122,7 @@ namespace beednn {
 	}
 	///////////////////////////////////////////////////////////////
 	std::string LayerSequential::constructUsage() {
-		return "error";
+		return "sequential layer container\nlayers\niNumLayers";
 	}
 	///////////////////////////////////////////////////////////////
 }

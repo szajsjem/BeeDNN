@@ -98,7 +98,7 @@ namespace beednn {
 	}
 	///////////////////////////////////////////////////////////////
 	std::string LayerBatchTo2D::constructUsage() {
-		return "error";
+		return "reshapes batch input to 2D format\nlayer\niInColSize;iOutColSize;iOutRowSize";
 	}
 	///////////////////////////////////////////////////////////////
 }

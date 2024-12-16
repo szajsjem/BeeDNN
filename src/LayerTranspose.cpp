@@ -38,7 +38,7 @@ beednn::Layer* beednn::LayerTranspose::construct(std::initializer_list<float> fA
 }
 ///////////////////////////////////////////////////////////////
 std::string beednn::LayerTranspose::constructUsage() {
-	return "error";
+	return "transposes input matrix\n \n ";
 }
 ///////////////////////////////////////////////////////////////
 bool beednn::LayerTranspose::has_weights() const

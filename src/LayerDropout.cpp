@@ -70,7 +70,7 @@ Layer* LayerDropout::construct(std::initializer_list<float> fArgs, std::string s
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerDropout::constructUsage() {
-	return "error";
+	return "randomly drops units during training\n \nfRate";
 }
 ////////////////////////////////////////////////////////////////
 bool LayerDropout::init(size_t& in, size_t& out, bool debug)

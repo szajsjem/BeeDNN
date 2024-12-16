@@ -18,5 +18,8 @@ namespace beednn {
         new LayerGlobalBias()
         })
 {}
+    std::string LayerGlobalAffine::constructUsage() {
+        return "applies global affine transformation\n \n ";
+    }
 ///////////////////////////////////////////////////////////////////////////////
 }

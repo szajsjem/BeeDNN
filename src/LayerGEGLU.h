@@ -21,6 +21,7 @@ public:
     static Layer* load(std::istream& from);
     static Layer* construct(std::initializer_list<float> fArgs, std::string sArg);
     static std::string constructUsage();*/
+    static std::string constructUsage();
 };
 REGISTER_LAYER(LayerGEGLU, "LayerGEGLU");
 }

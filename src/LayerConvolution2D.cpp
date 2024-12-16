@@ -373,7 +373,7 @@ Layer* LayerConvolution2D::construct(std::initializer_list<float> fArgs, std::st
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerConvolution2D::constructUsage() {
-	return "error";
+	return "applies 2D convolution operation\n \niInRows;iInCols;iInChannels;iKernelRows;iKernelCols;iOutChannels;iRowStride;iColStride";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerConvolution2D::has_weights() const

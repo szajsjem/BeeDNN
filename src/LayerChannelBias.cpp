@@ -79,7 +79,7 @@ Layer* LayerChannelBias::construct(std::initializer_list<float> fArgs, std::stri
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerChannelBias::constructUsage() {
-	return "error";
+	return "adds trainable bias per channel\nsBiasInitializer\niNbRows;iNbCols;iNbChannels";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerChannelBias::has_weights() const

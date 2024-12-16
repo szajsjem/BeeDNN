@@ -100,7 +100,7 @@ Layer* LayerDot::construct(std::initializer_list<float> fArgs, std::string sArg)
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerDot::constructUsage() {
-	return "layer fully connected\nsWeightInitializer\niInputSize;iOutputSize";
+	return "matrix multiplication layer\nsWeightInitializer\niInputSize;iOutputSize";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerDot::has_weights() const

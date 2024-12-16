@@ -94,7 +94,7 @@ Layer* LayerPRelu::construct(std::initializer_list<float> fArgs, std::string sAr
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerPRelu::constructUsage() {
-	return "error";
+	return "parametric rectified linear unit\n \n ";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerPRelu::has_weights() const

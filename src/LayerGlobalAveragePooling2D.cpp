@@ -107,7 +107,7 @@ Layer* LayerGlobalAveragePooling2D::construct(std::initializer_list<float> fArgs
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerGlobalAveragePooling2D::constructUsage() {
-	return "error";
+	return "global average pooling for 2D data\n \niInRows;iInCols;iInChannels";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerGlobalAveragePooling2D::init(size_t& in, size_t& out, bool debug ) {

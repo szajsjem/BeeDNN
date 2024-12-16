@@ -18,6 +18,7 @@
 #include "LayerParallel.h"
 #include "LayerRouter.h"
 #include "LayerStacked.h"
+#include "LayerRepetetive.h"
 
 // Convolutional and Pooling Layers
 #include "LayerConvolution2D.h"
@@ -63,19 +64,19 @@
 #include "LayerGlobalAffine.h"
 #include "LayerChannelBias.h"
 
-// RNN and Attention Layers
+// RNN Layers
 #include "LayerRNN.h"
 #include "LayerSimpleRNN.h"
 #include "LayerSimplestRNN.h"
-#include "LayerSelfDot.h"
-#include "LayerSelfAttention.h"
 
 // Time Distributed Layers
 #include "LayerTimeDistributedDot.h"
 #include "LayerTimeDistributedBias.h"
 #include "LayerTimeDistributedDense.h"
 
-// Transformer Layers
+// Transformer and Attention Layers
+#include "LayerSelfDot.h"
+#include "LayerSelfAttention.h"
 #include "LayerTranspose.h"
 #include "LayerTransformerHeads.h"
 #include "LayerTransformerFeedForward.h"

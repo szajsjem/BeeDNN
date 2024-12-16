@@ -10,4 +10,7 @@ namespace beednn {
 				new LayerActivation(sActivation),
 				new LayerDense(iMemorySize, iDimmensionSize, sWeightInitializer, sBiasInitializer)})
 			}, SUM) {}
+	std::string LayerTransformerFeedForward::constructUsage() {
+		return "transformer feed forward block\nsReduction;sActivation;sWeightInitializer;sBiasInitializer\niDimensionSize;iMemorySize";
+	}
 }

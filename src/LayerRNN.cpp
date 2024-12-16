@@ -85,7 +85,7 @@ Layer* LayerRNN::construct(std::initializer_list<float> fArgs, std::string sArg)
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerRNN::constructUsage() {
-    return "error";
+    return "recurrent neural network base class\n \niFrameSize;iUnits";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerRNN::has_weights() const

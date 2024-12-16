@@ -75,9 +75,11 @@ set(BEEDNN_FILES
 	LayerTranspose.cpp LayerTranspose.h
 	LayerBatchTo2D.cpp LayerBatchTo2D.h
 	LayerRouter.h LayerRouter.cpp
-	allLayers.h "ParallelReduction.cpp")
+	ParallelReduction.cpp ParallelReduction.h
+	LayerRepetetive.cpp LayerRepetetive.h
+	allLayers.h )
 include_directories(.)
-add_library( libBeeDNN STATIC ${BEEDNN_FILES})
+add_library( libBeeDNN STATIC ${BEEDNN_FILES} "LayerRepetetive.cpp")
 
 # Make the library available for installation
 set_target_properties(libBeeDNN PROPERTIES

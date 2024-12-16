@@ -65,7 +65,7 @@ Layer* LayerGlobalBias::construct(std::initializer_list<float> fArgs, std::strin
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerGlobalBias::constructUsage() {
-    return "error";
+	return "adds global bias term\n \n ";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerGlobalBias::has_weights() const

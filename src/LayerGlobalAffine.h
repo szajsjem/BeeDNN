@@ -16,6 +16,7 @@ class LayerGlobalAffine : public LayerSequential
 {
 public:
     explicit LayerGlobalAffine();
+    static std::string constructUsage();
 };
 REGISTER_LAYER(LayerGlobalAffine, "LayerGlobalAffine");
 }

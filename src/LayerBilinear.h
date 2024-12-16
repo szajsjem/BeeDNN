@@ -15,6 +15,7 @@ class LayerBilinear : public LayerGatedActivation
 {
 public:
     explicit LayerBilinear();
+    static std::string constructUsage();
 };
 REGISTER_LAYER(LayerBilinear, "LayerBilinear");
 }

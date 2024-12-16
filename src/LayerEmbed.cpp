@@ -100,7 +100,7 @@ namespace beednn {
 	}
 	///////////////////////////////////////////////////////////////
 	std::string LayerEmbed::constructUsage() {
-		return "error";
+		return "embedding layer with positional encoding\nsBiasInitializer\niVocabSize;iDimensionSize;iMaxPosition";
 	}
 	///////////////////////////////////////////////////////////////
 }

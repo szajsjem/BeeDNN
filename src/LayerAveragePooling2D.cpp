@@ -126,7 +126,7 @@ Layer* LayerAveragePooling2D::construct(std::initializer_list<float> fArgs, std:
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerAveragePooling2D::constructUsage() {
-	return "error";
+	return "downsamples input using average pooling\n \niInRows;iInCols;iInChannels;iRowFactor;iColFactor";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerAveragePooling2D::init(size_t& in, size_t& out, bool debug) {

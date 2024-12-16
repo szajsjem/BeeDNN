@@ -217,7 +217,7 @@ namespace beednn {
 	}
 	///////////////////////////////////////////////////////////////
 	std::string LayerParallel::constructUsage() {
-		return "error";
+		return "parallel layer combination\nsReduction;layers\niNumLayers";
 	}
 	///////////////////////////////////////////////////////////////
 }

@@ -16,5 +16,8 @@ namespace beednn {
 LayerBilinear::LayerBilinear() :
     LayerGatedActivation("Identity", "Identity")
 { }
+std::string LayerBilinear::constructUsage() {
+    return "applies bilinear gating mechanism\n \n ";
+}
 ///////////////////////////////////////////////////////////////////////////////
 }

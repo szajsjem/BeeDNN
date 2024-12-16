@@ -71,7 +71,7 @@ Layer* LayerBias::construct(std::initializer_list<float> fArgs, std::string sArg
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerBias::constructUsage() {
-	return "error";
+	return "adds trainable bias terms\nsBiasInitializer\n ";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerBias::has_weights() const

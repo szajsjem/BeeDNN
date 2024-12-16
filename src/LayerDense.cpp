@@ -21,6 +21,9 @@ LayerDense::LayerDense(Index iInputSize, Index iOutputSize, const string& sWeigh
                       new LayerBias(sBiasInitializer)})
 {
 }
+std::string LayerDense::constructUsage() {
+    return "fully connected layer\nsWeightInitializer;sBiasInitializer\niInputSize;iOutputSize";
+}
 
 
 }

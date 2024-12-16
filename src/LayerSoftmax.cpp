@@ -77,7 +77,7 @@ Layer* LayerSoftmax::construct(std::initializer_list<float> fArgs, std::string s
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerSoftmax::constructUsage() {
-	return "error";
+	return "softmax activation function\n \n ";
 }
 ////////////////////////////////////////////////////////////////
 bool LayerSoftmax::init(size_t& in, size_t& out, bool debug)

@@ -110,7 +110,7 @@ Layer* LayerRandomFlip::construct(std::initializer_list<float> fArgs, std::strin
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerRandomFlip::constructUsage() {
-	return "error";
+	return "randomly flips inputs horizontally\n \niNbRows;iNbCols;iNbChannels";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerRandomFlip::has_weights() const

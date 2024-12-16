@@ -16,7 +16,7 @@ class LayerDense : public LayerSequential
 {
 public:
     explicit LayerDense(Index iInputSize,Index iOutputSize, const std::string& sWeightInitializer = "GlorotUniform", const std::string& sBiasInitializer = "Zeros");
-private:
+    static std::string constructUsage();
 };
 REGISTER_LAYER(LayerDense, "LayerDense");
 }

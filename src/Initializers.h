@@ -10,6 +10,8 @@
 
 #include "Layer.h"
 #include "Matrix.h"
+#include <string>
+#include <vector>
 
 // from https://www.tensorflow.org/api_docs/python/tf/keras/initializers
 namespace beednn {
@@ -30,5 +32,6 @@ public:
     static void Ones(MatrixFloat& m, Index iInputSize, Index iOutputSize);
 
     static void compute(const std::string& sInitializer, MatrixFloat& m, Index iInputSize, Index iOutputSize);
+    static std::vector<std::string> getAllInitializers();
 };
 }

@@ -65,7 +65,7 @@ Layer* LayerGlobalGain::construct(std::initializer_list<float> fArgs, std::strin
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerGlobalGain::constructUsage() {
-    return "error";
+    return "applies global multiplicative scaling\n \n ";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerGlobalGain::has_weights() const

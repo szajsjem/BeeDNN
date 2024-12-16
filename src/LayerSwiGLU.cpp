@@ -15,5 +15,8 @@ namespace beednn {
 LayerSwiGLU::LayerSwiGLU() :
     LayerGatedActivation("Identity", "Swish")
 { }
+std::string LayerSwiGLU::constructUsage() {
+    return "swish gated linear unit\n \n ";
+}
 ///////////////////////////////////////////////////////////////////////////////
 }

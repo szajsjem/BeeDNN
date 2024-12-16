@@ -86,7 +86,7 @@ Layer* LayerGatedActivation::construct(std::initializer_list<float> fArgs, std::
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerGatedActivation::constructUsage() {
-	return "error";
+	return "applies gated activation functions\nsActivation1;sActivation2\n ";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerGatedActivation::has_weights() const

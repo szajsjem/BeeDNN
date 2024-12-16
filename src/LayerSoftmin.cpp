@@ -78,7 +78,7 @@ Layer* LayerSoftmin::construct(std::initializer_list<float> fArgs, std::string s
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerSoftmin::constructUsage() {
-	return "error";
+	return "softmin activation function\n \n ";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerSoftmin::has_weights() const

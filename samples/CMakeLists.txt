@@ -32,3 +32,5 @@ target_link_libraries(Transformer_example libBeeDNN)
 
 add_executable(sample_graph_predictor sample_graph_predictor.cpp   )
 target_link_libraries(sample_graph_predictor libBeeDNN OpenMP::OpenMP_CXX)
+add_executable(sample_softcomputing sample_softcomputing.cpp   )
+target_link_libraries(sample_softcomputing libBeeDNN)

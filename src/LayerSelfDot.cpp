@@ -48,7 +48,7 @@ namespace beednn {
 	}
 	///////////////////////////////////////////////////////////////
 	std::string LayerSelfDot::constructUsage() {
-		return "error";
+		return "self dot product attention\n \n ";
 	}
 	///////////////////////////////////////////////////////////////
 	bool LayerSelfDot::has_weights() const

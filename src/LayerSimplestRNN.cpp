@@ -74,7 +74,7 @@ Layer* LayerSimplestRNN::construct(std::initializer_list<float> fArgs, std::stri
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerSimplestRNN::constructUsage() {
-    return "error";
+    return "minimal recurrent neural network\n \niFrameSize";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerSimplestRNN::has_weights() const

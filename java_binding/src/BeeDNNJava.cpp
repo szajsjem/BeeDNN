@@ -10,6 +10,7 @@
 #include <string>
 #include <initializer_list>
 #include "Activations.h"
+#include "Initializers.h"
 
 #include "allLayers.h"
 
@@ -468,6 +469,25 @@ JNIEXPORT jobjectArray JNICALL Java_com_beednn_Layer_getAvailableActivations(JNI
             result,
             i,
             env->NewStringUTF(activationNames[i].c_str())
+        );
+    }
+
+    return result;
+}
+JNIEXPORT jobjectArray JNICALL Java_com_beednn_Layer_getAvailableInitializers(JNIEnv* env, jclass cls) {
+    // Get initializer names
+    std::vector<std::string> initNames = Initializers::getAllInitializers();
+
+    // Create String array
+    jclass stringClass = env->FindClass("java/lang/String");
+    jobjectArray result = env->NewObjectArray(initNames.size(), stringClass, nullptr);
+
+    // Fill array with initializer names
+    for (size_t i = 0; i < initNames.size(); i++) {
+        env->SetObjectArrayElement(
+            result,
+            i,
+            env->NewStringUTF(initNames[i].c_str())
         );
     }
 

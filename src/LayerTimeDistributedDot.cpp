@@ -93,7 +93,7 @@ Layer* LayerTimeDistributedDot::construct(std::initializer_list<float> fArgs, st
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerTimeDistributedDot::constructUsage() {
-	return "error";
+	return "matrix multiplication across time\nsWeightInitializer\niInFrameSize;iOutFrameSize";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerTimeDistributedDot::has_weights() const

@@ -41,7 +41,7 @@ namespace beednn {
 	}
 	///////////////////////////////////////////////////////////////
 	std::string LayerSelfAttention::constructUsage() {
-		return "error";
+		return "self attention mechanism\n \n ";
 	}
 	///////////////////////////////////////////////////////////////
 	bool LayerSelfAttention::has_weights() const

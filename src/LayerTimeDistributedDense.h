@@ -16,7 +16,7 @@ class LayerTimeDistributedDense : public LayerSequential
 {
 public:
     explicit LayerTimeDistributedDense(int iInFrameSize,int iOutFrameSize, const std::string& sWeightInitializer = "GlorotUniform", const std::string& sBiasInitializer = "Zeros");
-	
+    static std::string constructUsage();
 };
 REGISTER_LAYER(LayerTimeDistributedDense, "LayerTimeDistributedDense");
 }

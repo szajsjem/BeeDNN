@@ -64,7 +64,7 @@ Layer* LayerGaussianNoise::construct(std::initializer_list<float> fArgs, std::st
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerGaussianNoise::constructUsage() {
-    return "error";
+	return "adds gaussian noise during training\n \nfStdDev";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerGaussianNoise::has_weights() const

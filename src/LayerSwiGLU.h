@@ -14,6 +14,7 @@ class LayerSwiGLU : public LayerGatedActivation
 {
 public:
     explicit LayerSwiGLU();
+    static std::string constructUsage();
 };
 REGISTER_LAYER(LayerSwiGLU, "LayerSwiGLU");
 }

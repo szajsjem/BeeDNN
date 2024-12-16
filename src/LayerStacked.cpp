@@ -14,4 +14,7 @@ namespace beednn {
 		:LayerParallel(std::generate_v<Layer*>(num, [&]() {return mStackedLayer->clone(); }), mReduction) {
 		delete mStackedLayer;
 	}
+	std::string LayerStacked::constructUsage() {
+		return "stacks multiple copies of a layer\nReduction;layer\nNum of copies in parallel";
+	}
 }

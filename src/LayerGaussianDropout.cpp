@@ -71,7 +71,7 @@ Layer* LayerGaussianDropout::construct(std::initializer_list<float> fArgs, std::
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerGaussianDropout::constructUsage() {
-	return "error";
+	return "applies multiplicative gaussian noise\n \nfProbability";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerGaussianDropout::init(size_t& in, size_t& out, bool debug) {

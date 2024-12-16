@@ -91,7 +91,7 @@ Layer* LayerRRelu::construct(std::initializer_list<float> fArgs, std::string sAr
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerRRelu::constructUsage() {
-	return "error";
+	return "randomized rectified linear unit\n \nfAlpha1;fAlpha2";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerRRelu::has_weights() const

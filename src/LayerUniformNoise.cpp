@@ -61,7 +61,7 @@ Layer* LayerUniformNoise::construct(std::initializer_list<float> fArgs, std::str
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerUniformNoise::constructUsage() {
-	return "error";
+	return "adds uniform noise during training\n \nfNoise";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerUniformNoise::has_weights() const

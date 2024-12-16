@@ -14,5 +14,8 @@ namespace beednn {
 LayerGLU::LayerGLU() :
     LayerGatedActivation("Identity", "Sigmoid")
 { }
+std::string LayerGLU::constructUsage() {
+    return "gated linear unit\n \n ";
+}
 ///////////////////////////////////////////////////////////////////////////////
 }

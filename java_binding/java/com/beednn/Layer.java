@@ -62,6 +62,11 @@ public class Layer {
      * @return Array of activation function names
      */
     public static native String[] getAvailableActivations();
+    /**
+     * Get all available weight initializers
+     * @return Array of initializer names
+     */
+    public static native String[] getAvailableInitializers();
     
     private native String save(long ptr);
     private native long createActivationLayer(String activation);
