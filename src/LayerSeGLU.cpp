@@ -17,5 +17,9 @@ LayerSeGLU::LayerSeGLU() :
 std::string LayerSeGLU::constructUsage() {
     return "scaled exponential gated linear unit\n \n ";
 }
+Layer* LayerSeGLU::construct(std::initializer_list<float> fArgs, std::string sArg) {
+    if (fArgs.size() != 0) return nullptr;
+    return new LayerSeGLU();
+}
 ///////////////////////////////////////////////////////////////////////////////
 }

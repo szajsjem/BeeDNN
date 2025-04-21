@@ -34,7 +34,8 @@ beednn::Layer* beednn::LayerTranspose::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 beednn::Layer* beednn::LayerTranspose::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 0) return nullptr;
+	return new LayerTranspose();
 }
 ///////////////////////////////////////////////////////////////
 std::string beednn::LayerTranspose::constructUsage() {

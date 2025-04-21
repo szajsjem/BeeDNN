@@ -33,7 +33,7 @@ public class Layer {
         super.finalize();
     }
     
-    long getNativePtr() {
+    public long getNativePtr() {
         return nativePtr;
     }
     

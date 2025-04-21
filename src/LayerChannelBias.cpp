@@ -75,7 +75,9 @@ Layer* LayerChannelBias::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerChannelBias::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 3) return nullptr; // iNbRows, iNbCols, iNbChannels
+	auto args = fArgs.begin();
+	return new LayerChannelBias(*args, *(args + 1), *(args + 2), sArg);
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerChannelBias::constructUsage() {

@@ -118,7 +118,25 @@ namespace beednn {
 	}
 	///////////////////////////////////////////////////////////////
 	Layer* LayerSequential::construct(std::initializer_list<float> fArgs, std::string sArg) {
-		return NULL;
+		if (fArgs.size() != 0) return nullptr;
+
+		// Parse layer pointers string - split on commas
+		std::vector<Layer*> layers;
+		std::string::size_type start = 0;
+		std::string::size_type end;
+
+		while ((end = sArg.find(',', start)) != std::string::npos) {
+			Layer* layer = (Layer*)std::stoull(sArg.substr(start, end - start), nullptr, 16);
+			layers.push_back(layer);
+			start = end + 1;
+		}
+		// Get last layer
+		if (start < sArg.length()) {
+			Layer* layer = (Layer*)std::stoull(sArg.substr(start), nullptr, 16);
+			layers.push_back(layer);
+		}
+
+		return new LayerSequential(layers);
 	}
 	///////////////////////////////////////////////////////////////
 	std::string LayerSequential::constructUsage() {

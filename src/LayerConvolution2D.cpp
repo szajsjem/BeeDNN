@@ -369,7 +369,18 @@ Layer* LayerConvolution2D::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerConvolution2D::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 8) return nullptr;
+	auto args = fArgs.begin();
+	return new LayerConvolution2D(
+		*args,      // iInRows
+		*(args + 1),  // iInCols
+		*(args + 2),  // iInChannels
+		*(args + 3),  // iKernelRows
+		*(args + 4),  // iKernelCols
+		*(args + 5),  // iOutChannels
+		*(args + 6),  // iRowStride
+		*(args + 7)   // iColStride
+	);
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerConvolution2D::constructUsage() {

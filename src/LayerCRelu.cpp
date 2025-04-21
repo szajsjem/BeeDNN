@@ -75,7 +75,8 @@ Layer* LayerCRelu::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerCRelu::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 0) return nullptr;
+	return new LayerCRelu();
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerCRelu::constructUsage() {

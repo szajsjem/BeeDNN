@@ -15,6 +15,7 @@ class LayerSeGLU : public LayerGatedActivation
 public:
     explicit LayerSeGLU();
     static std::string constructUsage();
+    static Layer* construct(std::initializer_list<float> fArgs, std::string sArg);
 };
 REGISTER_LAYER(LayerSeGLU, "LayerSeGLU");
 }

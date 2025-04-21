@@ -67,7 +67,8 @@ Layer* LayerBias::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerBias::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 0) return nullptr; // No float args
+	return new LayerBias(sArg); // Single string arg for initializer
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerBias::constructUsage() {

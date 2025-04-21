@@ -17,4 +17,19 @@ namespace beednn {
 	std::string LayerStacked::constructUsage() {
 		return "stacks multiple copies of a layer\nReduction;layer\nNum of copies in parallel";
 	}
+	Layer* LayerStacked::construct(std::initializer_list<float> fArgs, std::string sArg) {
+		if (fArgs.size() != 1) return nullptr; // Number of copies
+
+		// Split into reduction and layer pointer
+		size_t pos = sArg.find(';');
+		if (pos == std::string::npos) return nullptr;
+
+		std::string reductionStr = sArg.substr(0, pos);
+		std::string layerPtr = sArg.substr(pos + 1);
+
+		ParallelReduction reduction = reductionFromString(reductionStr);
+		Layer* layer = (Layer*)std::stoull(layerPtr, nullptr, 16);
+
+		return new LayerStacked(layer, reduction, *fArgs.begin());
+	}
 }

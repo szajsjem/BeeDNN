@@ -74,7 +74,8 @@ Layer* LayerSoftmin::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerSoftmin::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 0) return nullptr;
+	return new LayerSoftmin();
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerSoftmin::constructUsage() {

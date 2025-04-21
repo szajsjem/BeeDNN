@@ -158,7 +158,40 @@ namespace beednn {
 	}
 	///////////////////////////////////////////////////////////////
 	Layer* LayerRouter::construct(std::initializer_list<float> fArgs, std::string sArg) {
-		return NULL;
+		if (fArgs.size() != 1) return nullptr; // selectedExperts
+
+		// Split into parts: router layer, reduction, expert layers
+		size_t pos1 = sArg.find(';');
+		if (pos1 == std::string::npos) return nullptr;
+
+		size_t pos2 = sArg.find(';', pos1 + 1);
+		if (pos2 == std::string::npos) return nullptr;
+
+		// Parse router layer pointer
+		Layer* routerLayer = (Layer*)std::stoull(sArg.substr(0, pos1), nullptr, 16);
+
+		// Parse reduction type
+		std::string reductionStr = sArg.substr(pos1 + 1, pos2 - pos1 - 1);
+		ParallelReduction reduction = reductionFromString(reductionStr);
+
+		// Parse expert layer pointers
+		std::string expertPtrsStr = sArg.substr(pos2 + 1);
+		std::vector<Layer*> experts;
+		std::string::size_type start = 0;
+		std::string::size_type end;
+
+		while ((end = expertPtrsStr.find(',', start)) != std::string::npos) {
+			Layer* layer = (Layer*)std::stoull(expertPtrsStr.substr(start, end - start), nullptr, 16);
+			experts.push_back(layer);
+			start = end + 1;
+		}
+		// Get last expert
+		if (start < expertPtrsStr.length()) {
+			Layer* layer = (Layer*)std::stoull(expertPtrsStr.substr(start), nullptr, 16);
+			experts.push_back(layer);
+		}
+
+		return new LayerRouter(routerLayer, *fArgs.begin(), experts, reduction);
 	}
 	///////////////////////////////////////////////////////////////
 	std::string LayerRouter::constructUsage() {

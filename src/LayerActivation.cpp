@@ -65,7 +65,8 @@ Layer* LayerActivation::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerActivation::construct(std::initializer_list<float> fArgs, std::string sArg) {
-    return NULL;
+    if (fArgs.size() != 0) return nullptr;
+    return new LayerActivation(sArg); // Single activation type string
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerActivation::constructUsage() {

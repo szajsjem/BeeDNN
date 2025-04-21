@@ -106,7 +106,9 @@ Layer* LayerRandomFlip::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerRandomFlip::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 3) return nullptr; // iNbRows, iNbCols, iNbChannels
+	auto args = fArgs.begin();
+	return new LayerRandomFlip(*args, *(args + 1), *(args + 2));
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerRandomFlip::constructUsage() {

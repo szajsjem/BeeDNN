@@ -17,5 +17,9 @@ LayerGLU::LayerGLU() :
 std::string LayerGLU::constructUsage() {
     return "gated linear unit\n \n ";
 }
+Layer* LayerGLU::construct(std::initializer_list<float> fArgs, std::string sArg) {
+    if (fArgs.size() != 0) return nullptr;
+    return new LayerGLU();
+}
 ///////////////////////////////////////////////////////////////////////////////
 }

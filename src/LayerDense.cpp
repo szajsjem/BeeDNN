@@ -24,6 +24,18 @@ LayerDense::LayerDense(Index iInputSize, Index iOutputSize, const string& sWeigh
 std::string LayerDense::constructUsage() {
     return "fully connected layer\nsWeightInitializer;sBiasInitializer\niInputSize;iOutputSize";
 }
+Layer* LayerDense::construct(std::initializer_list<float> fArgs, std::string sArg) {
+    if (fArgs.size() != 2) return nullptr; // inputSize, outputSize
+    auto args = fArgs.begin();
 
+    // Split sArg into weightInit and biasInit
+    size_t pos = sArg.find(';');
+    if (pos == std::string::npos) return nullptr;
+
+    std::string weightInit = sArg.substr(0, pos);
+    std::string biasInit = sArg.substr(pos + 1);
+
+    return new LayerDense(*args, *(args + 1), weightInit, biasInit);
+}
 
 }

@@ -63,7 +63,9 @@ Layer* LayerSimpleRNN::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerSimpleRNN::construct(std::initializer_list<float> fArgs, std::string sArg) {
-    return NULL;
+    if (fArgs.size() != 2) return nullptr; // iSampleSize, iUnits
+    auto args = fArgs.begin();
+    return new LayerSimpleRNN(*args, *(args + 1));
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerSimpleRNN::constructUsage() {

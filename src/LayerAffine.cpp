@@ -79,26 +79,33 @@ Layer* LayerAffine::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerAffine::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 0) return nullptr;
+	return new LayerAffine();
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerAffine::constructUsage() {
-	return "applies an affine transformation (scale and shift)\n \niInRows;iInCols;iInChannels;iRowFactor;iColFactor";
+	return "applies an affine transformation (scale and shift)\n \n";
 }
 ///////////////////////////////////////////////////////////////
 bool LayerAffine::has_weights() const
 {
-	return false;
+	return true;
 }
 ///////////////////////////////////////////////////////////////
 std::vector<MatrixFloat*> LayerAffine::weights() const
 {
-	return std::vector<MatrixFloat*>();
+	std::vector<MatrixFloat*> v;
+	v.push_back((MatrixFloat*)&_bias);
+	v.push_back((MatrixFloat*)&_weight);
+	return v;
 }
 ///////////////////////////////////////////////////////////////
 std::vector<MatrixFloat*> LayerAffine::gradient_weights() const
 {
-	return std::vector<MatrixFloat*>();
+	std::vector<MatrixFloat*> v;
+	v.push_back((MatrixFloat*)&_gradientBias);
+	v.push_back((MatrixFloat*)&_gradientWeight);
+	return v;
 }
 ///////////////////////////////////////////////////////////////
 }

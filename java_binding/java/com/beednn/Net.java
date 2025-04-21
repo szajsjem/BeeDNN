@@ -32,10 +32,15 @@ public class Net {
     public long getNativePtr(){
         return nativePtr;
     }
+
+    public void init(long inputDataSize){
+        initNetwork(inputDataSize,nativePtr);
+    }
     
     // Native method declarations
     private native long createNet();
     private native void deleteNet(long ptr);
+    private native void initNetwork(long inputDataSize, long ptr);
     private native void addLayer(long ptr, long layerPtr);
     private native void predict(long ptr, float[] input, int rows, int cols, float[] output);
     private native void setTrainMode(long ptr, boolean trainMode);

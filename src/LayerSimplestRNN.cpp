@@ -70,7 +70,8 @@ Layer* LayerSimplestRNN::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerSimplestRNN::construct(std::initializer_list<float> fArgs, std::string sArg) {
-    return NULL;
+    if (fArgs.size() != 1) return nullptr; // iFrameSize
+    return new LayerSimplestRNN(*fArgs.begin());
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerSimplestRNN::constructUsage() {

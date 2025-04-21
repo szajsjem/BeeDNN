@@ -37,7 +37,8 @@ namespace beednn {
 	}
 	///////////////////////////////////////////////////////////////
 	Layer* LayerSelfAttention::construct(std::initializer_list<float> fArgs, std::string sArg) {
-		return NULL;
+		if (fArgs.size() != 0) return nullptr;
+		return new LayerSelfAttention();
 	}
 	///////////////////////////////////////////////////////////////
 	std::string LayerSelfAttention::constructUsage() {

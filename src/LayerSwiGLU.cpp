@@ -18,5 +18,9 @@ LayerSwiGLU::LayerSwiGLU() :
 std::string LayerSwiGLU::constructUsage() {
     return "swish gated linear unit\n \n ";
 }
+Layer* LayerSwiGLU::construct(std::initializer_list<float> fArgs, std::string sArg) {
+    if (fArgs.size() != 0) return nullptr;
+    return new LayerSwiGLU();
+}
 ///////////////////////////////////////////////////////////////////////////////
 }

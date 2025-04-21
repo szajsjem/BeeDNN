@@ -213,11 +213,40 @@ namespace beednn {
 	}
 	///////////////////////////////////////////////////////////////
 	Layer* LayerParallel::construct(std::initializer_list<float> fArgs, std::string sArg) {
-		return NULL;
+		if (fArgs.size() != 0) return nullptr;
+
+		// Split into reduction type and layer pointers
+		size_t pos = sArg.find(';');
+		if (pos == std::string::npos) return nullptr;
+
+		std::string reductionStr = sArg.substr(0, pos);
+		std::string layerPtrsStr = sArg.substr(pos + 1);
+
+		// Convert reduction string to enum
+		ParallelReduction reduction = reductionFromString(reductionStr);
+
+		// Parse layer pointers string - split on commas
+		std::vector<Layer*> layers;
+		std::string::size_type start = 0;
+		std::string::size_type end;
+
+		while ((end = layerPtrsStr.find(',', start)) != std::string::npos) {
+			// Convert hex string to pointer
+			Layer* layer = (Layer*)std::stoull(layerPtrsStr.substr(start, end - start), nullptr, 16);
+			layers.push_back(layer);
+			start = end + 1;
+		}
+		// Get last layer
+		if (start < layerPtrsStr.length()) {
+			Layer* layer = (Layer*)std::stoull(layerPtrsStr.substr(start), nullptr, 16);
+			layers.push_back(layer);
+		}
+
+		return new LayerParallel(layers, reduction);
 	}
 	///////////////////////////////////////////////////////////////
 	std::string LayerParallel::constructUsage() {
-		return "parallel layer combination\nsReduction;layers\niNumLayers";
+		return "parallel layer combination\nsReduction;layers\n";
 	}
 	///////////////////////////////////////////////////////////////
 }

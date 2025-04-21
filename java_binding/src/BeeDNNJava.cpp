@@ -61,13 +61,18 @@ extern "C" {
     }
 
     JNIEXPORT void JNICALL Java_com_beednn_Net_deleteNet(JNIEnv*, jobject, jlong ptr) {
-        delete reinterpret_cast<Net*>(ptr);
+        //delete reinterpret_cast<Net*>(ptr);
     }
 
     JNIEXPORT void JNICALL Java_com_beednn_Net_addLayer(JNIEnv* env, jobject, jlong ptr, jlong layerPtr) {
         Net* net = reinterpret_cast<Net*>(ptr);
         Layer* layer = reinterpret_cast<Layer*>(layerPtr);
         net->add(layer);
+    }
+
+    JNIEXPORT void JNICALL Java_com_beednn_Net_initNetwork(JNIEnv* env, jobject, jlong inputDataSize, jlong ptr) {
+        Net* net = reinterpret_cast<Net*>(ptr);
+        net->init(inputDataSize, false);
     }
 
     JNIEXPORT void JNICALL Java_com_beednn_Net_predict(JNIEnv* env, jobject, jlong ptr,
@@ -92,7 +97,7 @@ extern "C" {
     }
 
     JNIEXPORT void JNICALL Java_com_beednn_NetTrain_deleteNetTrain(JNIEnv*, jobject, jlong ptr) {
-        delete reinterpret_cast<NetTrain*>(ptr);
+        //delete reinterpret_cast<NetTrain*>(ptr);
     }
 
     JNIEXPORT void JNICALL Java_com_beednn_NetTrain_setTrainData(JNIEnv* env, jobject, jlong ptr,
@@ -104,7 +109,7 @@ extern "C" {
         MatrixFloat samplesMatrix = jFloatArrayToMatrix(env, samples, sampleRows, sampleCols);
         MatrixFloat truthMatrix = jFloatArrayToMatrix(env, truth, truthRows, truthCols);
 
-        trainer->set_train_data(samplesMatrix, truthMatrix);
+        trainer->set_train_data_copy(samplesMatrix, truthMatrix);
     }
 
     JNIEXPORT void JNICALL Java_com_beednn_NetTrain_setValidationData(JNIEnv* env, jobject, jlong ptr,
@@ -158,7 +163,7 @@ extern "C" {
     }
 
     JNIEXPORT void JNICALL Java_com_beednn_Layer_deleteLayer(JNIEnv*, jobject, jlong ptr) {
-        delete reinterpret_cast<Layer*>(ptr);
+        //delete reinterpret_cast<Layer*>(ptr);
     }
 
 

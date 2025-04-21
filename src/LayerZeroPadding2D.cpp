@@ -104,7 +104,9 @@ Layer* LayerZeroPadding2D::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerZeroPadding2D::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 4) return nullptr; // iInRows, iInCols, iInChannels, iBorder
+	auto args = fArgs.begin();
+	return new LayerZeroPadding2D(*args, *(args + 1), *(args + 2), *(args + 3));
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerZeroPadding2D::constructUsage() {

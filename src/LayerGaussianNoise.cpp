@@ -60,7 +60,8 @@ Layer* LayerGaussianNoise::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerGaussianNoise::construct(std::initializer_list<float> fArgs, std::string sArg) {
-    return NULL;
+	if (fArgs.size() != 1) return nullptr; // Just stddev
+	return new LayerGaussianNoise(*fArgs.begin());
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerGaussianNoise::constructUsage() {

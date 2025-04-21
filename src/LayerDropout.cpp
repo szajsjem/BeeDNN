@@ -66,7 +66,8 @@ Layer* LayerDropout::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerDropout::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 1) return nullptr; // Just rate
+	return new LayerDropout(*fArgs.begin());
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerDropout::constructUsage() {

@@ -74,7 +74,8 @@ Layer* LayerTimeDistributedBias::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerTimeDistributedBias::construct(std::initializer_list<float> fArgs, std::string sArg) {
-    return NULL;
+    if (fArgs.size() != 1) return nullptr; // iFrameSize
+    return new LayerTimeDistributedBias(*fArgs.begin(), sArg);
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerTimeDistributedBias::constructUsage() {

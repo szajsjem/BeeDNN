@@ -122,7 +122,15 @@ Layer* LayerAveragePooling2D::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerAveragePooling2D::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 5) return nullptr; // Check number of float args matches
+	auto args = fArgs.begin();
+	return new LayerAveragePooling2D(
+		*args,       // iInRows 
+		*(args + 1),   // iInCols
+		*(args + 2),   // iInChannels
+		*(args + 3),   // iRowFactor 
+		*(args + 4)    // iColFactor
+	);
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerAveragePooling2D::constructUsage() {

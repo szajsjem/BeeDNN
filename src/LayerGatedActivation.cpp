@@ -82,7 +82,15 @@ Layer* LayerGatedActivation::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerGatedActivation::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 0) return nullptr;
+
+	size_t pos = sArg.find(';');
+	if (pos == std::string::npos) return nullptr;
+
+	std::string activation1 = sArg.substr(0, pos);
+	std::string activation2 = sArg.substr(pos + 1);
+
+	return new LayerGatedActivation(activation1, activation2);
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerGatedActivation::constructUsage() {

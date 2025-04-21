@@ -89,7 +89,9 @@ Layer* LayerTimeDistributedDot::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerTimeDistributedDot::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 2) return nullptr; // iInFrameSize, iOutFrameSize
+	auto args = fArgs.begin();
+	return new LayerTimeDistributedDot(*args, *(args + 1), sArg);
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerTimeDistributedDot::constructUsage() {

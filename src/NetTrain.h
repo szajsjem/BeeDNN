@@ -31,6 +31,7 @@ public:
 	
 	const Net& model() const;
     void set_train_data(const MatrixFloat& mSamples, const MatrixFloat& mTruth);
+	void set_train_data_copy(const MatrixFloat& mSamples, const MatrixFloat& mTruth);
 	void set_validation_data(const MatrixFloat& mSamplesValidation, const MatrixFloat& mTruthValidation);
 
 	void set_epochs(int iEpochs); //100 by default

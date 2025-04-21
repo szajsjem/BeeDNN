@@ -24,4 +24,18 @@ namespace beednn {
 	std::string LayerTransformerHeads::constructUsage() {
 		return "multi-head attention block\nsReduction;sWeightInitializer;sBiasInitializer\niDimensionSize;iHeadVMem;iHeadQKMem;iNumHeads";
 	}
+	Layer* LayerTransformerHeads::construct(std::initializer_list<float> fArgs, std::string sArg) {
+		if (fArgs.size() != 4) return nullptr; // dimSize, headVMem, headQKMem, numHeads
+		auto args = fArgs.begin();
+
+		// Split sArg into weightInit and biasInit
+		size_t pos = sArg.find(';');
+		if (pos == std::string::npos) return nullptr;
+
+		std::string weightInit = sArg.substr(0, pos);
+		std::string biasInit = sArg.substr(pos + 1);
+
+		return new LayerTransformerHeads(*args, *(args + 1), *(args + 2), *(args + 3),
+			weightInit, biasInit);
+	}
 }

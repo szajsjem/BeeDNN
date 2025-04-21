@@ -90,7 +90,8 @@ Layer* LayerPRelu::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerPRelu::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 0) return nullptr;
+	return new LayerPRelu();
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerPRelu::constructUsage() {

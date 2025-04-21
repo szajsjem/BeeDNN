@@ -103,7 +103,9 @@ Layer* LayerGlobalAveragePooling2D::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerGlobalAveragePooling2D::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 3) return nullptr; // iInRows, iInCols, iInChannels
+	auto args = fArgs.begin();
+	return new LayerGlobalAveragePooling2D(*args, *(args + 1), *(args + 2));
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerGlobalAveragePooling2D::constructUsage() {

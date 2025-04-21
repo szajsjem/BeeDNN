@@ -19,5 +19,9 @@ LayerBilinear::LayerBilinear() :
 std::string LayerBilinear::constructUsage() {
     return "applies bilinear gating mechanism\n \n ";
 }
+Layer* LayerBilinear::construct(std::initializer_list<float> fArgs, std::string sArg) {
+    if (fArgs.size() != 0) return nullptr;
+    return new LayerBilinear();
+}
 ///////////////////////////////////////////////////////////////////////////////
 }

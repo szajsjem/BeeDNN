@@ -96,7 +96,10 @@ Layer* LayerDot::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerDot::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 2) return nullptr; // inputSize, outputSize
+	auto args = fArgs.begin();
+
+	return new LayerDot(*args, *(args + 1), sArg);
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerDot::constructUsage() {

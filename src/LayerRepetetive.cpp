@@ -17,4 +17,10 @@ namespace beednn {
 	std::string LayerRepetetive::constructUsage() {
 		return "stacks multiple copies of a layer in series\nReduction;layer\nNum of copies in parallel";
 	}
+	Layer* LayerRepetetive::construct(std::initializer_list<float> fArgs, std::string sArg) {
+		if (fArgs.size() != 1) return nullptr; // Number of copies
+
+		Layer* layer = (Layer*)std::stoull(sArg, nullptr, 16);
+		return new LayerRepetetive(layer, *fArgs.begin());
+	}
 }

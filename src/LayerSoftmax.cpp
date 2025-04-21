@@ -73,7 +73,8 @@ Layer* LayerSoftmax::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerSoftmax::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 0) return nullptr;
+	return new LayerSoftmax();
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerSoftmax::constructUsage() {

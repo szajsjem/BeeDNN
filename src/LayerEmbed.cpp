@@ -96,7 +96,9 @@ namespace beednn {
 	}
 	///////////////////////////////////////////////////////////////
 	Layer* LayerEmbed::construct(std::initializer_list<float> fArgs, std::string sArg) {
-		return NULL;
+		if (fArgs.size() != 3) return nullptr; // vocabSize, dimensionSize, maxPosition
+		auto args = fArgs.begin();
+		return new LayerEmbed(*args, *(args + 1), *(args + 2), sArg);
 	}
 	///////////////////////////////////////////////////////////////
 	std::string LayerEmbed::constructUsage() {

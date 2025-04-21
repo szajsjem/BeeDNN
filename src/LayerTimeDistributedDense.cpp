@@ -25,5 +25,17 @@ namespace beednn {
     std::string LayerTimeDistributedDense::constructUsage() {
         return "dense layer applied across time\nsWeightInitializer;sBiasInitializer\niInFrameSize;iOutFrameSize";
     }
+    Layer* LayerTimeDistributedDense::construct(std::initializer_list<float> fArgs, std::string sArg) {
+        if (fArgs.size() != 2) return nullptr; // iInFrameSize, iOutFrameSize
+        auto args = fArgs.begin();
+
+        size_t pos = sArg.find(';');
+        if (pos == std::string::npos) return nullptr;
+
+        std::string weightInit = sArg.substr(0, pos);
+        std::string biasInit = sArg.substr(pos + 1);
+
+        return new LayerTimeDistributedDense(*args, *(args + 1), weightInit, biasInit);
+    }
 ///////////////////////////////////////////////////////////////////////////////
 }

@@ -87,7 +87,9 @@ Layer* LayerRRelu::load(std::istream& from) {
 }
 ///////////////////////////////////////////////////////////////
 Layer* LayerRRelu::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+	if (fArgs.size() != 2) return nullptr; // alpha1, alpha2
+	auto args = fArgs.begin();
+	return new LayerRRelu(*args, *(args + 1));
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerRRelu::constructUsage() {
