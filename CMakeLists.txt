@@ -3,7 +3,7 @@ project (BeeDNN)
 enable_testing()
 
 # if eigen is installed, use it to speed up training
-if(DEFINED ENV{EIGEN_PATH})
+if(FALSE)#DEFINED ENV{EIGEN_PATH})
     message(STATUS "Using Eigen at EIGEN_PATH env")
     include_directories($ENV{EIGEN_PATH})
     add_compile_definitions(USE_EIGEN)
@@ -24,4 +24,5 @@ add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(samples)
 add_subdirectory(java_binding)
+
 

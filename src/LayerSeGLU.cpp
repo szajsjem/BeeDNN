@@ -11,15 +11,19 @@
 #include "LayerSeGLU.h"
 namespace beednn {
 ///////////////////////////////////////////////////////////////////////////////
-LayerSeGLU::LayerSeGLU() :
-    LayerGatedActivation("Identity", "Selu")
-{ }
+LayerSeGLU::LayerSeGLU() : LayerGatedActivation("Identity", "Selu") {}
 std::string LayerSeGLU::constructUsage() {
-    return "scaled exponential gated linear unit\n \n ";
+  return "scaled exponential gated linear unit\n\n";
 }
-Layer* LayerSeGLU::construct(std::initializer_list<float> fArgs, std::string sArg) {
-    if (fArgs.size() != 0) return nullptr;
-    return new LayerSeGLU();
+Layer *LayerSeGLU::construct(std::initializer_list<float> fArgs,
+                             std::string sArg) {
+  if (fArgs.size() != 0)
+    return nullptr;
+  return new LayerSeGLU();
 }
+void LayerSeGLU::save(std::ostream &to) const {
+  to << "LayerSeGLU" << std::endl;
+}
+Layer *LayerSeGLU::load(std::istream &from) { return new LayerSeGLU(); }
 ///////////////////////////////////////////////////////////////////////////////
-}
+} // namespace beednn

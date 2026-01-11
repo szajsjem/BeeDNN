@@ -11,15 +11,15 @@
 #include "LayerGLU.h"
 namespace beednn {
 ///////////////////////////////////////////////////////////////////////////////
-LayerGLU::LayerGLU() :
-    LayerGatedActivation("Identity", "Sigmoid")
-{ }
-std::string LayerGLU::constructUsage() {
-    return "gated linear unit\n \n ";
+LayerGLU::LayerGLU() : LayerGatedActivation("Identity", "Sigmoid") {}
+std::string LayerGLU::constructUsage() { return "gated linear unit\n\n"; }
+Layer *LayerGLU::construct(std::initializer_list<float> fArgs,
+                           std::string sArg) {
+  if (fArgs.size() != 0)
+    return nullptr;
+  return new LayerGLU();
 }
-Layer* LayerGLU::construct(std::initializer_list<float> fArgs, std::string sArg) {
-    if (fArgs.size() != 0) return nullptr;
-    return new LayerGLU();
-}
+void LayerGLU::save(std::ostream &to) const { to << "LayerGLU" << std::endl; }
+Layer *LayerGLU::load(std::istream &from) { return new LayerGLU(); }
 ///////////////////////////////////////////////////////////////////////////////
-}
+} // namespace beednn

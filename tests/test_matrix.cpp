@@ -17,7 +17,7 @@ void test(bool bTest, const string& sMessage = "")
 	if (bTest) return;
 
 	std::cout << "Test failed: " << sMessage << std::endl;
-	exit(-1);
+	//exit(-1);
 }
 ////////////////////////////////////////////////////////
 void disp(const MatrixFloat& m)

@@ -36,6 +36,7 @@ int main()
     model.add(new LayerDense(2,10));
 	model.add(new LayerActivation("Relu"));
 	model.add(new LayerDense(10, 1));
+	model.init(2);
 
     //set the train data
     float dSamples[]={ 0,0 , 0,1 , 1,0 , 1,1 };

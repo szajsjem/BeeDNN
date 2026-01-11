@@ -24,9 +24,17 @@ target_link_libraries(test_LayerSequential libBeeDNN)
 add_executable(test_LayerParallel "SingleLayersTests/test_LayerParallel.cpp"  )
 target_link_libraries(test_LayerParallel libBeeDNN)
 
+add_executable(test_Layers "test_layers.cpp"  )
+target_link_libraries(test_Layers libBeeDNN)
+
+add_executable(test_LayerSaveLoad "save_load_test.cpp"  )
+target_link_libraries(test_LayerSaveLoad libBeeDNN)
+
 add_test(test_regression_sin test_regression_sin)
 add_test(test_classification_xor test_classification_xor)
 add_test(test_metrics test_metrics)
 add_test(test_matrix_GEMM test_matrix_GEMM)
 add_test(test_LayerSequential test_LayerSequential)
 add_test(test_LayerParallel test_LayerParallel)
+add_test(test_Layers test_Layers)
+add_test(test_LayerSaveLoad test_LayerSaveLoad)

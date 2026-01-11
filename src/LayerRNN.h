@@ -10,40 +10,50 @@
 
 #include "Layer.h"
 #include "Matrix.h"
-#include "Layer.h"
+#include "ParallelReduction.h"
 
 #include <vector>
 namespace beednn {
-class LayerRNN : public Layer
-{
+class LayerRNN : public Layer {
 public:
-    explicit LayerRNN(int iFrameSize,int iUnits);
-    virtual ~LayerRNN();
+  explicit LayerRNN(int iFrameSize, int iUnits);
+  virtual ~LayerRNN();
 
-    virtual bool init(size_t& in, size_t& out, bool debug = false) override;
+  virtual bool init(size_t &in, size_t &out,
+                    std::vector<MatrixFloat> &internalCalculationMatrices,
+                    bool debug = false) override;
 
-    virtual bool has_weights() const override;
-    virtual std::vector<MatrixFloat*> weights() const override;
-    virtual std::vector<MatrixFloat*> gradient_weights() const override;
+  virtual bool has_weights() const override;
+  virtual std::vector<MatrixFloat *> weights() const override;
+  virtual std::vector<MatrixFloat *> gradient_weights() const override;
 
-    virtual void save(std::ostream& to)const override;
-    static Layer* load(std::istream& from);
-    static Layer* construct(std::initializer_list<float> fArgs, std::string sArg);
-    static std::string constructUsage();
+  virtual void save(std::ostream &to) const override;
+  static Layer *load(std::istream &from);
+  static Layer *construct(std::initializer_list<float> fArgs, std::string sArg);
+  static std::string constructUsage();
 
-    virtual Layer* clone() const override =0;
-    virtual void forward(const MatrixFloat& mIn, MatrixFloat& mOut) override;
-    virtual void backpropagation(const MatrixFloat& mIn, const MatrixFloat& mGradientOut, MatrixFloat& mGradientIn) override;
+  virtual Layer *clone() const override = 0;
+  virtual void forward(const MatrixFloat &mIn, MatrixFloat &mOut) override;
+  virtual void
+  backpropagation(const MatrixFloat &mIn, const MatrixFloat &mGradientOut,
+                  MatrixFloat &mGradientIn,
+                  std::vector<MatrixFloat> &internalCalculationMatrices,
+                  int start) override;
 
-    virtual void forward_frame(const MatrixFloat& mInFrame, MatrixFloat& mOut) =0;
-    virtual void backpropagation_frame(const MatrixFloat& mInFrame, const MatrixFloat& mH, const MatrixFloat& mHm1,const MatrixFloat& mGradientOut, MatrixFloat& mGradientIn) =0;
+  virtual void forward_frame(const MatrixFloat &mInFrame,
+                             MatrixFloat &mOut) = 0;
+  virtual void backpropagation_frame(const MatrixFloat &mInFrame,
+                                     const MatrixFloat &mH,
+                                     const MatrixFloat &mHm1,
+                                     const MatrixFloat &mGradientOut,
+                                     MatrixFloat &mGradientIn) = 0;
 
 protected:
-    MatrixFloat _h;
-    std::vector<MatrixFloat> _savedH; // used for back propagation
+  MatrixFloat _h;
+  std::vector<MatrixFloat> _savedH; // used for back propagation
 
-    int _iFrameSize;
-    int _iUnits;
+  int _iFrameSize;
+  int _iUnits;
 };
 REGISTER_LAYER(LayerRNN, "LayerRNN");
-}
+} // namespace beednn

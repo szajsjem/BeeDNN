@@ -12,15 +12,19 @@
 namespace beednn {
 
 ///////////////////////////////////////////////////////////////////////////////
-LayerSwiGLU::LayerSwiGLU() :
-    LayerGatedActivation("Identity", "Swish")
-{ }
+LayerSwiGLU::LayerSwiGLU() : LayerGatedActivation("Identity", "Swish") {}
 std::string LayerSwiGLU::constructUsage() {
-    return "swish gated linear unit\n \n ";
+  return "swish gated linear unit\n\n";
 }
-Layer* LayerSwiGLU::construct(std::initializer_list<float> fArgs, std::string sArg) {
-    if (fArgs.size() != 0) return nullptr;
-    return new LayerSwiGLU();
+Layer *LayerSwiGLU::construct(std::initializer_list<float> fArgs,
+                              std::string sArg) {
+  if (fArgs.size() != 0)
+    return nullptr;
+  return new LayerSwiGLU();
 }
+void LayerSwiGLU::save(std::ostream &to) const {
+  to << "LayerSwiGLU" << std::endl;
+}
+Layer *LayerSwiGLU::load(std::istream &from) { return new LayerSwiGLU(); }
 ///////////////////////////////////////////////////////////////////////////////
-}
+} // namespace beednn

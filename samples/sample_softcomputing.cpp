@@ -31,7 +31,7 @@ int main()
 
 	//network structure
 	Net model;
-	model.add(new LayerDense(1, 2));
+	model.add(new LayerDense(1, 20));
 	model.add(new LayerActivation("Tanh"));
 	model.add(new LayerDense(-1, 1));
 

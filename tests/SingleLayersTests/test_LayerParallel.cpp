@@ -34,11 +34,13 @@ int main()
 	//construct network, 2 input, 1 output
 	Net model;
 	//model.add(new LayerStacked(new LayerDense(2, 2), COLSTACK,5));// this doesn't work as well as LayerDense(2,10)
-	model.add(new LayerParallel({ new LayerDense(2, 4),new LayerDense(2,8) }, DOT));
+	//model.add(new LayerParallel({ new LayerDense(2, 4),new LayerDense(2,8) }, DOT));
 	//                                  batchx4(batch) matrix            batchx8 matrix  =>   4x8 matrix
-	//model.add(new LayerDense(2,10));
+	model.add(new LayerDense(2,8));
 	model.add(new LayerActivation("Relu"));
 	model.add(new LayerDense(8, 1));
+
+	model.init(2, true);
 
 	//set the train data
 	float dSamples[] = { 0,0 , 0,1 , 1,0 , 1,1 };

@@ -6,127 +6,126 @@
     in the LICENSE.txt file.
 */
 
-// ZeroPadding2S as in : https://www.tensorflow.org/api_docs/python/tf/keras/layers/ZeroPadding2D 
-// and
+// ZeroPadding2S as in :
+// https://www.tensorflow.org/api_docs/python/tf/keras/layers/ZeroPadding2D and
 // https://deeplizard.com/learn/video/qSTv_m-KFk0
 
 #include "LayerZeroPadding2D.h"
 namespace beednn {
 
 ///////////////////////////////////////////////////////////////////////////////
-LayerZeroPadding2D::LayerZeroPadding2D(Index iInRows, Index iInCols, Index iInChannels, Index iBorder) :
-    Layer("ZeroPadding2D")
-{
-	_iInRows = iInRows;
-	_iInCols = iInCols;
-	_iInChannels = iInChannels;
-	_iBorder = iBorder;
+LayerZeroPadding2D::LayerZeroPadding2D(Index iInRows, Index iInCols,
+                                       Index iInChannels, Index iBorder)
+    : Layer("ZeroPadding2D") {
+  _iInRows = iInRows;
+  _iInCols = iInCols;
+  _iInChannels = iInChannels;
+  _iBorder = iBorder;
 }
 ///////////////////////////////////////////////////////////////////////////////
-LayerZeroPadding2D::~LayerZeroPadding2D()
-{ }
+LayerZeroPadding2D::~LayerZeroPadding2D() {}
 ///////////////////////////////////////////////////////////////////////////////
-void LayerZeroPadding2D::get_params(Index& iInRows, Index& iInCols, Index & iInChannels, Index& iBorder) const
-{
-	iInRows = _iInRows;
-	iInCols = _iInCols;
-	iInChannels = _iInChannels;
-	iBorder = _iBorder;
+void LayerZeroPadding2D::get_params(Index &iInRows, Index &iInCols,
+                                    Index &iInChannels, Index &iBorder) const {
+  iInRows = _iInRows;
+  iInCols = _iInCols;
+  iInChannels = _iInChannels;
+  iBorder = _iBorder;
 }
 ///////////////////////////////////////////////////////////////////////////////
-Layer* LayerZeroPadding2D::clone() const
-{
-    return new LayerZeroPadding2D(_iInRows, _iInCols, _iInChannels, _iBorder);
+Layer *LayerZeroPadding2D::clone() const {
+  return new LayerZeroPadding2D(_iInRows, _iInCols, _iInChannels, _iBorder);
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerZeroPadding2D::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
-{
-	Index iOutCol=_iInCols+2*_iBorder;
-	Index iOutPlaneSize=(_iInRows+2*_iBorder)*iOutCol;
-	Index iInPlaneSize=_iInRows*_iInCols;
-	mOut.setZero(mIn.rows(), iOutPlaneSize*_iInChannels);
+void LayerZeroPadding2D::forward(const MatrixFloat &mIn, MatrixFloat &mOut) {
+  Index iOutCol = _iInCols + 2 * _iBorder;
+  Index iOutPlaneSize = (_iInRows + 2 * _iBorder) * iOutCol;
+  Index iInPlaneSize = _iInRows * _iInCols;
+  mOut.setZero(mIn.rows(), iOutPlaneSize * _iInChannels);
 
-	//not optimized yet
-	for (Index sample = 0; sample < mIn.rows(); sample++)
-	{
-		for (Index channel = 0; channel < _iInChannels; channel++)
-		{
-			const float* lIn = mIn.row(sample).data()+ channel * iInPlaneSize;
-			float* lOut = mOut.row(sample).data()+channel* iOutPlaneSize;
-			for (Index r = 0; r < _iInRows; r++)
-			{
-				for (Index c = 0; c < _iInCols; c++)
-				{
-					lOut[(r+_iBorder)*iOutCol+c+_iBorder] = lIn[r*_iInCols+c];
-				}
-			}
-		}
-	}
+  // not optimized yet
+  for (Index sample = 0; sample < mIn.rows(); sample++) {
+    for (Index channel = 0; channel < _iInChannels; channel++) {
+      const float *lIn = mIn.row(sample).data() + channel * iInPlaneSize;
+      float *lOut = mOut.row(sample).data() + channel * iOutPlaneSize;
+      for (Index r = 0; r < _iInRows; r++) {
+        for (Index c = 0; c < _iInCols; c++) {
+          lOut[(r + _iBorder) * iOutCol + c + _iBorder] = lIn[r * _iInCols + c];
+        }
+      }
+    }
+  }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerZeroPadding2D::backpropagation(const MatrixFloat &mIn,const MatrixFloat &mGradientOut, MatrixFloat &mGradientIn)
-{
-    (void)mIn;
+void LayerZeroPadding2D::backpropagation(const MatrixFloat &mIn, const MatrixFloat &mGradientOut, MatrixFloat &mGradientIn, std::vector<MatrixFloat> &internalCalculationMatrices, int start) {
+  (void)mIn;
 
-	if (_bFirstLayer)
-		return;
+  if (_bFirstLayer)
+    return;
 
-	Index iOutCol=_iInCols+2*_iBorder;
-	Index iOutPlaneSize=(_iInRows+2*_iBorder)*iOutCol;
-	Index iInPlaneSize=_iInRows*_iInCols;
+  Index iOutCol = _iInCols + 2 * _iBorder;
+  Index iOutPlaneSize = (_iInRows + 2 * _iBorder) * iOutCol;
+  Index iInPlaneSize = _iInRows * _iInCols;
 
-	mGradientIn.resize(mGradientOut.rows(), iInPlaneSize*_iInChannels);
+  MatrixFloat mLocalGrad;
+  mLocalGrad.resize(mGradientOut.rows(), iInPlaneSize * _iInChannels);
 
-	//not optimized yet
-	for (Index sample = 0; sample < mGradientOut.rows(); sample++)
-	{
-		for (Index channel = 0; channel < _iInChannels; channel++)
-		{
-			float* lIn = mGradientIn.row(sample).data()+ channel * iInPlaneSize;
-			const float* lOut = mGradientOut.row(sample).data()+channel* iOutPlaneSize;
-			for (Index r = 0; r < _iInRows; r++)
-			{
-				for (Index c = 0; c < _iInCols; c++)
-				{
-					lIn[r*_iInCols+c]=lOut[(r+_iBorder)*iOutCol+c+_iBorder] ; 
-				}
-			}
-		}
-	}
+  // not optimized yet
+  for (Index sample = 0; sample < mGradientOut.rows(); sample++) {
+    for (Index channel = 0; channel < _iInChannels; channel++) {
+      float *lIn = mLocalGrad.row(sample).data() + channel * iInPlaneSize;
+      const float *lOut =
+          mGradientOut.row(sample).data() + channel * iOutPlaneSize;
+      for (Index r = 0; r < _iInRows; r++) {
+        for (Index c = 0; c < _iInCols; c++) {
+          lIn[r * _iInCols + c] = lOut[(r + _iBorder) * iOutCol + c + _iBorder];
+        }
+      }
+    }
+  }
+
+  if (mGradientIn.size() == 0) {
+    mGradientIn = mLocalGrad;
+  } else {
+    mGradientIn += mLocalGrad;
+  }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerZeroPadding2D::save(std::ostream& to) const {
-
-}
+void LayerZeroPadding2D::save(std::ostream &to) const {}
 ///////////////////////////////////////////////////////////////
-Layer* LayerZeroPadding2D::load(std::istream& from) {
-	return NULL;
-}
+Layer *LayerZeroPadding2D::load(std::istream &from) { return NULL; }
 ///////////////////////////////////////////////////////////////
-Layer* LayerZeroPadding2D::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	if (fArgs.size() != 4) return nullptr; // iInRows, iInCols, iInChannels, iBorder
-	auto args = fArgs.begin();
-	return new LayerZeroPadding2D(*args, *(args + 1), *(args + 2), *(args + 3));
+Layer *LayerZeroPadding2D::construct(std::initializer_list<float> fArgs,
+                                     std::string sArg) {
+  if (fArgs.size() != 4)
+    return nullptr; // iInRows, iInCols, iInChannels, iBorder
+  auto args = fArgs.begin();
+  return new LayerZeroPadding2D(*args, *(args + 1), *(args + 2), *(args + 3));
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerZeroPadding2D::constructUsage() {
-	return "adds zero padding to 2D input\n \niInRows;iInCols;iInChannels;iBorder";
+  return "adds zero padding to 2D input\n "
+         "\niInRows;iInCols;iInChannels;iBorder";
 }
 ///////////////////////////////////////////////////////////////
-bool LayerZeroPadding2D::init(size_t& in, size_t& out, bool debug) {
-	return false;
+bool LayerZeroPadding2D::init(size_t &in, size_t &out, std::vector<MatrixFloat> &internalCalculationMatrices, bool debug) {
+  if (in != _iInRows * _iInCols * _iInChannels)
+    return false;
+  Index iOutCol = _iInCols + 2 * _iBorder;
+  Index iOutPlaneSize = (_iInRows + 2 * _iBorder) * iOutCol;
+  out = iOutPlaneSize * _iInChannels;
+  Layer::init(in, out, internalCalculationMatrices, debug);
+  return true;
 }
 ///////////////////////////////////////////////////////////////
-bool LayerZeroPadding2D::has_weights() const {
-	return false;
+bool LayerZeroPadding2D::has_weights() const { return false; }
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat *> LayerZeroPadding2D::weights() const {
+  return std::vector<MatrixFloat *>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerZeroPadding2D::weights() const {
-	return std::vector<MatrixFloat*>();
-}
-///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerZeroPadding2D::gradient_weights() const {
-	return std::vector<MatrixFloat*>();
+std::vector<MatrixFloat *> LayerZeroPadding2D::gradient_weights() const {
+  return std::vector<MatrixFloat *>();
 }
 ///////////////////////////////////////////////////////////////////////////////
-}
+} // namespace beednn

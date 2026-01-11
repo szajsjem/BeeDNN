@@ -12,12 +12,18 @@
 #include "LayerSequential.h"
 #include "Matrix.h"
 namespace beednn {
-class LayerTimeDistributedDense : public LayerSequential
-{
+class LayerTimeDistributedDense : public LayerSequential {
 public:
-    explicit LayerTimeDistributedDense(int iInFrameSize,int iOutFrameSize, const std::string& sWeightInitializer = "GlorotUniform", const std::string& sBiasInitializer = "Zeros");
-    static std::string constructUsage();
-    static Layer* construct(std::initializer_list<float> fArgs, std::string sArg);
+  explicit LayerTimeDistributedDense(
+      int iInFrameSize, int iOutFrameSize,
+      const std::string &sWeightInitializer = "GlorotUniform",
+      const std::string &sBiasInitializer = "Zeros");
+  explicit LayerTimeDistributedDense(std::vector<Layer *> layers);
+  static std::string constructUsage();
+  static Layer *construct(std::initializer_list<float> fArgs, std::string sArg);
+
+  void save(std::ostream &to) const override;
+  static Layer *load(std::istream &from);
 };
 REGISTER_LAYER(LayerTimeDistributedDense, "LayerTimeDistributedDense");
-}
+} // namespace beednn

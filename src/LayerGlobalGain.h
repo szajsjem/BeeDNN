@@ -20,7 +20,7 @@ public:
 
     virtual Layer* clone() const override;
 
-    virtual bool init(size_t& in, size_t& out, bool debug = false) override;
+    virtual bool init(size_t &in, size_t &out, std::vector<MatrixFloat> &internalCalculationMatrices, bool debug = false) override;
 
     virtual bool has_weights() const override;
     virtual std::vector<MatrixFloat*> weights() const override;
@@ -32,7 +32,7 @@ public:
     static std::string constructUsage();
 
     virtual void forward(const MatrixFloat& mIn, MatrixFloat &mOut) override;
-    virtual void backpropagation(const MatrixFloat &mIn,const MatrixFloat &mGradientOut, MatrixFloat &mGradientIn) override;
+    virtual void backpropagation(const MatrixFloat &mIn, const MatrixFloat &mGradientOut, MatrixFloat &mGradientIn, std::vector<MatrixFloat> &internalCalculationMatrices, int start) override;
 };
 REGISTER_LAYER(LayerGlobalGain, "LayerGlobalGain");
 }

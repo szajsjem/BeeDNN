@@ -18,10 +18,10 @@ namespace beednn {
 		return pLayer;
 	}
 	///////////////////////////////////////////////////////////////////////////////
-	bool LayerNormalize::init(size_t& in, size_t& out, bool debug)
+	bool LayerNormalize::init(size_t& in, size_t& out, std::vector<MatrixFloat>& internalCalculationMatrices, bool debug)
 	{
 		out = in;
-		Layer::init(in, out, debug);
+		Layer::init(in, out, internalCalculationMatrices, debug);
 		return true;
 	}
 	///////////////////////////////////////////////////////////////////////////////
@@ -42,7 +42,7 @@ namespace beednn {
 		}
 	}
 	///////////////////////////////////////////////////////////////////////////////
-	void LayerNormalize::backpropagation(const MatrixFloat& mIn, const MatrixFloat& mGradientOut, MatrixFloat& mGradientIn)
+	void LayerNormalize::backpropagation(const MatrixFloat& mIn, const MatrixFloat& mGradientOut, MatrixFloat& mGradientIn, std::vector<MatrixFloat>& internalCalculationMatrices, int start)
 	{
 		mGradientIn.resizeLike(mIn);
 		//mGradientIn = mGradientOut;
@@ -66,11 +66,11 @@ namespace beednn {
 	}
 	///////////////////////////////////////////////////////////////////////////////
 	void LayerNormalize::save(std::ostream& to) const {
-
+		to << "LayerNormalize\n";
 	}
 	///////////////////////////////////////////////////////////////
 	Layer* LayerNormalize::load(std::istream& from) {
-		return NULL;
+		return new LayerNormalize();
 	}
 	///////////////////////////////////////////////////////////////
 	Layer* LayerNormalize::construct(std::initializer_list<float> fArgs, std::string sArg) {

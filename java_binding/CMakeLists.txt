@@ -3,7 +3,7 @@ find_package(Java REQUIRED)
 include(UseJava)
 
 # Add JNI headers to include path
-include_directories(${JNI_INCLUDE_DIRS})
+include_directories(${JNI_INCLUDE_DIRS} ../src)
 
 # Create the native library
 add_library(BeeDNNJava SHARED

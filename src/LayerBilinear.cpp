@@ -11,17 +11,20 @@
 #include "LayerBilinear.h"
 namespace beednn {
 
-
 ///////////////////////////////////////////////////////////////////////////////
-LayerBilinear::LayerBilinear() :
-    LayerGatedActivation("Identity", "Identity")
-{ }
+LayerBilinear::LayerBilinear() : LayerGatedActivation("Identity", "Identity") {}
 std::string LayerBilinear::constructUsage() {
-    return "applies bilinear gating mechanism\n \n ";
+  return "applies bilinear gating mechanism\n\n";
 }
-Layer* LayerBilinear::construct(std::initializer_list<float> fArgs, std::string sArg) {
-    if (fArgs.size() != 0) return nullptr;
-    return new LayerBilinear();
+Layer *LayerBilinear::construct(std::initializer_list<float> fArgs,
+                                std::string sArg) {
+  if (fArgs.size() != 0)
+    return nullptr;
+  return new LayerBilinear();
 }
+void LayerBilinear::save(std::ostream &to) const {
+  to << "LayerBilinear" << std::endl;
+}
+Layer *LayerBilinear::load(std::istream &from) { return new LayerBilinear(); }
 ///////////////////////////////////////////////////////////////////////////////
-}
+} // namespace beednn

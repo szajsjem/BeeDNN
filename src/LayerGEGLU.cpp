@@ -11,11 +11,19 @@
 #include "LayerGEGLU.h"
 namespace beednn {
 ///////////////////////////////////////////////////////////////////////////////
-LayerGEGLU::LayerGEGLU() :
-    LayerGatedActivation("Identity", "GELU")
-{ }
+LayerGEGLU::LayerGEGLU() : LayerGatedActivation("Identity", "GELU") {}
 std::string LayerGEGLU::constructUsage() {
-    return "gated gaussian error linear unit\n \n ";
+  return "gated gaussian error linear unit\n\n";
 }
+Layer *LayerGEGLU::construct(std::initializer_list<float> fArgs,
+                             std::string sArg) {
+  if (fArgs.size() != 0)
+    return nullptr;
+  return new LayerGEGLU();
+}
+void LayerGEGLU::save(std::ostream &to) const {
+  to << "LayerGEGLU" << std::endl;
+}
+Layer *LayerGEGLU::load(std::istream &from) { return new LayerGEGLU(); }
 ///////////////////////////////////////////////////////////////////////////////
-}
+} // namespace beednn

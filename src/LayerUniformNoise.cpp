@@ -10,81 +10,72 @@
 namespace beednn {
 
 ///////////////////////////////////////////////////////////////////////////////
-LayerUniformNoise::LayerUniformNoise(float fNoise):
-    Layer("UniformNoise"),
-    _fNoise(fNoise),
-	_distUniform(-fNoise, fNoise)
-{ }
+LayerUniformNoise::LayerUniformNoise(float fNoise)
+    : Layer("UniformNoise"), _fNoise(fNoise), _distUniform(-fNoise, fNoise) {}
 ///////////////////////////////////////////////////////////////////////////////
-LayerUniformNoise::~LayerUniformNoise()
-{ }
+LayerUniformNoise::~LayerUniformNoise() {}
 ///////////////////////////////////////////////////////////////////////////////
-Layer* LayerUniformNoise::clone() const
-{
-    return new LayerUniformNoise(_fNoise);
+Layer *LayerUniformNoise::clone() const {
+  return new LayerUniformNoise(_fNoise);
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerUniformNoise::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
-{
-	mOut = mIn;
-	if (_bTrainMode && (_fNoise > 0.f) )
-	{
-		for (Index i = 0; i < mOut.size(); i++)
-			mOut(i) += _distUniform(randomEngine());
-	}
+void LayerUniformNoise::forward(const MatrixFloat &mIn, MatrixFloat &mOut) {
+  mOut = mIn;
+  if (_bTrainMode && (_fNoise > 0.f)) {
+    for (Index i = 0; i < mOut.size(); i++)
+      mOut(i) += _distUniform(randomEngine());
+  }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerUniformNoise::backpropagation(const MatrixFloat &mIn,const MatrixFloat &mGradientOut, MatrixFloat &mGradientIn)
-{
-	if (_bFirstLayer)
-		return;
+void LayerUniformNoise::backpropagation(
+    const MatrixFloat &mIn, const MatrixFloat &mGradientOut,
+    MatrixFloat &mGradientIn,
+    std::vector<MatrixFloat> &internalCalculationMatrices, int start) {
+  if (_bFirstLayer)
+    return;
 
-    (void)mIn;
-    mGradientIn= mGradientOut;
+  (void)mIn;
+  if (mGradientIn.size() == 0) {
+    mGradientIn = mGradientOut;
+  } else {
+    mGradientIn += mGradientOut;
+  }
 }
 ///////////////////////////////////////////////////////////////////////////////
-float LayerUniformNoise::get_noise() const
-{
-    return _fNoise;
-}
+float LayerUniformNoise::get_noise() const { return _fNoise; }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerUniformNoise::save(std::ostream& to) const {
-
-}
+void LayerUniformNoise::save(std::ostream &to) const {}
 ///////////////////////////////////////////////////////////////
-Layer* LayerUniformNoise::load(std::istream& from) {
-	return NULL;
-}
+Layer *LayerUniformNoise::load(std::istream &from) { return NULL; }
 ///////////////////////////////////////////////////////////////
-Layer* LayerUniformNoise::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	return NULL;
+Layer *LayerUniformNoise::construct(std::initializer_list<float> fArgs,
+                                    std::string sArg) {
+  if (fArgs.size() != 1)
+    return nullptr; // probability
+  return new LayerUniformNoise(*fArgs.begin());
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerUniformNoise::constructUsage() {
-	return "adds uniform noise during training\n \nfNoise";
+  return "adds uniform noise during training\n \nfNoise";
 }
 ///////////////////////////////////////////////////////////////
-bool LayerUniformNoise::has_weights() const
-{
-	return false;
+bool LayerUniformNoise::has_weights() const { return false; }
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat *> LayerUniformNoise::weights() const {
+  return std::vector<MatrixFloat *>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerUniformNoise::weights() const
-{
-	return std::vector<MatrixFloat*>();
-}
-///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerUniformNoise::gradient_weights() const
-{
-	return std::vector<MatrixFloat*>();
+std::vector<MatrixFloat *> LayerUniformNoise::gradient_weights() const {
+  return std::vector<MatrixFloat *>();
 }
 ///////////////////////////////////////////////////////////////////////////////
-bool LayerUniformNoise::init(size_t& in, size_t& out, bool debug)
-{
+bool LayerUniformNoise::init(
+    size_t &in, size_t &out,
+    std::vector<MatrixFloat> &internalCalculationMatrices, bool debug) {
 
-	out = in;
-	Layer::init(in, out, debug);
-	return true;
+  out = in;
+  Layer::init(in, out, internalCalculationMatrices, debug);
+  return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
-}
+} // namespace beednn

@@ -10,77 +10,71 @@
 namespace beednn {
 
 ///////////////////////////////////////////////////////////////////////////////
-LayerGlobalBias::LayerGlobalBias() :
-    Layer("GlobalBias")
-{
-    _bias.resize(1,1);
-	_gradientBias.resize(1, 1);
+LayerGlobalBias::LayerGlobalBias() : Layer("GlobalBias") {
+  _bias.resize(1, 1);
+  _gradientBias.resize(1, 1);
 }
 ///////////////////////////////////////////////////////////////////////////////
-LayerGlobalBias::~LayerGlobalBias()
-{ }
+LayerGlobalBias::~LayerGlobalBias() {}
 ///////////////////////////////////////////////////////////////////////////////
-Layer* LayerGlobalBias::clone() const
-{
-    LayerGlobalBias* pLayer=new LayerGlobalBias();
-	pLayer->_bias = _bias;
-    return pLayer;
+Layer *LayerGlobalBias::clone() const {
+  LayerGlobalBias *pLayer = new LayerGlobalBias();
+  pLayer->_bias = _bias;
+  return pLayer;
 }
 ///////////////////////////////////////////////////////////////////////////////
-bool LayerGlobalBias::init(size_t& in, size_t& out, bool debug)
-{
-	_bias.setZero();
-	out = in;
-	Layer::init(in, out, debug);
-	return true;
+bool LayerGlobalBias::init(
+    size_t &in, size_t &out,
+    std::vector<MatrixFloat> &internalCalculationMatrices, bool debug) {
+  _bias.setZero();
+  out = in;
+  Layer::init(in, out, internalCalculationMatrices, debug);
+  return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerGlobalBias::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
-{
-    mOut = mIn.array() + _bias(0);
+void LayerGlobalBias::forward(const MatrixFloat &mIn, MatrixFloat &mOut) {
+  mOut = mIn.array() + _bias(0);
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerGlobalBias::backpropagation(const MatrixFloat &mIn,const MatrixFloat &mGradientOut, MatrixFloat &mGradientIn)
-{
-	(void)mIn;
+void LayerGlobalBias::backpropagation(
+    const MatrixFloat &mIn, const MatrixFloat &mGradientOut,
+    MatrixFloat &mGradientIn,
+    std::vector<MatrixFloat> &internalCalculationMatrices, int start) {
+  (void)mIn;
 
-	_gradientBias(0) = mGradientOut.mean();
-	
-	if (_bFirstLayer)
-		return;
+  _gradientBias(0) = mGradientOut.mean();
 
+  if (_bFirstLayer)
+    return;
+
+  if (mGradientIn.size() == 0) {
     mGradientIn = mGradientOut;
+  } else {
+    mGradientIn += mGradientOut;
+  }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerGlobalBias::save(std::ostream& to) const {
-
-}
+void LayerGlobalBias::save(std::ostream &to) const {}
 ///////////////////////////////////////////////////////////////
-Layer* LayerGlobalBias::load(std::istream& from) {
-    return NULL;
-}
+Layer *LayerGlobalBias::load(std::istream &from) { return NULL; }
 ///////////////////////////////////////////////////////////////
-Layer* LayerGlobalBias::construct(std::initializer_list<float> fArgs, std::string sArg) {
-    return NULL;
+Layer *LayerGlobalBias::construct(std::initializer_list<float> fArgs,
+                                  std::string sArg) {
+  return NULL;
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerGlobalBias::constructUsage() {
-	return "adds global bias term\n \n ";
+  return "adds global bias term\n \n ";
 }
 ///////////////////////////////////////////////////////////////
-bool LayerGlobalBias::has_weights() const
-{
-	return false;
+bool LayerGlobalBias::has_weights() const { return false; }
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat *> LayerGlobalBias::weights() const {
+  return std::vector<MatrixFloat *>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerGlobalBias::weights() const
-{
-	return std::vector<MatrixFloat*>();
-}
-///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerGlobalBias::gradient_weights() const
-{
-	return std::vector<MatrixFloat*>();
+std::vector<MatrixFloat *> LayerGlobalBias::gradient_weights() const {
+  return std::vector<MatrixFloat *>();
 }
 ///////////////////////////////////////////////////////////////////////////////
-}
+} // namespace beednn

@@ -10,16 +10,14 @@
 
 #include "LayerGatedActivation.h"
 namespace beednn {
-class LayerGTU : public LayerGatedActivation
-{
+class LayerGTU : public LayerGatedActivation {
 public:
-    explicit LayerGTU();
+  explicit LayerGTU();
 
-    //virtual void save(std::ostream& to)const override;
-    //static Layer* load(std::istream& from);
-    //static Layer* construct(std::initializer_list<float> fArgs, std::string sArg);
-    static std::string constructUsage();
+  void save(std::ostream &to) const override;
+  static Layer *load(std::istream &from);
+  static Layer *construct(std::initializer_list<float> fArgs, std::string sArg);
+  static std::string constructUsage();
 };
 REGISTER_LAYER(LayerGTU, "LayerGTU");
-}
-
+} // namespace beednn

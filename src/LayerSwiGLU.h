@@ -10,12 +10,14 @@
 
 #include "LayerGatedActivation.h"
 namespace beednn {
-class LayerSwiGLU : public LayerGatedActivation
-{
+class LayerSwiGLU : public LayerGatedActivation {
 public:
-    explicit LayerSwiGLU();
-    static std::string constructUsage();
-    static Layer* construct(std::initializer_list<float> fArgs, std::string sArg);
+  explicit LayerSwiGLU();
+  static std::string constructUsage();
+  static Layer *construct(std::initializer_list<float> fArgs, std::string sArg);
+
+  void save(std::ostream &to) const override;
+  static Layer *load(std::istream &from);
 };
 REGISTER_LAYER(LayerSwiGLU, "LayerSwiGLU");
-}
+} // namespace beednn

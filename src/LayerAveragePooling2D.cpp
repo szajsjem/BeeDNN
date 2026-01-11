@@ -9,148 +9,147 @@
 #include "LayerAveragePooling2D.h"
 namespace beednn {
 
-
 ///////////////////////////////////////////////////////////////////////////////
-LayerAveragePooling2D::LayerAveragePooling2D(Index iInRows, Index iInCols, Index iInChannels, Index iRowFactor, Index iColFactor) :
-    Layer("AveragePooling2D")
-{
-	_iInRows = iInRows;
-	_iInCols = iInCols;
-	_iInChannels = iInChannels;
-	_iRowFactor = iRowFactor;
-	_iColFactor = iColFactor;
-	_iOutRows = iInRows/iRowFactor;
-	_iOutCols = iInCols/iColFactor;
-	_iInPlaneSize = _iInRows * _iInCols;
-	_iOutPlaneSize = _iOutRows * _iOutCols;
-	_fInvKernelSize = 1.f / (float)(_iRowFactor * _iColFactor);
+LayerAveragePooling2D::LayerAveragePooling2D(Index iInRows, Index iInCols,
+                                             Index iInChannels,
+                                             Index iRowFactor, Index iColFactor)
+    : Layer("AveragePooling2D") {
+  _iInRows = iInRows;
+  _iInCols = iInCols;
+  _iInChannels = iInChannels;
+  _iRowFactor = iRowFactor;
+  _iColFactor = iColFactor;
+  _iOutRows = iInRows / iRowFactor;
+  _iOutCols = iInCols / iColFactor;
+  _iInPlaneSize = _iInRows * _iInCols;
+  _iOutPlaneSize = _iOutRows * _iOutCols;
+  _fInvKernelSize = 1.f / (float)(_iRowFactor * _iColFactor);
 }
 ///////////////////////////////////////////////////////////////////////////////
-LayerAveragePooling2D::~LayerAveragePooling2D()
-{ }
+LayerAveragePooling2D::~LayerAveragePooling2D() {}
 ///////////////////////////////////////////////////////////////////////////////
-void LayerAveragePooling2D::get_params(Index& iInRows, Index& iInCols, Index & iInChannels, Index& iRowFactor, Index& iColFactor) const
-{
-	iInRows = _iInRows;
-	iInCols = _iInCols;
-	iInChannels = _iInChannels;
-	iRowFactor = _iRowFactor;
-	iColFactor= _iColFactor;
+void LayerAveragePooling2D::get_params(Index &iInRows, Index &iInCols,
+                                       Index &iInChannels, Index &iRowFactor,
+                                       Index &iColFactor) const {
+  iInRows = _iInRows;
+  iInCols = _iInCols;
+  iInChannels = _iInChannels;
+  iRowFactor = _iRowFactor;
+  iColFactor = _iColFactor;
 }
 ///////////////////////////////////////////////////////////////////////////////
-Layer* LayerAveragePooling2D::clone() const
-{
-    return new LayerAveragePooling2D(_iInRows, _iInCols, _iInChannels, _iRowFactor, _iColFactor);
+Layer *LayerAveragePooling2D::clone() const {
+  return new LayerAveragePooling2D(_iInRows, _iInCols, _iInChannels,
+                                   _iRowFactor, _iColFactor);
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerAveragePooling2D::forward(const MatrixFloat& mIn,MatrixFloat& mOut)
-{
-	mOut.resize(mIn.rows(), _iOutPlaneSize*_iInChannels);
+void LayerAveragePooling2D::forward(const MatrixFloat &mIn, MatrixFloat &mOut) {
+  mOut.resize(mIn.rows(), _iOutPlaneSize * _iInChannels);
 
-	//not optimized yet
-	for (Index sample = 0; sample < mIn.rows(); sample++)
-	{
-		for (Index channel = 0; channel < _iInChannels; channel++)
-		{
-			const float* lIn = mIn.row(sample).data()+ channel * _iInPlaneSize;
-			float* lOut = mOut.row(sample).data()+channel* _iOutPlaneSize;
-			for (Index r = 0; r < _iOutRows; r++)
-			{
-				for (Index c = 0; c < _iOutCols; c++)
-				{
-					float fSum= 0.f;
-					
-					for (Index ri = r * _iRowFactor; ri < r*_iRowFactor + _iRowFactor; ri++)
-					{
-						for (Index ci = c * _iColFactor; ci < c*_iColFactor + _iColFactor; ci++)
-						{
-							Index iIndex = ri * _iInCols + ci; //flat index in plane
-							fSum += lIn[iIndex];
-						}
-					}
+  // not optimized yet
+  for (Index sample = 0; sample < mIn.rows(); sample++) {
+    for (Index channel = 0; channel < _iInChannels; channel++) {
+      const float *lIn = mIn.row(sample).data() + channel * _iInPlaneSize;
+      float *lOut = mOut.row(sample).data() + channel * _iOutPlaneSize;
+      for (Index r = 0; r < _iOutRows; r++) {
+        for (Index c = 0; c < _iOutCols; c++) {
+          float fSum = 0.f;
 
-					lOut[r * _iOutCols + c] = fSum*_fInvKernelSize;
-				}
-			}
-		}
-	}
+          for (Index ri = r * _iRowFactor; ri < r * _iRowFactor + _iRowFactor;
+               ri++) {
+            for (Index ci = c * _iColFactor; ci < c * _iColFactor + _iColFactor;
+                 ci++) {
+              Index iIndex = ri * _iInCols + ci; // flat index in plane
+              fSum += lIn[iIndex];
+            }
+          }
+
+          lOut[r * _iOutCols + c] = fSum * _fInvKernelSize;
+        }
+      }
+    }
+  }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerAveragePooling2D::backpropagation(const MatrixFloat &mIn,const MatrixFloat &mGradientOut, MatrixFloat &mGradientIn)
-{
-    (void)mIn;
+void LayerAveragePooling2D::backpropagation(const MatrixFloat &mIn, const MatrixFloat &mGradientOut, MatrixFloat &mGradientIn, std::vector<MatrixFloat> &internalCalculationMatrices, int start) {
+  (void)mIn;
 
-	if (_bFirstLayer)
-		return;
+  if (_bFirstLayer)
+    return;
 
-	mGradientIn.setZero(mGradientOut.rows(), _iInPlaneSize * _iInChannels);
+  MatrixFloat mLocalGrad;
+  mLocalGrad.setZero(mGradientOut.rows(), _iInPlaneSize * _iInChannels);
 
-	//not optimized yet
-	for (Index sample = 0; sample < mGradientOut.rows(); sample++)
-	{
-		for (Index channel = 0; channel < _iInChannels; channel++)
-		{
-			const float* lGradientOut= mGradientOut.row(sample).data() + channel * _iOutPlaneSize;
-			float* lGradientIn = mGradientIn.row(sample).data() + channel * _iInPlaneSize;
+  // not optimized yet
+  for (Index sample = 0; sample < mGradientOut.rows(); sample++) {
+    for (Index channel = 0; channel < _iInChannels; channel++) {
+      const float *lGradientOut =
+          mGradientOut.row(sample).data() + channel * _iOutPlaneSize;
+      float *lLocalGrad =
+          mLocalGrad.row(sample).data() + channel * _iInPlaneSize;
 
-			for (Index r = 0; r < _iOutRows; r++)
-			{
-				for (Index c = 0; c < _iOutCols; c++)
-				{
-					float fGradOut= lGradientOut[c+r*_iOutCols]* _fInvKernelSize;
+      for (Index r = 0; r < _iOutRows; r++) {
+        for (Index c = 0; c < _iOutCols; c++) {
+          float fGradOut = lGradientOut[c + r * _iOutCols] * _fInvKernelSize;
 
-					for (Index ri = r * _iRowFactor; ri < r * _iRowFactor + _iRowFactor; ri++)
-					{
-						for (Index ci = c * _iColFactor; ci < c * _iColFactor + _iColFactor; ci++)
-						{
-							Index iIndexIn = ri * _iInCols + ci; //flat index in plane
-							lGradientIn[iIndexIn]+= fGradOut;
-						}
-					}
-				}
-			}
-		}
-	}
+          for (Index ri = r * _iRowFactor; ri < r * _iRowFactor + _iRowFactor;
+               ri++) {
+            for (Index ci = c * _iColFactor; ci < c * _iColFactor + _iColFactor;
+                 ci++) {
+              Index iIndexIn = ri * _iInCols + ci; // flat index in plane
+              lLocalGrad[iIndexIn] += fGradOut;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (mGradientIn.size() == 0) {
+    mGradientIn = mLocalGrad;
+  } else {
+    mGradientIn += mLocalGrad;
+  }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void LayerAveragePooling2D::save(std::ostream& to) const {
-
-}
+void LayerAveragePooling2D::save(std::ostream &to) const {}
 ///////////////////////////////////////////////////////////////
-Layer* LayerAveragePooling2D::load(std::istream& from) {
-	return NULL;
-}
+Layer *LayerAveragePooling2D::load(std::istream &from) { return NULL; }
 ///////////////////////////////////////////////////////////////
-Layer* LayerAveragePooling2D::construct(std::initializer_list<float> fArgs, std::string sArg) {
-	if (fArgs.size() != 5) return nullptr; // Check number of float args matches
-	auto args = fArgs.begin();
-	return new LayerAveragePooling2D(
-		*args,       // iInRows 
-		*(args + 1),   // iInCols
-		*(args + 2),   // iInChannels
-		*(args + 3),   // iRowFactor 
-		*(args + 4)    // iColFactor
-	);
+Layer *LayerAveragePooling2D::construct(std::initializer_list<float> fArgs,
+                                        std::string sArg) {
+  if (fArgs.size() != 5)
+    return nullptr; // Check number of float args matches
+  auto args = fArgs.begin();
+  return new LayerAveragePooling2D(*args,       // iInRows
+                                   *(args + 1), // iInCols
+                                   *(args + 2), // iInChannels
+                                   *(args + 3), // iRowFactor
+                                   *(args + 4)  // iColFactor
+  );
 }
 ///////////////////////////////////////////////////////////////
 std::string LayerAveragePooling2D::constructUsage() {
-	return "downsamples input using average pooling\n \niInRows;iInCols;iInChannels;iRowFactor;iColFactor";
+  return "downsamples input using average pooling\n "
+         "\niInRows;iInCols;iInChannels;iRowFactor;iColFactor";
 }
 ///////////////////////////////////////////////////////////////
-bool LayerAveragePooling2D::init(size_t& in, size_t& out, bool debug) {
-	return false;
+bool LayerAveragePooling2D::init(size_t &in, size_t &out, std::vector<MatrixFloat> &internalCalculationMatrices, bool debug) {
+  if (in != _iInRows * _iInCols * _iInChannels)
+    return false;
+  out = _iOutPlaneSize * _iInChannels;
+  Layer::init(in, out, internalCalculationMatrices, debug);
+  return true;
 }
 ///////////////////////////////////////////////////////////////
-bool LayerAveragePooling2D::has_weights() const {
-	return false;
+bool LayerAveragePooling2D::has_weights() const { return false; }
+///////////////////////////////////////////////////////////////
+std::vector<MatrixFloat *> LayerAveragePooling2D::weights() const {
+  return std::vector<MatrixFloat *>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerAveragePooling2D::weights() const {
-	return std::vector<MatrixFloat*>();
+std::vector<MatrixFloat *> LayerAveragePooling2D::gradient_weights() const {
+  return std::vector<MatrixFloat *>();
 }
 ///////////////////////////////////////////////////////////////
-std::vector<MatrixFloat*> LayerAveragePooling2D::gradient_weights() const {
-	return std::vector<MatrixFloat*>();
-}
-///////////////////////////////////////////////////////////////
-}
+} // namespace beednn

@@ -7,19 +7,42 @@
 */
 
 #include "LayerGlobalAffine.h"
-#include "LayerGlobalGain.h"
 #include "LayerGlobalBias.h"
+#include "LayerGlobalGain.h"
+
 namespace beednn {
 
 ///////////////////////////////////////////////////////////////////////////////
-    LayerGlobalAffine::LayerGlobalAffine() :
-        LayerSequential({
-        new LayerGlobalGain(),
-        new LayerGlobalBias()
-        })
-{}
-    std::string LayerGlobalAffine::constructUsage() {
-        return "applies global affine transformation\n \n ";
-    }
-///////////////////////////////////////////////////////////////////////////////
+LayerGlobalAffine::LayerGlobalAffine()
+    : LayerSequential({new LayerGlobalGain(), new LayerGlobalBias()}) {}
+
+LayerGlobalAffine::LayerGlobalAffine(std::vector<Layer *> layers)
+    : LayerSequential(layers) {}
+
+std::string LayerGlobalAffine::constructUsage() {
+  return "applies global affine transformation\n\n";
 }
+Layer *LayerGlobalAffine::construct(std::initializer_list<float> fArgs,
+                                    std::string sArg) {
+  if (fArgs.size() != 0)
+    return nullptr;
+  return new LayerGlobalAffine();
+}
+void LayerGlobalAffine::save(std::ostream &to) const {
+  to << "LayerGlobalAffine" << std::endl;
+  to << _Layers.size() << std::endl;
+  for (auto layer : _Layers) {
+    layer->save(to);
+  }
+}
+Layer *LayerGlobalAffine::load(std::istream &from) {
+  size_t numLayers;
+  from >> numLayers;
+  std::vector<Layer *> layers;
+  for (size_t i = 0; i < numLayers; ++i) {
+    layers.push_back(Layer::load(from));
+  }
+  return new LayerGlobalAffine(layers);
+}
+///////////////////////////////////////////////////////////////////////////////
+} // namespace beednn

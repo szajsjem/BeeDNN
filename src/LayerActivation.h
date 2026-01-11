@@ -16,31 +16,36 @@
 namespace beednn {
 class Activation;
 
-class LayerActivation : public Layer
-{
+class LayerActivation : public Layer {
 public:
-    explicit LayerActivation(const std::string& sActivation);
-    virtual ~LayerActivation() override;
+  explicit LayerActivation(const std::string &sActivation);
+  virtual ~LayerActivation() override;
 
-    virtual Layer* clone() const override;
+  virtual Layer *clone() const override;
 
-    virtual void forward(const MatrixFloat& mIn, MatrixFloat &mOut) override;
-	
-    virtual void backpropagation(const MatrixFloat &mIn,const MatrixFloat &mGradientOut, MatrixFloat &mGradientIn) override;
+  virtual void forward(const MatrixFloat &mIn, MatrixFloat &mOut) override;
 
-    virtual bool init(size_t& in, size_t& out, bool debug = false) override;
+  virtual bool init(size_t &in, size_t &out,
+                    std::vector<MatrixFloat> &internalCalculationMatrices,
+                    bool debug = false) override;
 
-    virtual bool has_weights() const override;
-    virtual std::vector<MatrixFloat*> weights() const override;
-    virtual std::vector<MatrixFloat*> gradient_weights() const override;
+  virtual void
+  backpropagation(const MatrixFloat &mIn, const MatrixFloat &mGradientOut,
+                  MatrixFloat &mGradientIn,
+                  std::vector<MatrixFloat> &internalCalculationMatrices,
+                  int start) override;
 
-    virtual void save(std::ostream& to)const override;
-    static Layer* load(std::istream& from);
-    static Layer* construct(std::initializer_list<float> fArgs, std::string sArg);
-    static std::string constructUsage();
+  virtual bool has_weights() const override;
+  virtual std::vector<MatrixFloat *> weights() const override;
+  virtual std::vector<MatrixFloat *> gradient_weights() const override;
+
+  virtual void save(std::ostream &to) const override;
+  static Layer *load(std::istream &from);
+  static Layer *construct(std::initializer_list<float> fArgs, std::string sArg);
+  static std::string constructUsage();
 
 private:
-    Activation * _pActivation;
+  Activation *_pActivation;
 };
 REGISTER_LAYER(LayerActivation, "LayerActivation");
-}
+} // namespace beednn

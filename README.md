@@ -1,115 +1,76 @@
 # BeeDNN
 
-BeeDNN is a deep learning library.
+**BeeDNN** is a lightweight, high-performance Deep Learning library written in C++. It is designed to be simple, dependency-free, and easy to integrate into any C++ project.
 
-The git repository is https://github.com/edeforas/BeeDNN
+## Key Features
 
-The API is clear and simple, the goal is that every C++ developer can contribute, test, and use Deep Neural Network.
-BeeDNN can run on small devices. It is even possible to learn directly on the device.
+*   **Zero Dependencies**: Written in pure C++ (STL only). No external libraries required.
+*   **High Performance**: Optimized for speed. Can optionally use [Eigen](http://eigen.tuxfamily.org) for accelerated matrix operations.
+*   **Cross-Platform**: Works on Windows, Linux, and macOS. Compatible with Visual Studio and CMake.
+*   **Flexible API**:
+    *   Decoupled layers and activations.
+    *   Support for various initializers (Glorot, He, Lecun).
+    *   Wide range of layers (Dense, Conv2D, RNN, LSTM, etc.).
+    *   Extensive list of activation functions (ReLU, Gelu, Swish, Mish, etc.).
+*   **Serialization**: Save and load models, weights, and training parameters to simple JSON files.
+*   **Bindings**: Includes Python and Java bindings (check subdirectories).
 
-Please see at: https://github.com/edeforas/BeeDNN/issues for contributing ideas.
-No dependencies needed, every algorithm rewritten in C++ from scratch.
-To increase speed, ones can choose the Eigen library (http://eigen.tuxfamily.org), instead of the internal matrix library.
+## Quick Start
 
-Initializers:
-- GlorotUniform, GlorotNormal
-- HeUniform, HeNormal
-- LecunUniform, LecunNormal
-- Zeros, Ones
+### Prerequisites
+*   C++ Compiler (C++11 or later)
+*   CMake (optional, for building with CMake)
+*   Visual Studio 2019+ (optional, for Windows)
 
-Layers:
-- Dense (with bias), Dot (without bias)
-- GlobalGain, GlobalBias, GlobalAffine, Gain, Bias, Affine
-- Softmax, Softmin
-- PRelu, RRelu, PELU, TERELU, CRelu
-- Gated activations: GLU, ReGLU, Bilinear, SwiGLU, GEGLU, GTU, SeGLU
-- Layers and activations are decoupled and can be in any order
+### Building
+You can build BeeDNN using CMake or the provided Visual Studio solution.
 
-Time series:
-- TimeDistributedBias
-- TimeDistributedDot
-- TimeDistributedDense
-- WIP
+**Using CMake:**
+```bash
+mkdir build
+cd build
+cmake ..
+make
+```
 
-2D layers:
-- Convolution2D, ChannelBias
-- MaxPool2D, GlobalMaxPool2D, 
-- AveragePooling2D, GlobalAveragePooling2D
-- ZeroPadding2D
+**Using Visual Studio:**
+1.  Open `src/all.sln`.
+2.  Select your configuration (Debug/Release).
+3.  Build the solution.
 
-Activations (in alphabetical order):
-- Absolute, Asinh, Atan
-- Bent, BinaryStep, Bipolar, BipolarSigmoid, Bump
-- ComplementaryLogLog, CELU
-- dSiLU
-- ELiSH, Elliot, ELU, Exponential, E2RU, E3RU, Eswish
-- FTS, FTS+
-- Gauss, GELU
-- HardELU, HardSigmoid, HardShrink, HardTanh, HardSwish, Hann
-- ISRELU
-- Linear, LeakyRelu, LeakyRelu256, LecunTanh, LiSHT, Logit, LogSigmoid
-- Mish
-- NLRelu
-- O2RU, O3RU
-- SmoothSoftPlus
-- SmoothTanh
-- SmoothSigmoid
-- Relu, Relu6
-- Selu, SQNL, SQ-RBF, SoftPlus, Sin, SinC, Sigmoid, SiLU, Swish, SoftShrink, SoftSign, SoftSteps, SineReLU
-- Tanh, TanhExp, TanhShrink, ThresholdedRelu,TwiceLeakyRelu6
+### Example: XOR Classification
+See `samples/sample_classification_xor` for a simple example.
 
-Loss functions: 
-- MeanSquareError, MeanAbsoluteError, MeanCubicError
-- L2, L1, L3
-- LogCosh
-- Huber, PseudoHuber
-- SparseCategoricalCrossEntropy, CategoricalCrossEntropy, BinaryCrossEntropy
+```cpp
+// Pseudo-code snippet
+Net net;
+net.add(new LayerDense(2, 10));
+net.add(new LayerActivation(new Relu()));
+net.add(new LayerDense(10, 1));
+net.add(new LayerActivation(new Sigmoid()));
 
-Overfitting:
-- Layers: Dropout, GaussianNoise, GaussianDropout, UniformNoise
-- Regularizer: GradientClip, GradientNormClip, GradientClipTanh, L1, L2, L1L2
+NetTrain trainer;
+trainer.train(net, inputData, targetData);
+```
 
-Data augmentation
-- RandomFlip
+## Project Structure
 
-Learning and optimization:
-- Classification or regression, test and/or learn
-- SGD, Momentum, MomentumNg, Nesterov
-- Adam, AdamW, Nadam
-- Adagrad
-- Adamax
-- Amsgrad
-- RMSprop
-- RPROP-, iRPROP-
-- MetaOptimizer (V1)
-- Class balancing if needed
-- Keep best model vs epochs
-- LearnMore mode 
-- Reboost mode
+*   `src/`: Core library source code.
+*   `samples/`: Example programs demonstrating various features (XOR, MNIST, etc.).
+*   `tests/`: Unit tests.
+*   `python/`: Python bindings and examples.
+*   `java_binding/`: Java bindings.
+*   `res/`: Resources.
 
-KMeans:
-- can use any loss
-- batchmode learning
+## Documentation
 
-I/O:
-- MNIST reader
-- CIFAR10 reader
-- csv file reader
-- model, weights and training parameters are saved in a simple .json file
+*   **[HOWTO.md](HOWTO.md)**: Detailed guide on compiling, running samples, and using the library.
+*   **[TODO.md](TODO.md)**: List of planned features, fixes, and optimizations.
 
-Precomputing:
-- StandardScaler, MinMaxScaler
-	
-Commented samples:
-- Simple XOR classification, with and w/o softmax
-- Simple sinus regression
-- MNIST with dense net
-- MNIST using time serie (a time frame is an image row)
-- MNIST with poolmax2D
-- MNIST all convolutional
-- MNIST and Meta Optimizer: select best activation
-- CIFAR10 conv2D using poolmax2D
-- MNIST with kmeans and custom loss
+## Contributing
 
-Build with vs2019 or CMake.
-To compile, run the samples, etc, please read the HOWTO.md file
+Contributions are welcome! Please check `TODO.md` for ideas or open an issue on GitHub.
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE.txt](LICENSE.txt) for details.
