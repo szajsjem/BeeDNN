@@ -5,10 +5,12 @@
 
 #include "Activations.h"
 #include "Layer.h"
+#include "LayerActivation.h"
 #include "LayerFactory.h"
 #include "Net.h"
 #include "NetTrain.h"
 #include "NetUtil.h"
+
 
 using namespace beednn;
 

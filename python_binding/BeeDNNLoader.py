@@ -21,6 +21,10 @@ class BeeDNNLoader:
             lib = ct.cdll.LoadLibrary("./" + lib_name)
         elif os.path.exists("../python_binding/" + lib_name): # Dev path
              lib = ct.cdll.LoadLibrary("../python_binding/" + lib_name)
+        elif os.path.exists("../build/python_binding/Release/" + lib_name): # CMake Release
+             lib = ct.cdll.LoadLibrary("../build/python_binding/Release/" + lib_name)
+        elif os.path.exists("../build/python_binding/Debug/" + lib_name): # CMake Debug
+             lib = ct.cdll.LoadLibrary("../build/python_binding/Debug/" + lib_name)
         else:
              lib = ct.cdll.LoadLibrary(lib_name)
     except Exception as e:

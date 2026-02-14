@@ -14,7 +14,6 @@
 #include <string>
 #include <vector>
 
-
 namespace beednn {
 
 class Optimizer;
@@ -55,7 +54,7 @@ public:
   void
   set_regularizer(const std::string &sRegularizer,
                   float fParameter = -1.f); //"None" by default , -1 is default
-                                            //paremeter, can be also "L2" ...
+                                            // paremeter, can be also "L2" ...
   std::string get_regularizer() const;
   float get_regularizer_parameter() const;
 
@@ -106,10 +105,6 @@ public:
 
   // Distributed training
   void distributed_step(float num_workers);
-
-  float compute_loss_accuracy(const MatrixFloat &mSamples,
-                              const MatrixFloat &mTruth,
-                              float *pfAccuracy = nullptr) const;
 
   float compute_loss_accuracy(const MatrixFloat &mSamples,
                               const MatrixFloat &mTruth,
