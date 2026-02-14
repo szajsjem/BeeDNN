@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BeeDNN WASM Example</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 2em auto; padding: 0 1em; }
+        .output { background: #f0f0f0; padding: 1em; border-radius: 4px; font-family: monospace; white-space: pre-wrap; }
+        button { font-size: 1.2em; padding: 0.5em 1em; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>BeeDNN WebAssembly Example</h1>
+    <p>This example demonstrates training an XOR network in the browser using BeeDNN wrapped in WebAssembly.</p>
+    
+    <div id="status">Loading WASM...</div>
+    <button id="trainBtn" disabled onclick="runTraining()">Train XOR</button>
+    
+    <h3>Output:</h3>
+    <div id="log" class="output"></div>
+
+    <script src="beednn.js"></script>
+    <script>
+        let Module;
+        let beednn = {};
+
+        // Emscripten module loading
+        BeeDNNModule().then(instance => {
+            Module = instance;
+            document.getElementById('status').textContent = "WASM Loaded. Ready.";
+            document.getElementById('trainBtn').disabled = false;
+        });
+
+        function log(msg) {
+            const el = document.getElementById('log');
+            el.innerHTML += msg + "\n";
+            el.scrollTop = el.scrollHeight;
+        }
+
+        function runTraining() {
+            log("Starting training...");
+            
+            try {
+                // Create Network
+                const net = new Module.Net();
+                
+                // Add Layers (XOR structure: 2 -> 4 -> 1)
+                // Note: Embind pointers matching
+                const l1 = Module.constructLayer("Dense", new Module.VectorFloat([4]), "GlorotUniform"); 
+                const l2 = Module.createActivationLayer("Tanh");
+                const l3 = Module.constructLayer("Dense", new Module.VectorFloat([1]), "GlorotUniform");
+                
+                net.add(l1);
+                net.add(l2);
+                net.add(l3);
+                
+                net.init(2); // input size 2
+                net.setTrainMode(true);
+                
+                // Create Data (XOR)
+                // 0,0 -> 0
+                // 0,1 -> 1
+                // 1,0 -> 1
+                // 1,1 -> 0
+                const samples = new Module.VectorFloat([
+                    0,0,
+                    0,1,
+                    1,0,
+                    1,1
+                ]);
+                const truth = new Module.VectorFloat([
+                    0,
+                    1,
+                    1,
+                    0
+                ]);
+                
+                // Create Trainer
+                const trainer = new Module.NetTrain();
+                trainer.setTrainData(samples, 4, 2, truth, 4, 1);
+                trainer.setBatchSize(4);
+                trainer.setEpochs(1000);
+                trainer.setOptimizer("Adam");
+                trainer.setLoss("MeanSquareError");
+                trainer.setLearningRate(0.01);
+                
+                log("Training...");
+                
+                // Train
+                trainer.fit(net);
+                
+                log("Training complete.");
+                
+                // Get Metrics
+                const losses = trainer.getTrainLoss();
+                log("Final Loss: " + losses.get(losses.size()-1));
+                
+                // Predict
+                net.setTrainMode(false);
+                const result = net.predict(samples, 4, 2);
+                
+                log("\nPredictions:");
+                log("0,0 -> " + result.get(0).toFixed(4));
+                log("0,1 -> " + result.get(1).toFixed(4));
+                log("1,0 -> " + result.get(2).toFixed(4));
+                log("1,1 -> " + result.get(3).toFixed(4));
+                
+                // Cleanup
+                net.delete();
+                trainer.delete();
+                // Layers owned by net are deleted by net?
+                // C++ Net destructor deletes layers.
+                // JS GC handles wrappers, but C++ memory must be manually managed if 'new' was called?
+                // Embind: if we created with 'new', we should .delete().
+                // But Net.add takes ownership.
+                // If we call l1.delete() after net.add(l1), we might have double free if specific ownership semantics aren't clean.
+                // In Embind, allow_raw_pointers() just passes the address.
+                // If C++ takes ownership, we should be fine NOT deleting the layer wrapper, but we MUST delete the Net.
+                
+            } catch(e) {
+                log("Error: " + e);
+                console.error(e);
+            }
+        }
+    </script>
+</body>
+</html>

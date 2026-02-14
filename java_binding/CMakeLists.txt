@@ -49,10 +49,33 @@ add_jar(BeeDNNJar
         java/com/beednn/Net.java
         java/com/beednn/NetTrain.java
         java/com/beednn/Layer.java
-    RESOURCE
-        $<TARGET_FILE:BeeDNNJava> # sadly, doesnt put the dll inside
     OUTPUT_NAME
         BeeDNN
 )
 
 add_dependencies(BeeDNNJar BeeDNNJava)
+
+# Bundle native library into JAR
+if(WIN32)
+    set(LIB_PLATFORM "win32-x86-64")
+    set(LIB_NAME "BeeDNNJava.dll")
+elseif(APPLE)
+    set(LIB_PLATFORM "darwin")
+    set(LIB_NAME "libBeeDNNJava.dylib")
+    set(CMAKE_SHARED_LIBRARY_SUFFIX ".dylib")
+else()
+    set(LIB_PLATFORM "linux-x86-64")
+    set(LIB_NAME "libBeeDNNJava.so")
+    set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
+endif()
+
+# Staged location inside JAR: /native/<platform>/<libname>
+set(NATIVE_DIR "native/${LIB_PLATFORM}")
+set(STAGING_DIR "${CMAKE_CURRENT_BINARY_DIR}/staging")
+
+add_custom_command(TARGET BeeDNNJar POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${STAGING_DIR}/${NATIVE_DIR}
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:BeeDNNJava> ${STAGING_DIR}/${NATIVE_DIR}/${LIB_NAME}
+    COMMAND "${Java_JAR_EXECUTABLE}" uf "${CMAKE_CURRENT_BINARY_DIR}/BeeDNN.jar" -C "${STAGING_DIR}" .
+    COMMENT "Bundling native library ${LIB_NAME} into JAR at ${NATIVE_DIR}"
+)
