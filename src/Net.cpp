@@ -114,3 +114,105 @@ size_t Net::init(size_t inputDataSize, bool debug) {
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 } // namespace beednn
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Distributed Training Implementation
+std::vector<float> Net::get_params() const {
+  std::vector<float> params;
+  for (const auto *l : _layers) {
+    if (l->has_weights()) {
+      for (const auto *w : l->weights()) {
+        if (w) {
+          for (size_t i = 0; i < w->size(); ++i)
+            params.push_back((*w)(i));
+        }
+      }
+    }
+  }
+  return params;
+}
+
+void Net::set_params(const std::vector<float> &params) {
+  size_t idx = 0;
+  for (auto *l : _layers) {
+    if (l->has_weights()) {
+      for (auto *w : l->weights()) {
+        if (w) {
+          for (size_t i = 0; i < w->size(); ++i) {
+            if (idx < params.size())
+              (*w)(i) = params[idx++];
+          }
+        }
+      }
+    }
+  }
+}
+
+void Net::mix_params(const std::vector<float> &other_params, float theta) {
+  if (theta == 1.0f) {
+    set_params(other_params);
+    return;
+  }
+  if (theta == 0.0f) {
+    return;
+  }
+
+  size_t idx = 0;
+  for (auto *l : _layers) {
+    if (l->has_weights()) {
+      for (auto *w : l->weights()) {
+        if (w) {
+          for (size_t i = 0; i < w->size(); ++i) {
+            if (idx < other_params.size()) {
+              float current = (*w)(i);
+              float other = other_params[idx++];
+              (*w)(i) = (1.0f - theta) * current + theta * other;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+std::vector<float> Net::get_param_gradients() const {
+  std::vector<float> grads;
+  for (const auto *l : _layers) {
+    if (l->has_weights()) {
+      for (const auto *g : l->gradient_weights()) {
+        if (g) {
+          for (size_t i = 0; i < g->size(); ++i)
+            grads.push_back((*g)(i));
+        }
+      }
+    }
+  }
+  return grads;
+}
+
+void Net::accumulate_weight_diff_to_grad(
+    const std::vector<float> &received_weights) {
+  // Adds (CurrentWeight - ReceivedWeight) to Gradient
+  size_t idx = 0;
+  for (auto *l : _layers) {
+    if (l->has_weights()) {
+      const auto &weights = l->weights();
+      const auto &grads = l->gradient_weights();
+
+      // Assuming weights and grads are aligned (same count, same dims)
+      for (size_t matIdx = 0; matIdx < weights.size(); ++matIdx) {
+        MatrixFloat *w = weights[matIdx];
+        MatrixFloat *g = grads[matIdx];
+
+        if (w && g) {
+          for (size_t i = 0; i < w->size(); ++i) {
+            if (idx < received_weights.size()) {
+              float diff = (*w)(i)-received_weights[idx++];
+              (*g)(i) += diff;
+            }
+          }
+        }
+      }
+    }
+  }
+}

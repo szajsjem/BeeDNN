@@ -3,14 +3,12 @@
 #include <string>
 #include <vector>
 
-
 #include "Activations.h"
 #include "Layer.h"
 #include "LayerFactory.h"
 #include "Net.h"
 #include "NetTrain.h"
 #include "NetUtil.h"
-
 
 using namespace beednn;
 
@@ -153,6 +151,36 @@ void delete_layer(void *ptr) {
   // This is up to the caller (Python GC).
   if (ptr)
     delete static_cast<Layer *>(ptr);
+}
+
+// Distributed Training Implementation
+int net_get_params_size(void *ptr) {
+  return (int)static_cast<Net *>(ptr)->get_params().size();
+}
+
+void net_get_params_data(void *ptr, float *buffer) {
+  std::vector<float> p = static_cast<Net *>(ptr)->get_params();
+  std::copy(p.begin(), p.end(), buffer);
+}
+
+void net_set_params(void *ptr, float *params, int size) {
+  std::vector<float> v(params, params + size);
+  static_cast<Net *>(ptr)->set_params(v);
+}
+
+void net_mix_params(void *ptr, float *other_params, int size, float theta) {
+  std::vector<float> v(other_params, other_params + size);
+  static_cast<Net *>(ptr)->mix_params(v, theta);
+}
+
+void net_accumulate_weight_diff_to_grad(void *ptr, float *recv_params,
+                                        int size) {
+  std::vector<float> v(recv_params, recv_params + size);
+  static_cast<Net *>(ptr)->accumulate_weight_diff_to_grad(v);
+}
+
+void train_distributed_step(void *ptr, float num_workers) {
+  static_cast<NetTrain *>(ptr)->distributed_step(num_workers);
 }
 
 // Legacy / Helper

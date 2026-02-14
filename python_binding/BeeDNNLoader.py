@@ -65,6 +65,15 @@ class BeeDNNLoader:
     lib.train_get_train_loss_size.restype = ct.c_int
     lib.train_get_train_loss_data.argtypes = [ct.c_void_p, c_float_p]
 
+    # Distributed Training methods
+    lib.net_get_params_size.argtypes = [ct.c_void_p]
+    lib.net_get_params_size.restype = ct.c_int
+    lib.net_get_params_data.argtypes = [ct.c_void_p, c_float_p]
+    lib.net_set_params.argtypes = [ct.c_void_p, c_float_p, ct.c_int]
+    lib.net_mix_params.argtypes = [ct.c_void_p, c_float_p, ct.c_int, ct.c_float]
+    lib.net_accumulate_weight_diff_to_grad.argtypes = [ct.c_void_p, c_float_p, ct.c_int]
+    lib.train_distributed_step.argtypes = [ct.c_void_p, ct.c_float]
+
     def __init__(self, inputSize=0):
         self.net = ct.c_void_p(self.lib.create_net())
         if inputSize > 0:
@@ -77,6 +86,33 @@ class BeeDNNLoader:
             self.lib.delete_net(self.net)
             if self.trainer:
                 self.lib.delete_train(self.trainer)
+    
+    # Distributed API
+    def get_weights(self):
+        size = self.lib.net_get_params_size(self.net)
+        if size == 0: return np.array([], dtype=np.float32)
+        data = np.zeros(size, dtype=np.float32)
+        self.lib.net_get_params_data(self.net, data.ctypes.data_as(self.c_float_p))
+        return data
+        
+    def set_weights(self, weights):
+        w_data = weights.astype(np.float32)
+        self.lib.net_set_params(self.net, w_data.ctypes.data_as(self.c_float_p), w_data.size)
+
+    def mix_weights(self, other_weights, theta):
+        """
+        Updates weights = (1-theta)*current + theta*other_weights
+        """
+        w_data = other_weights.astype(np.float32)
+        self.lib.net_mix_params(self.net, w_data.ctypes.data_as(self.c_float_p), w_data.size, theta)
+        
+    def accumulate_weight_diff(self, other_weights):
+        w_data = other_weights.astype(np.float32)
+        self.lib.net_accumulate_weight_diff_to_grad(self.net, w_data.ctypes.data_as(self.c_float_p), w_data.size)
+        
+    def distributed_step(self, num_workers):
+        if not self.trainer: self.create_trainer()
+        self.lib.train_distributed_step(self.trainer, num_workers)
 
     def add_layer(self, layer_name, args=[], arg_str=""):
         # Check if it's a simple activation (compat)

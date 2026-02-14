@@ -1,26 +1,28 @@
 # BeeDNN
 
-**BeeDNN** is a lightweight, high-performance Deep Learning library written in C++. It is designed to be simple, dependency-free, and easy to integrate into any C++ project.
+**BeeDNN** is a lightweight, high-performance Deep Learning library written in C++. It is designed to be simple, dependency-free, and easy to integrate into any project, with extensive support for modern language bindings and distributed training.
 
 ## Key Features
 
 *   **Zero Dependencies**: Written in pure C++ (STL only). No external libraries required.
 *   **High Performance**: Optimized for speed. Can optionally use [Eigen](http://eigen.tuxfamily.org) for accelerated matrix operations.
-*   **Cross-Platform**: Works on Windows, Linux, and macOS. Compatible with Visual Studio and CMake.
+*   **Cross-Platform & Web**: Works on Windows, Linux, macOS, and **Web Browsers (WASM)**.
+*   **Multi-Language Bindings**: Full-featured bindings for **Python**, **Java**, and **WebAssembly/JavaScript**.
+*   **Distributed Training**: Support for Federated Learning, weight sync, gradient aggregation, and param mixing.
 *   **Flexible API**:
     *   Decoupled layers and activations.
     *   Support for various initializers (Glorot, He, Lecun).
     *   Wide range of layers (Dense, Conv2D, RNN, LSTM, etc.).
     *   Extensive list of activation functions (ReLU, Gelu, Swish, Mish, etc.).
-*   **Serialization**: Save and load models, weights, and training parameters to simple JSON files.
-*   **Bindings**: Includes Python and Java bindings (check subdirectories).
+*   **Serialization**: Save and load models, weights, and training parameters.
 
 ## Quick Start
 
 ### Prerequisites
 *   C++ Compiler (C++11 or later)
 *   CMake (optional, for building with CMake)
-*   Visual Studio 2019+ (optional, for Windows)
+*   Emscripten (optional, for WASM bindings)
+*   JDK & Python (optional, for bindings)
 
 ### Building
 You can build BeeDNN using CMake or the provided Visual Studio solution.
@@ -30,42 +32,41 @@ You can build BeeDNN using CMake or the provided Visual Studio solution.
 mkdir build
 cd build
 cmake ..
-make
+cmake --build . --config Release
 ```
 
-**Using Visual Studio:**
-1.  Open `src/all.sln`.
-2.  Select your configuration (Debug/Release).
-3.  Build the solution.
+**For WebAssembly (WASM):**
+Check `wasm_binding/compile.bat` or use Emscripten via CMake.
 
-### Example: XOR Classification
-See `samples/sample_classification_xor` for a simple example.
+### Example: Python
+```python
+from beednn.BeeDNNLoader import BeeDNNLoader
+import numpy as np
 
-```cpp
-// Pseudo-code snippet
-Net net;
-net.add(new LayerDense(2, 10));
-net.add(new LayerActivation(new Relu()));
-net.add(new LayerDense(10, 1));
-net.add(new LayerActivation(new Sigmoid()));
+loader = BeeDNNLoader("BeeDNNLib.dll")
+net = loader.create_net()
+loader.add_dense(net, 2, 8, "Relu")
+loader.add_dense(net, 8, 1, "Sigmoid")
 
-NetTrain trainer;
-trainer.train(net, inputData, targetData);
+# Predict
+output = loader.predict(net, np.array([[0, 1]], dtype=np.float32))
 ```
 
 ## Project Structure
 
 *   `src/`: Core library source code.
-*   `samples/`: Example programs demonstrating various features (XOR, MNIST, etc.).
-*   `tests/`: Unit tests.
-*   `python/`: Python bindings and examples.
-*   `java_binding/`: Java bindings.
-*   `res/`: Resources.
+*   `wasm_binding/`: WebAssembly/JS bindings and web examples.
+*   `python_binding/`: C-API and Python loader integration.
+*   `java_binding/`: JNI bindings for Java (Self-contained JAR).
+*   `python/`: Higher-level Python API.
+*   `samples/`: Example programs (C++).
+*   `tests/`: Unit tests and verification scripts.
 
 ## Documentation
 
-*   **[HOWTO.md](HOWTO.md)**: Detailed guide on compiling, running samples, and using the library.
-*   **[TODO.md](TODO.md)**: List of planned features, fixes, and optimizations.
+*   **[HOWTO.md](HOWTO.md)**: Detailed guide on compiling and using the library.
+*   **[TODO.md](TODO.md)**: Roadmap and planned optimizations.
+*   **[save_load_walkthrough.md](save_load_walkthrough.md)**: Guide on model serialization.
 
 ## Contributing
 

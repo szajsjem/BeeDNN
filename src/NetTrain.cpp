@@ -729,4 +729,55 @@ void NetTrain::train_one_epoch(const MatrixFloat &mSampleShuffled,
   }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
+// Distributed training
+void NetTrain::distributed_step(float num_workers) {
+  if (!_pNet)
+    return;
+
+  // Ensure weights/grads are collected
+  if (_pWeights.empty() || _pGradWeights.empty()) {
+    collect_all_weights_biases();
+  }
+
+  // Ensure optimizers are initialized
+  // Usually fit() or set_net() does this. If not, we do it.
+  if (_optimizers.size() != _pWeights.size()) {
+    clear_optimizers();
+    Index iNbOptimizers = _pWeights.size();
+    for (Index i = 0; i < iNbOptimizers; i++) {
+      _optimizers.push_back(create_optimizer(_sOptimizer));
+      _optimizers[i]->set_params(_fLearningRate, _fDecay, _fMomentum);
+      _optimizers[i]->init();
+    }
+  }
+
+  if (num_workers < 1.0f)
+    num_workers = 1.0f;
+  float scale = 1.0f / num_workers;
+
+  // Scale gradients
+  // We assume MatrixFloat supports scalar multiplication
+  // NetTrain.cpp uses MatrixFloat.
+  // _pGradWeights is vector<MatrixFloat*>
+  for (size_t i = 0; i < _pGradWeights.size(); ++i) {
+    // (*_pGradWeights[i]) *= scale; // If operator*= exists
+    // Fallback if not: iterate
+    MatrixFloat &m = *_pGradWeights[i];
+    for (size_t k = 0; k < m.size(); ++k)
+      m(k) *= scale;
+  }
+
+  Index iNbWeights = _pWeights.size();
+#pragma omp parallel for
+  for (int i = 0; i < iNbWeights; i++) {
+    if (_pRegularizer)
+      _pRegularizer->apply(*_pWeights[i], *_pGradWeights[i]);
+
+    _optimizers[i]->optimize(*_pWeights[i], *_pGradWeights[i]);
+
+    // Clear gradient after step to be ready for next accumulation
+    _pGradWeights[i]->setZero();
+  }
+}
+
 } // namespace beednn

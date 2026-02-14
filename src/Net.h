@@ -42,12 +42,19 @@ public:
   void set_train_mode(bool bTrainMode); // set to true if training, set to false
                                         // if testing (default)
 
+  // Distributed training API
+  std::vector<float> get_params() const;
+  void set_params(const std::vector<float> &params);
+  void mix_params(const std::vector<float> &other_params,
+                  float theta); // new = (1-theta)*current + theta*other
+  std::vector<float> get_param_gradients() const; // Helper for debug
+  void
+  accumulate_weight_diff_to_grad(const std::vector<float> &received_weights);
+
   std::vector<MatrixFloat> &internalCalculationMatrices() {
     return _internalCalculationMatrices;
   }
-  int startICM(int i) {
-      return _layerStarticm[i];
-  }
+  int startICM(int i) { return _layerStarticm[i]; }
 
 private:
   bool _bTrainMode;

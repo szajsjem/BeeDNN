@@ -12,7 +12,6 @@
 #include <emscripten/bind.h>
 #include <emscripten/val.h>
 
-
 using namespace emscripten;
 using namespace beednn;
 
@@ -203,8 +202,13 @@ EMSCRIPTEN_BINDINGS(beednn_module) {
       .function("predict", &Net_predict)
       .function("setTrainMode", &Net::set_train_mode)
       .function("isClassificationMode", &Net::is_classification_mode)
-      .function("setClassificationMode", &Net::set_classification_mode);
-
+      .function("setClassificationMode", &Net::set_classification_mode)
+      // Distributed
+      .function("getParams", &Net::get_params)
+      .function("setParams", &Net::set_params)
+      .function("mixParams", &Net::mix_params)
+      .function("accumulateWeightDiffToGrad",
+                &Net::accumulate_weight_diff_to_grad);
   class_<NetTrain>("NetTrain")
       .constructor<>()
       .function("setTrainData", &NetTrain_setTrainData)
@@ -229,7 +233,10 @@ EMSCRIPTEN_BINDINGS(beednn_module) {
       .function("getDecay", &NetTrain::get_decay)
       .function("setDecay", &NetTrain::set_decay)
       .function("getMomentum", &NetTrain::get_momentum)
-      .function("setMomentum", &NetTrain::set_momentum);
+      .function("setMomentum", &NetTrain::set_momentum)
+
+      // Distributed
+      .function("distributedStep", &NetTrain::distributed_step);
 
   class_<Layer>("Layer")
       // Abstract class, but we bind it for pointer return types?
@@ -237,7 +244,6 @@ EMSCRIPTEN_BINDINGS(beednn_module) {
       // We handle creation via Factory.
       .function("save",
                 select_overload<void(std::ostream &) const>(
-                    &Layer::save)) // std::ostream not bindable directly?
       // We need a helper for save to string.
       ;
 

@@ -54,6 +54,18 @@ BEEDNN_EXPORT void *layer_construct(const char *type, float *args,
                                     int argsCount, const char *arg);
 BEEDNN_EXPORT void delete_layer(void *ptr);
 
+// Distributed Training
+// Net Params
+BEEDNN_EXPORT int net_get_params_size(void *ptr);
+BEEDNN_EXPORT void net_get_params_data(void *ptr, float *buffer);
+BEEDNN_EXPORT void net_set_params(void *ptr, float *params, int size);
+BEEDNN_EXPORT void net_mix_params(void *ptr, float *other_params, int size,
+                                  float theta);
+BEEDNN_EXPORT void
+net_accumulate_weight_diff_to_grad(void *ptr, float *recv_params, int size);
+// Distributed Step
+BEEDNN_EXPORT void train_distributed_step(void *ptr, float num_workers);
+
 // Legacy
 BEEDNN_EXPORT void save(void *pNN, char *filename);
 
