@@ -1,6 +1,7 @@
 #include "Activations.h"
 #include "Initializers.h"
 #include "Layer.h"
+#include "LayerActivation.h"
 #include "LayerFactory.h"
 #include "Loss.h"
 #include "Matrix.h"
@@ -11,6 +12,7 @@
 #include "Regularizer.h"
 #include <emscripten/bind.h>
 #include <emscripten/val.h>
+
 
 using namespace emscripten;
 using namespace beednn;
@@ -243,9 +245,7 @@ EMSCRIPTEN_BINDINGS(beednn_module) {
       // We can't construct it directly.
       // We handle creation via Factory.
       .function("save",
-                select_overload<void(std::ostream &) const>(
-      // We need a helper for save to string.
-      ;
+                select_overload<void(std::ostream &) const>(&Layer::save));
 
   // Layer Factory functions
   function("createActivationLayer", &Layer_createActivation,

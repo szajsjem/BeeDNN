@@ -22,10 +22,10 @@ target_link_libraries(beednn libBeeDNN)
 target_compile_options(beednn PRIVATE "-fexceptions")
 target_link_options(beednn PRIVATE 
     "-lembind" 
-    "-s" "MODULARIZE=1"
-    "-s" "EXPORT_NAME='BeeDNNModule'"
-    "-s" "ALLOW_MEMORY_GROWTH=1"
-    "-s" "environment='web,worker'"
+    "-sMODULARIZE=1"
+    "-sEXPORT_NAME=BeeDNNModule"
+    "-sALLOW_MEMORY_GROWTH=1"
+    "-sENVIRONMENT=web,worker"
     "-fexceptions" 
 )
 
