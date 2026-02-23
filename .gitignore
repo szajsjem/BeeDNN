@@ -84,3 +84,4 @@ build
 *.sln
 /US30M1.10k.csv
 /wasm_binding/build_wasm
+linker_files.txt

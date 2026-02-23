@@ -8,15 +8,14 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories(../src)
 
 # Source files
+file(GLOB SOURCES_CORE ../src/*.cpp)
 set(SOURCES
     src/BeeDNNWasm.cpp
+    ${SOURCES_CORE}
 )
 
 # Create executable (which emscripten turns into .js + .wasm)
 add_executable(beednn ${SOURCES})
-
-# Link BeeDNN static library
-target_link_libraries(beednn libBeeDNN)
 
 # Emscripten specific settings
 target_compile_options(beednn PRIVATE "-fexceptions")
